@@ -137,23 +137,44 @@ ClaudeCode-AI-Coach/
 │   ├── CLAUDE.md                        ← 核心：教练系统的行为规则
 │   ├── PROGRESS.md                      ← 进度模板（安装后本机独立维护）
 │   ├── ai-engineering-leveling-guide.md ← Level 1-8 完整定义和验收标准
-│   └── commands/
-│       └── coach/                       ← coach 命名空间
-│           ├── assess.md                ← /coach:assess 全面评估
-│           ├── install.md               ← /coach:install 安装到本机
-│           ├── practice.md              ← /coach:practice 练习任务
-│           ├── progress-report.md       ← /coach:progress-report 进度汇报
-│           ├── review-prompt.md         ← /coach:review-prompt 审查 prompt
-│           └── uninstall.md             ← /coach:uninstall 卸载系统
+│   └── commands/coach/                  ← 安装到 user scope 的命令
+│       ├── assess.md                    ← /coach:assess 全面评估
+│       ├── practice.md                  ← /coach:practice 练习任务
+│       ├── progress-report.md           ← /coach:progress-report 进度汇报
+│       ├── review-prompt.md             ← /coach:review-prompt 审查 prompt
+│       └── uninstall.md                 ← /coach:uninstall 卸载系统
 ├── .claude/
+│   ├── commands/coach/
+│   │   └── install.md                   ← /coach:install（仅 project scope）
 │   └── settings.local.json              ← 项目级 Claude 设置
 └── scripts/
     ├── install.sh                       ← macOS/Linux 安装脚本
     ├── install.ps1                      ← Windows 安装脚本
     ├── uninstall.sh                     ← macOS/Linux 卸载脚本
     ├── uninstall.ps1                    ← Windows 卸载脚本
-    └── test-worktree.sh                 ← 测试 worktree 设置
+    └── dev-worktree.sh                  ← Git worktree 开发管理工具
 ```
+
+## 使用 Git Worktree 开发
+
+如果你已安装教练系统到 user scope（`~/.claude/`），开发本项目时可以使用 git worktree 创建隔离工作区，避免 project scope 和 user scope 重复：
+
+```bash
+# 创建 worktree 开发某个功能
+./scripts/dev-worktree.sh --create fix-assess
+
+# 在隔离的 worktree 中工作（无教练指令重复）
+cd ../coach-wt-fix-assess/
+
+# 测试改动
+./scripts/install.sh    # 重新部署到 ~/.claude/
+# 在其他项目中打开 Claude Code → 验证教练效果
+
+# 清理
+./scripts/dev-worktree.sh --remove fix-assess
+```
+
+支持同时创建多个 worktree 并行开发不同功能，每个 worktree 对应独立的分支和目录。
 
 ## 自定义与扩展
 

@@ -118,7 +118,7 @@ function Install-CoachSystem {
                 Copy-Item $file.FullName $coachDir -Force
             }
             # Verify critical command files were copied
-            $criticalCommands = @("coach\assess.md", "coach\install.md", "coach\practice.md", "coach\progress-report.md", "coach\review-prompt.md")
+            $criticalCommands = @("coach\assess.md", "coach\practice.md", "coach\progress-report.md", "coach\review-prompt.md")
             $verifyFailed = $false
             foreach ($cmd in $criticalCommands) {
                 if (-not (Test-Path (Join-Path $commandsDir $cmd))) {

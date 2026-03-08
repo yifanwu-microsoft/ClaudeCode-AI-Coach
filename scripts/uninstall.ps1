@@ -15,7 +15,6 @@ $MarkerEnd = "<!-- AI-COACH-END -->"
 # Coach command files installed by install.ps1
 $CoachCommands = @(
     "coach\assess.md",
-    "coach\install.md",
     "coach\uninstall.md",
     "coach\practice.md",
     "coach\progress-report.md",

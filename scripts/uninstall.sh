@@ -12,7 +12,6 @@ MARKER_END="<!-- AI-COACH-END -->"
 # Coach command files installed by install.sh
 COACH_COMMANDS=(
     "coach/assess.md"
-    "coach/install.md"
     "coach/uninstall.md"
     "coach/practice.md"
     "coach/progress-report.md"

@@ -137,23 +137,44 @@ ClaudeCode-AI-Coach/
 │   ├── CLAUDE.md                        ← Core: coaching rules
 │   ├── PROGRESS.md                      ← Progress template
 │   ├── ai-engineering-leveling-guide.md ← Full Level 1-8 guide
-│   └── commands/
-│       └── coach/                       ← Coach commands
-│           ├── assess.md
-│           ├── install.md
-│           ├── practice.md
-│           ├── progress-report.md
-│           ├── review-prompt.md
-│           └── uninstall.md
+│   └── commands/coach/                  ← Commands installed to user scope
+│       ├── assess.md
+│       ├── practice.md
+│       ├── progress-report.md
+│       ├── review-prompt.md
+│       └── uninstall.md
 ├── .claude/
+│   ├── commands/coach/
+│   │   └── install.md                   ← /coach:install (project scope only)
 │   └── settings.local.json              ← Project-level Claude settings
 └── scripts/
     ├── install.sh                       ← macOS/Linux install
     ├── install.ps1                      ← Windows install
     ├── uninstall.sh                     ← macOS/Linux uninstall
     ├── uninstall.ps1                    ← Windows uninstall
-    └── test-worktree.sh                 ← Test worktree setup
+    └── dev-worktree.sh                  ← Git worktree manager for dev
 ```
+
+## Development with Git Worktrees
+
+When developing this project while having the coach installed at user scope (`~/.claude/`), use git worktrees for isolated workspaces:
+
+```bash
+# Create a worktree for a feature
+./scripts/dev-worktree.sh --create fix-assess
+
+# Work in the isolated worktree (no coach duplication)
+cd ../coach-wt-fix-assess/
+
+# Test your changes
+./scripts/install.sh    # re-deploy to ~/.claude/
+# Open another project in Claude Code → verify coach behavior
+
+# Clean up
+./scripts/dev-worktree.sh --remove fix-assess
+```
+
+Multiple worktrees can run in parallel for different features — each is a separate branch and directory.
 
 ## Customization & Extension
 

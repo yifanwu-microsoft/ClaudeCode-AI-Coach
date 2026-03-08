@@ -132,7 +132,7 @@ main() {
         cp -f "$COMMANDS_SOURCE/coach/"*.md "$CLAUDE_HOME/commands/coach/" 2>/dev/null || true
         # Verify critical command files were copied
         local verify_failed=0
-        for cmd in coach/assess.md coach/install.md coach/practice.md coach/progress-report.md coach/review-prompt.md; do
+        for cmd in coach/assess.md coach/practice.md coach/progress-report.md coach/review-prompt.md; do
             if [ ! -f "$CLAUDE_HOME/commands/$cmd" ]; then
                 err "Critical command file missing after copy: $cmd"
                 verify_failed=1
