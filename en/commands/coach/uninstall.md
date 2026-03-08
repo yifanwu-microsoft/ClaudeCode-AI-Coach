@@ -31,10 +31,10 @@ If any verification fails, report the error and provide manual cleanup instructi
 
 - Inform the user: ✅ Uninstall complete! The coaching system has been removed from this machine.
 - If PROGRESS.md was kept, note: Your learning progress has been preserved and will be available if you reinstall.
-- Remind: To reinstall, run `/install`
+- Remind: To reinstall, run `/coach:install`
 
 ## Notes
 
 - Uninstall only removes content installed by the coaching system — it does not affect user's own rules in CLAUDE.md
 - Default recommendation is to keep PROGRESS.md to avoid losing learning progress
-- After uninstalling, `/assess`, `/practice` and other coach commands will no longer be available
+- After uninstalling, `/coach:assess`, `/coach:practice` and other coach commands will no longer be available

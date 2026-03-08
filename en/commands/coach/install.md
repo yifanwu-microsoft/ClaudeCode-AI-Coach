@@ -27,7 +27,7 @@ AI coaching system one-click install. Running this command will automatically co
 
 After the install script runs, verify that key files are in place:
 - Check that `~/.claude/CLAUDE.md` exists
-- Check that `~/.claude/commands/assess.md` exists
+- Check that `~/.claude/commands/coach/assess.md` exists
 - Check that `~/.claude/PROGRESS.md` exists
 
 If any file is missing, report the error and provide remediation steps.
@@ -38,7 +38,7 @@ Provide different guidance based on the situation:
 
 **First-time install** (install script output contains "created"):
 - Inform the user: ✅ Installation successful! The coaching system is now active globally
-- Suggest: You can now open Claude Code in any project and run `/assess` for your initial assessment
+- Suggest: You can now open Claude Code in any project and run `/coach:assess` for your initial assessment
 - Note: From now on, Claude will automatically append coaching feedback after each interaction — no extra steps needed
 
 **Update install** (install script output contains "already exists, skipping"):
@@ -49,4 +49,4 @@ Provide different guidance based on the situation:
 
 - Installation will not overwrite an existing PROGRESS.md (your local progress is protected)
 - CLAUDE.md uses tagged block merging and will not affect your own custom rules
-- To reset progress, manually delete `~/.claude/PROGRESS.md` and re-run `/install`
+- To reset progress, manually delete `~/.claude/PROGRESS.md` and re-run `/coach:install`
