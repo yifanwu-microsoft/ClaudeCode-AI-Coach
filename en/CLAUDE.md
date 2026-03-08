@@ -15,7 +15,7 @@ The file `PROGRESS.md` in this directory tracks the user's current progress. Rea
 
 If PROGRESS.md shows "Current Level" as "Pending Assessment", this is a new user or first-time setup:
 1. Do not assume the user's Level — proactively ask about their AI tool usage
-2. Guide the user to run `/assess` for an initial assessment
+2. Guide the user to run `/coach:assess` for an initial assessment
 3. After the assessment, help the user update the initial state in PROGRESS.md
 
 ## Level Detection Rules
@@ -250,18 +250,18 @@ When all sub-skills within a complete Level are marked 🟢, give stronger celeb
 ```
 🏆 **Level N Graduated!**
 - You've completed all sub-skills for Level N
-- Recommend running `/assess` to re-evaluate and confirm readiness for Level N+1
+- Recommend running `/coach:assess` to re-evaluate and confirm readiness for Level N+1
 ```
 
 When updating, preserve the file structure — only modify specific field values.
 
 ## Custom Commands
 
-Available commands (see .claude/commands/ for details):
-- `/assess` — Comprehensive assessment of current Level, scored per criterion
-- `/progress-report` — Generate a progress report suitable for sharing with a team lead
-- `/practice` — Get practice tasks for the currently focused sub-skill
-- `/review-prompt` — Review prompt quality and provide upgrade advice
-- `/install` — Install or update the coaching system on this machine
-- `/uninstall` — Remove the coaching system from this machine
-- `/i18n` — Translation sync management (project maintenance)
+Available commands (see .claude/commands/coach/ for details):
+- `/coach:assess` — Comprehensive assessment of current Level, scored per criterion
+- `/coach:progress-report` — Generate a progress report suitable for sharing with a team lead
+- `/coach:practice` — Get practice tasks for the currently focused sub-skill
+- `/coach:review-prompt` — Review prompt quality and provide upgrade advice
+- `/coach:install` — Install or update the coaching system on this machine
+- `/coach:uninstall` — Remove the coaching system from this machine
+- `/coach:i18n` — Translation sync management (project maintenance)

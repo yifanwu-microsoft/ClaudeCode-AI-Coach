@@ -79,7 +79,7 @@ Status Legend: 🔴 Not Started / 🟡 Practicing / 🟢 Verified
 
 ## Current Focus
 
-- **Focus Sub-skill**: Pending Assessment (run `/assess` for initial assessment)
+- **Focus Sub-skill**: Pending Assessment (run `/coach:assess` for initial assessment)
 - **Reason**: —
 - **Next Step**: —
 
@@ -90,11 +90,11 @@ Status Legend: 🔴 Not Started / 🟡 Practicing / 🟢 Verified
 
 <!-- 
 Update Guide:
-- Run /assess on first use for assessment, the system will auto-fill the fields above
+- Run /coach:assess on first use for assessment, the system will auto-fill the fields above
 - After completing a sub-skill verification, change status from 🔴/🟡 to 🟢
 - After starting practice on a sub-skill, change status from 🔴 to 🟡
 - Update "Overall Assessment" and "Assessment Date" after each assessment
 - Add entries to "Milestone Log" when important milestones are reached
 - Update Level 7 Graduation Test status after passing
-- When switching devices, no sync needed — just run /assess again
+- When switching devices, no sync needed — just run /coach:assess again
 -->
