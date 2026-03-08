@@ -1,8 +1,9 @@
 # Complete Guide to AI Engineering Skills (Level 1 → Level 8)
 
-> **Target audience**: Full-stack engineers (primarily frontend, React/Next.js stack)
+> **Target audience**: All software engineers using AI-assisted programming
 > **Core tool**: Claude Code CLI
 > **How to use**: Each Level has a clear acceptance Checklist — check off every item before moving to the next stage
+> **About examples**: Code examples in this guide primarily use React/Next.js (TypeScript), but Level definitions and acceptance criteria apply to any tech stack. Substitute the specific technologies in examples with your own project's stack.
 
 ---
 
@@ -31,8 +32,8 @@
 | 4 | Prompt Engineering | Writing structured prompts, managing project context | A junior engineer following instructions |
 | 5 | Intent-Driven | Describing business intent, reviewing AI's proposals | A mid-level engineer who can deliver independently |
 | 6 | Multi-Agent Parallelism | Managing multiple AI task streams simultaneously | A parallelizable development team |
-| 7 | Workflow Orchestration | Designing standardized processes for AI to execute | An automated pipeline |
-| 8 | Automated System | Configuring event triggers, AI running autonomously 24/7 | Infrastructure |
+| 7 | Workflow Orchestration | Designing standardized processes for AI to execute | A dev-time automated pipeline |
+| 8 | Automated System | Configuring event triggers, AI running autonomously 24/7 | Unattended infrastructure |
 
 ### Self-Assessment (0-2 points per item)
 
@@ -49,12 +50,12 @@
 
 **Autonomous Development (Level 5)**
 - [ ] Describing business intent rather than technical implementation; AI independently selects approach
-- [ ] Can delegate complete Features (frontend + API + tests)
+- [ ] Can delegate complete Features (spanning multiple modules and tests)
 - [ ] AI proposals pass architecture review on first attempt > 80% of the time
 
 **Parallelism & Orchestration (Level 6-7)**
-- [ ] Can manage 3+ Claude Code instances running in parallel
-- [ ] Proficient with Git Worktree for isolating parallel tasks
+- [ ] Can manage 3+ parallel AI task streams (built-in parallelism or multiple instances)
+- [ ] Can correctly distinguish parallelizable vs. must-be-serial tasks
 - [ ] Have 5+ Custom Slash Commands
 - [ ] Hooks configured for automated quality checks
 
@@ -93,10 +94,16 @@ claude
 ```
 
 **Daily practice**: Consciously let AI complete the following while coding:
-- JSX structure for React components
-- TypeScript type/interface definitions
-- Dependency arrays for `useEffect`, `useCallback`, and other Hooks
-- Repetitive code (map rendering, form fields)
+- Component/class structural scaffolding
+- Type definitions/interface definitions
+- Repetitive pattern code (loops, conditionals, configuration items)
+- Boilerplate code
+
+> The following uses React/TypeScript as an example — substitute with your own tech stack:
+> - JSX structure for React components
+> - TypeScript type/interface definitions
+> - Dependency arrays for `useEffect`, `useCallback`, and other Hooks
+> - Repetitive code (map rendering, form fields)
 
 #### Week 2: Learning to Ask Questions in Claude Code
 
@@ -127,12 +134,14 @@ After each AI code generation, check three things:
 - [ ] AI contributes 20-30% of code (non-critical paths)
 - [ ] Have a habit of "accept/modify/reject" judgment for every piece of AI code
 
+> **💡 Self-test method**: Review the code you wrote today — how many pieces were AI-completed/generated? If more than 5, you've formed the habit. "Accept/modify/reject" doesn't require tracking numbers — as long as you find yourself naturally thinking "is this line correct?" when looking at AI code, you've met the bar.
+
 **Graduation test**: Complete a small Feature with 3 components (e.g., form + list + detail view) using AI assistance. AI contributes 20%+ of code, and you can explain every line.
 
 ### Practice: Exercises
 
-1. **Type generation**: Give Claude a JSON response sample from an API, have it generate TypeScript types. Compare with your hand-written version
-2. **Component scaffolding**: Have Claude generate a `<DataTable>` component (with sorting + pagination), annotate line by line what needs modification
+1. **Type generation**: Give Claude a JSON response sample from an API, have it generate corresponding type definitions (TypeScript interface / Python dataclass / Go struct, etc.). Compare with your hand-written version
+2. **Component scaffolding**: Have Claude generate a data display component (e.g., `<DataTable>` with sorting + pagination), annotate line by line what needs modification
 3. **Code explanation**: Find a piece of code in your project that you don't fully understand, have Claude explain it, then verify accuracy
 
 ### Anti-patterns: Common Pitfalls
@@ -286,6 +295,8 @@ This is more efficient than spending 30 minutes crafting one "perfect prompt."
 - [ ] Complex tasks (spanning 3+ files) use Plan Mode 100% of the time
 - [ ] AI code contribution 50-60%, manual modifications < 20%
 
+> **💡 Self-test method**: Review your last 5 tasks — how many rounds of conversation with AI did each take? If ≥4 tasks were done in 3 rounds or fewer, you've met the bar. A simple check for "manual modifications < 20%": after AI finishes writing, you only need to change a few things (variable names, edge cases) rather than rewriting large sections.
+
 **Graduation test**: Complete a data table with filtering + sorting + pagination. Use Plan Mode for planning, 1-3 prompt rounds to complete. Less than 20% of AI code requires manual modification.
 
 ### Practice: Exercises
@@ -403,13 +414,49 @@ After AI provides a proposal, review it with this checklist:
 
 Tests passing = you can trust the code. This is 10x more efficient than line-by-line review.
 
+#### Step 4: Task Decomposition & Dependency Analysis (Weeks 7-8)
+
+This is a prerequisite skill for Level 6 (Multi-Agent Parallelism). Learn to decompose first, then learn to parallelize.
+
+**Exercise: Break a Feature into independent subtasks**
+
+```
+Requirement: Order management page
+
+Decomposition:
+├── Subtask 1: Order data model + API (independent)
+├── Subtask 2: Order list component (depends on Subtask 1's type definitions)
+├── Subtask 3: Order detail component (depends on Subtask 1's type definitions)
+├── Subtask 4: Filter/search functionality (depends on Subtask 2)
+└── Subtask 5: Tests (depends on Subtasks 1-4)
+
+Dependency graph:
+  1 ──→ 2 ──→ 4
+  │     │
+  └──→ 3     5 (last)
+
+Parallelizable combinations:
+  - After agreeing on type definitions: Subtask 2 and Subtask 3 can run in parallel
+  - Subtask 4 must wait for Subtask 2 to complete
+```
+
+**Key skills:**
+- Identifying dependencies between tasks (data dependencies, file dependencies, logic dependencies)
+- Finding "interface points" — boundaries where you can agree on interfaces first, then develop independently
+- Evaluating decomposition granularity — too fine means high management overhead, too coarse means no parallelism possible
+
+> 💡 At Level 5, you still use a single Agent to execute these subtasks serially. But once you've learned to decompose, transitioning to Level 6 only requires changing "serial execution" to "parallel execution" — the barrier will be much lower.
+
 ### Done When: Acceptance Criteria
 
 - [ ] What/Why makes up > 70% of prompts (review your last 10 prompts)
 - [ ] Completed 3+ Feature-level delegations (frontend + API + tests)
 - [ ] AI proposals pass architecture review on first attempt > 80% of the time
+- [ ] Can decompose complex Features into 3+ subtasks and map out their dependencies
 - [ ] Feature completion speed is 2x+ faster compared to writing entirely by hand (track 3 Features for comparison)
 - [ ] AI code contribution 60-75%
+
+> **💡 Self-test method**: Look through your last 10 prompts — count how many describe "what/why" rather than "how to do it". ≥7 out of 10 means 70%. For "passes architecture review on first attempt": out of the last 5 times you had AI propose a solution, how many times did you think "I can use this directly" rather than "this needs major changes"? ≥4 times means 80%.
 
 **Graduation test**: Complete a full Feature (frontend + API + database) using intent descriptions throughout — never specifying implementation approach. AI proposal passes architecture review on first attempt, total time is 2x+ faster than writing by hand.
 
@@ -418,6 +465,7 @@ Tests passing = you can trust the code. This is 10x more efficient than line-by-
 1. **Intent rewrite**: Take your last 5 prompts, rewrite them using intent-driven approach, compare AI output quality between the two versions
 2. **Proposal showdown**: Use both How and What approaches for the same requirement, compare which produces a more comprehensive solution
 3. **Feature delegation**: Pick a 4-8 hour Feature and hand it to AI. Track total time, prompt rounds, and manual modification percentage
+4. **Task decomposition**: Pick a medium-complexity Feature, draw a subtask dependency graph, and mark which tasks can be parallelized
 
 ### Anti-patterns: Common Pitfalls
 
@@ -571,6 +619,8 @@ Phase 4: Integration (15-30 minutes)
 - [ ] Switching between Agents and reviewing takes < 3 minutes
 - [ ] AI code contribution 75-85%
 
+> **💡 Self-test method**: A simple check for "2x speedup": a task you estimate would take 2 hours serially, completed in under 1 hour with parallelism (including management overhead), counts as 2x. "Conflicts < 10%": out of the last 10 parallel merges, if ≤1 had conflicts, you've met the bar.
+
 **Graduation test**: Launch 3 Agents simultaneously to complete different parts of a Feature (API + component + tests), total time is 2x+ faster than serial, all tests pass after merging.
 
 ### Practice: Exercises
@@ -593,10 +643,12 @@ Phase 4: Integration (15-30 minutes)
 
 ## 6. Level 7: Workflow Orchestration
 
-### Why: From "Manually Managing Agents" to "System-Automated Orchestration"
+### Why: From "Manually Managing Agents" to "Dev-Time Automated Orchestration"
 
 At Level 6, you're a project manager — manually assigning, monitoring, and integrating.
-At Level 7, you're a system architect — designing workflows that execute automatically.
+At Level 7, you're a system architect — designing workflows that AI executes automatically **during development**.
+
+> **Key distinction between Level 7 and Level 8**: Level 7 automation happens **while you're present** (during development) — you trigger commands, AI follows the workflow, you review results. Level 8 automation happens **while you're away** (CI/CD event-triggered, AI running autonomously).
 
 **The three pillars of orchestration**:
 1. **CLAUDE.md** (advanced version) — Project-level AI operating manual
@@ -798,9 +850,10 @@ Standard Feature Development Workflow:
 
 ## 7. Level 8: Automated Orchestration System
 
-### Why: From "Human-Triggered AI Execution" to "Event-Triggered Autonomous AI"
+### Why: From "Dev-Time Orchestration" to "Unattended Orchestration"
 
-At Level 7, you're still manually typing `/new-feature`. At Level 8, the system responds to events automatically:
+Level 7 automation requires your presence — you type `/new-feature`, AI follows the workflow.
+Level 8 automation is **event-driven and unattended** — the system responds to events automatically, AI running autonomously 24/7:
 
 - PR submitted → AI auto Code Review
 - CI fails → AI automatically attempts to fix
@@ -934,7 +987,8 @@ jobs:
 
              Analyze the failure and fix it.
              Only fix the actual error. Do not refactor or change unrelated code." \
-            --allowedTools "Read,Write,Edit,Bash"
+            --allowedTools "Read,Write,Edit"
+          # ⚠️ Security note: Do not grant AI Bash access in CI to avoid arbitrary command execution
 
       - name: Verify fix
         run: npm test
@@ -944,7 +998,9 @@ jobs:
         run: |
           BRANCH="fix/auto-ci-$(date +%s)"
           git checkout -b "$BRANCH"
-          git add -A
+          # ⚠️ Security note: Only add specific file types to avoid committing unexpected files (e.g., .env, secrets)
+          git add '*.ts' '*.tsx' '*.js' '*.jsx' '*.json' '*.css'
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
           git commit -m "fix: auto-fix CI failure"
           git push origin "$BRANCH"
           gh pr create \
@@ -990,9 +1046,18 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const triage = require('./triage.json');
-            const result = JSON.parse(triage.result || '{}');
-            const labels = [result.type, `size-${result.size}`].filter(Boolean);
+            const fs = require('fs');
+            // ⚠️ Security note: AI output may not be valid JSON — always add error handling
+            let result = {};
+            try {
+              const raw = fs.readFileSync('./triage.json', 'utf8');
+              const triage = JSON.parse(raw);
+              result = JSON.parse(triage.result || '{}');
+            } catch (e) {
+              console.log('Failed to parse AI triage output:', e.message);
+              return; // Exit gracefully on parse failure — don't block the Issue workflow
+            }
+            const labels = [result.type, result.size ? `size-${result.size}` : null].filter(Boolean);
             if (labels.length > 0) {
               await github.rest.issues.addLabels({
                 owner: context.repo.owner,
@@ -1158,18 +1223,20 @@ alias cc='claude'
 alias ccp='claude -p'
 ```
 
-### D. Progression Roadmap
+### D. Reference Pace
+
+The following is a reference pace — **actual progress varies by person, project, and usage frequency**. Some people may reach Level 5 in 3 months, while others may take 6 months to reach Level 4 — both are perfectly normal.
 
 ```
-Week 1-4:    Level 1-2  ← Build AI usage habits
-Week 5-8:    Level 3-4  ← Prompt engineering + CLAUDE.md
-Week 9-14:   Level 5    ← Intent-driven development
-Week 15-20:  Level 6    ← Multi-Agent parallelism
-Week 21-26:  Level 7    ← Workflow orchestration
-Week 27-32:  Level 8    ← Automated systems (as needed)
+Level 1-2  ← Build AI usage habits (typically 2-4 weeks)
+Level 3-4  ← Prompt engineering + CLAUDE.md (typically 3-6 weeks)
+Level 5    ← Intent-driven development (typically 4-8 weeks)
+Level 6    ← Multi-Agent parallelism (typically 4-8 weeks)
+Level 7    ← Workflow orchestration (typically 4-8 weeks)
+Level 8    ← Automated systems (as needed — not everyone needs this)
 ```
 
-Pass each Level's graduation test before moving on. Progressing faster than the timeline is great; progressing slower is also perfectly normal — the key is that each step is solid.
+**Key principle**: Solid foundations matter more than speed. Pass each Level's graduation test before moving on. Gaps from skipping levels will surface in later Levels.
 
 ### E. When to Downshift
 
