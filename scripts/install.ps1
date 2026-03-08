@@ -1,11 +1,5 @@
-# AI Coach System Sync Tool
-# Usage: .\scripts\sync.ps1 -Direction push|pull
-
-param(
-    [Parameter(Mandatory = $true)]
-    [ValidateSet("push", "pull")]
-    [string]$Direction
-)
+# AI Coach System Install Tool
+# Usage: .\scripts\install.ps1
 
 $ErrorActionPreference = "Stop"
 
@@ -18,8 +12,8 @@ $MarkerEnd = "<!-- AI-COACH-END -->"
 function Write-Info { param($Msg) Write-Host "[INFO] $Msg" -ForegroundColor Green }
 function Write-Warn { param($Msg) Write-Host "[WARN] $Msg" -ForegroundColor Yellow }
 
-function Push-ToGlobal {
-    Write-Info "Deploying to $ClaudeHome ..."
+function Install-CoachSystem {
+    Write-Info "Installing AI Coach to $ClaudeHome ..."
 
     # Create directory
     $commandsDir = Join-Path $ClaudeHome "commands"
@@ -27,14 +21,14 @@ function Push-ToGlobal {
         New-Item -ItemType Directory -Path $commandsDir -Force | Out-Null
     }
 
-    # 1. Sync commands/
+    # 1. Install commands/
     $sourceCommands = Join-Path $RepoRoot ".claude\commands"
     if (Test-Path $sourceCommands) {
         $commandFiles = Get-ChildItem "$sourceCommands\*.md" -ErrorAction SilentlyContinue
         foreach ($file in $commandFiles) {
             Copy-Item $file.FullName $commandsDir -Force
         }
-        Write-Info "Commands synced"
+        Write-Info "Commands installed"
     }
 
     # 2. Sync CLAUDE.md (marker block merge)
@@ -48,7 +42,6 @@ function Push-ToGlobal {
         $targetContent = Get-Content $targetFile -Raw -Encoding UTF8
 
         if ($targetContent.Contains($MarkerStart)) {
-            # Replace existing coach block
             $startIdx = $targetContent.IndexOf($MarkerStart)
             $endIdx = $targetContent.IndexOf($MarkerEnd, $startIdx)
 
@@ -61,7 +54,6 @@ function Push-ToGlobal {
             }
         }
         else {
-            # Append coach block
             $newContent = $targetContent.TrimEnd() + "`r`n`r`n" + $coachBlock + "`r`n"
             Set-Content $targetFile $newContent -Encoding UTF8 -NoNewline
             Write-Info "CLAUDE.md coach block appended (existing rules unaffected)"
@@ -72,41 +64,27 @@ function Push-ToGlobal {
         Write-Info "CLAUDE.md created"
     }
 
-    # 3. Sync PROGRESS.md
-    Copy-Item (Join-Path $RepoRoot "PROGRESS.md") $ClaudeHome -Force
-    Write-Info "PROGRESS.md synced"
+    # 3. PROGRESS.md (only create if not exists — protect local progress)
+    $progressFile = Join-Path $ClaudeHome "PROGRESS.md"
+    if (Test-Path $progressFile) {
+        Write-Warn "PROGRESS.md already exists, skipping (protecting local progress)"
+        Write-Warn "To reset, manually delete ~/.claude/PROGRESS.md and re-run install"
+    }
+    else {
+        Copy-Item (Join-Path $RepoRoot "PROGRESS.md") $ClaudeHome -Force
+        Write-Info "PROGRESS.md created (initial state)"
+    }
 
     # 4. Sync guide
     $guideFile = Join-Path $RepoRoot "ai-engineering-leveling-guide.md"
     if (Test-Path $guideFile) {
         Copy-Item $guideFile $ClaudeHome -Force
-        Write-Info "Guide synced"
+        Write-Info "Guide installed"
     }
 
     Write-Host ""
-    Write-Info "Deploy complete! AI Coach is now globally active."
-    Write-Info "You can use it in any project with Claude Code."
+    Write-Info "Install complete! AI Coach is now globally active."
+    Write-Info "Open Claude Code in any project and run /assess for initial evaluation."
 }
 
-function Pull-FromGlobal {
-    Write-Info "Pulling progress from $ClaudeHome ..."
-
-    $globalProgress = Join-Path $ClaudeHome "PROGRESS.md"
-    if (Test-Path $globalProgress) {
-        Copy-Item $globalProgress (Join-Path $RepoRoot "PROGRESS.md") -Force
-        Write-Info "PROGRESS.md pulled to repo"
-        Write-Host ""
-        Write-Info "Next: git add PROGRESS.md ; git commit -m 'chore: sync progress' ; git push"
-    }
-    else {
-        Write-Warn "No PROGRESS.md found at $globalProgress"
-    }
-}
-
-# Main logic
-if ($Direction -eq "push") {
-    Push-ToGlobal
-}
-elseif ($Direction -eq "pull") {
-    Pull-FromGlobal
-}
+Install-CoachSystem

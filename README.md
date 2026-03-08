@@ -1,163 +1,152 @@
 # AI 工程能力教练系统
 
-> 一套跨项目、跨电脑的 AI 工程能力成长系统。通过 Claude Code 的 CLAUDE.md + Custom Commands 机制，在每次 AI 交互中自动评估你的操作层级并给出成长建议。
+> 一套基于 Claude Code 的 AI 工程能力成长系统。安装后在你日常使用 Claude Code 的过程中，自动评估你的操作层级并给出成长建议。
 
 ## 这是什么？
 
-这个 repo 是你的 **AI 工程能力教练**的配置中心。它基于 [AI 工程能力提升完整指南](ai-engineering-leveling-guide.md)（Level 1→8），实现以下功能：
+你正常使用 Claude Code 写代码，这套系统会在**每次交互结束后**自动附加一段简短的教练反馈：
 
-- **自动检测**：从你的 prompt 模式判断当前操作层级（Level 3-8）
-- **渐进式阻力**：当你给出低层级 prompt 时，推动你用更高层级的表达方式
-- **反模式拦截**：实时检测并警告 Level 6/7/8 的常见陷阱
-- **进度追踪**：持久化记录各子技能状态和里程碑
-- **跨电脑同步**：通过 git + 同步脚本，在所有设备上保持一致
+```
+---
+📊 AI 教练评估
+- 本次操作层级：Level 4
+- 当前聚焦：意图驱动开发
+
+💡 升级建议：
+- 你说："用 useState 加个搜索框"（Level 4）
+- 试试："用户需要在 200 条数据中快速找到目标"（Level 5）
+- 好处：AI 会自己判断用前端过滤还是后端搜索，可能给你更好的方案
+```
+
+它基于 [AI 工程能力提升完整指南](ai-engineering-leveling-guide.md)（Level 1→8），核心能力：
+
+- **自动检测**：从你的 prompt 模式判断操作层级（Level 3-8）
+- **渐进式阻力**：当你给出低层级 prompt 时，给出更高层级的表达示例
+- **反模式拦截**：实时检测并警告常见陷阱
+- **进度追踪**：记录各子技能状态和里程碑
+
+## 快速开始（3 步）
+
+### Step 1：克隆仓库
+
+```bash
+git clone https://github.com/anthropics/ClaudeCode-AI-Coach.git
+cd ClaudeCode-AI-Coach
+```
+
+### Step 2：安装到本机
+
+在 repo 目录中打开 Claude Code，输入：
+
+```
+/install
+```
+
+Claude 会自动检测系统并执行安装脚本。
+
+或者手动运行：
+
+**macOS / Linux**：
+```bash
+chmod +x scripts/install.sh
+./scripts/install.sh
+```
+
+**Windows（PowerShell）**：
+```powershell
+.\scripts\install.ps1
+```
+
+安装脚本会将配置部署到 `~/.claude/`，对本机所有项目全局生效。
+
+### Step 3：首次评估
+
+打开 Claude Code（任意项目都行），输入：
+
+```
+/assess
+```
+
+Claude 会询问你的 AI 工具使用情况，逐项打分，确定你的起始 Level。
+
+**完成！** 之后正常使用 Claude Code 即可，教练系统会自动工作。
+
+## 日常使用
+
+### 它什么时候会出现？
+
+**每次你和 Claude Code 交互时**，教练系统在后台运行。你不需要做任何额外操作：
+
+- 正常写代码、问问题、做需求 — Claude 照常完成你的请求
+- 交互结束后，Claude 会在回答末尾附加 2-3 行教练评估
+- 当你的 prompt 有明显提升空间时，会给出具体的升级建议
+
+### 什么时候需要主动使用命令？
+
+| 场景 | 做什么 |
+|------|--------|
+| 想看看自己进步了没 | `/assess` — 重新全面评估 |
+| 想练习但不知道做什么 | `/practice` — 获取当前聚焦子技能的练习任务 |
+| 想提升 prompt 质量 | `/review-prompt <你的prompt>` — 分析并给出升级建议 |
+| 需要给 leader 汇报 | `/progress-report` — 生成结构化进度报告 |
+
+### Level 是什么意思？
+
+| Level | 你的状态 | AI 的角色 |
+|-------|---------|----------|
+| 1-2 | 偶尔用补全/问答 | 打字助手 |
+| 3-4 | 写结构化 Prompt，管理上下文 | 听指令的初级工程师 |
+| 5 | 描述业务意图，审查 AI 方案 | 能独立交付的中级工程师 |
+| 6 | 同时管理多条 AI 任务流 | 一个可并行的开发团队 |
+| 7 | 设计标准化流程，AI 按流程执行 | 自动化流水线 |
+| 8 | 配置事件触发器，AI 自主运转 | 基础设施 |
+
+> 详见 [完整 Level 定义与验收标准](ai-engineering-leveling-guide.md)
+
+## 多设备使用
+
+每台电脑的进度独立维护。换电脑时：
+
+```bash
+git clone → ./scripts/install.sh → /assess
+```
+
+重新评估会根据你当前的实际能力快速定位 Level，无需手动迁移数据。
+
+## 更新教练系统
+
+当 repo 有新版本时：
+
+```bash
+git pull
+./scripts/install.sh  # 或 Windows: .\scripts\install.ps1
+```
+
+安装脚本会更新配置和命令，但**不会覆盖你的本机进度**。
 
 ## 文件结构
 
 ```
-claude-code-root/
-├── README.md                        ← 你正在看的文件
-├── CLAUDE.md                        ← 核心：Claude 行为规则 + 教练系统配置
-├── PROGRESS.md                      ← 你的进度状态（子技能 + 里程碑）
+ClaudeCode-AI-Coach/
+├── CLAUDE.md                        ← 核心：教练系统的行为规则
+├── PROGRESS.md                      ← 进度模板（安装后本机独立维护）
 ├── ai-engineering-leveling-guide.md ← Level 1-8 完整定义和验收标准
-├── .claude/
-│   └── commands/
-│       ├── assess.md                ← /assess 全面评估当前 Level
-│       ├── practice.md              ← /practice 获取练习任务
-│       ├── progress-report.md       ← /progress-report 生成向上汇报
-│       └── review-prompt.md         ← /review-prompt 审查 prompt 质量
+├── .claude/commands/
+│   ├── assess.md                    ← /assess 全面评估
+│   ├── install.md                   ← /install 安装到本机
+│   ├── practice.md                  ← /practice 练习任务
+│   ├── progress-report.md           ← /progress-report 进度汇报
+│   └── review-prompt.md             ← /review-prompt 审查 prompt
 └── scripts/
-    ├── sync.ps1                     ← Windows 同步脚本
-    └── sync.sh                      ← macOS/Linux 同步脚本
+    ├── install.sh                   ← macOS/Linux 安装脚本
+    └── install.ps1                  ← Windows 安装脚本
 ```
-
-## 快速开始
-
-### 1. 克隆仓库
-
-```bash
-git clone <your-repo-url> claude-code-root
-cd claude-code-root
-```
-
-### 2. 首次部署到本机
-
-**Windows（PowerShell）**：
-```powershell
-.\scripts\sync.ps1 -Direction push
-```
-
-**macOS / Linux**：
-```bash
-chmod +x scripts/sync.sh
-./scripts/sync.sh push
-```
-
-这会将教练系统部署到 `~/.claude/`，对本机所有项目生效。
-
-### 3. 首次使用
-
-在任何项目中打开 Claude Code，执行 `/assess` 进行首次评估。Claude 会：
-1. 询问你当前的使用情况
-2. 逐项评分确定你的 Level
-3. 初始化 PROGRESS.md 中的状态
-
-之后每次交互，Claude 会在回答末尾附加简短的层级评估和成长建议。
-
-## 自定义命令
-
-| 命令 | 用途 | 使用场景 |
-|------|------|---------|
-| `/assess` | 全面评估当前 Level | 每 1-2 周做一次，检视进步 |
-| `/practice` | 获取当前聚焦子技能的练习任务 | 想练习但不知道做什么时 |
-| `/progress-report` | 生成向上汇报 | 需要给 leader 汇报进度时 |
-| `/review-prompt` | 分析 prompt 层级并给出升级建议 | 想提升 prompt 质量时 |
-| `/sync` | AI 辅助的跨设备同步 | 换电脑或想备份进度时 |
-
-## 跨电脑同步
-
-### 工作流程
-
-```
-在电脑 A 上练完了：
-  sync pull  →  git add + commit + push
-
-换到电脑 B 继续：
-  git pull   →  sync push
-```
-
-### 同步命令
-
-**Push（repo → 本机全局）**：
-```powershell
-# Windows
-.\scripts\sync.ps1 -Direction push
-
-# macOS/Linux
-./scripts/sync.sh push
-```
-
-将 repo 中的最新配置和进度部署到本机 `~/.claude/`。
-
-**Pull（本机全局 → repo）**：
-```powershell
-# Windows
-.\scripts\sync.ps1 -Direction pull
-
-# macOS/Linux
-./scripts/sync.sh pull
-```
-
-将本机 `~/.claude/PROGRESS.md` 的最新进度拉回 repo，然后你可以 git push 同步到远端。
-
-### 合并策略
-
-同步脚本使用**标记块**机制处理 CLAUDE.md 合并：
-
-- 教练系统内容被 `<!-- AI-COACH-START -->` 和 `<!-- AI-COACH-END -->` 包裹
-- 同步时只替换标记块内的内容，不碰标记块外的任何规则
-- 如果目标机器已有自己的 CLAUDE.md 规则，完全不受影响
-
-| 场景 | 处理方式 |
-|------|---------|
-| 目标没有 CLAUDE.md | 直接创建 |
-| 目标有自己的规则 | 在末尾追加教练块 |
-| 目标有旧版教练 | 替换标记块内容 |
-| commands/ 有其他命令 | 不影响，只覆盖我们的 4 个文件 |
-
-## PROGRESS.md 自动更新
-
-在日常交互中，Claude 会根据以下规则自动维护 PROGRESS.md：
-
-| 类型 | 操作 | 是否需要确认 |
-|------|------|-------------|
-| 评估日期更新 | 自动 | ❌ |
-| 添加里程碑记录 | 自动 | ❌ |
-| 子技能状态变更 | 提出建议 | ✅ 需确认 |
-| Level 评估变更 | 提出建议 | ✅ 需确认 |
-| 聚焦子技能切换 | 提出建议 | ✅ 需确认 |
-
-## 三条不可违反的底线
-
-无论在什么项目中使用，以下底线永远生效：
-
-1. **Level 7 毕业先行**：未通过 Level 7 毕业测试前，不配置 Level 8 的 CI/CD 自动化
-2. **人工审查不可绕过**：AI 自动生成的代码变更必须经人工审查，绝不 auto-merge
-3. **配置完成 ≠ 达成**：Level 8 需要 2 周运行数据支撑，不是配完就算毕业
 
 ## 自定义与扩展
 
-### 添加新的 Custom Command
-
-在 `.claude/commands/` 下创建新的 `.md` 文件，sync push 后所有电脑生效。
-
-### 修改教练规则
-
-编辑 `CLAUDE.md`，sync push 部署。标记块机制确保不影响各电脑的本地规则。
-
-### 项目级别的 CLAUDE.md
-
-这套系统是**全局教练**。你的各个项目仍然可以有自己的项目级 CLAUDE.md（放在项目根目录），定义项目特有的技术栈、代码规范等。两者共存，不冲突。
+- **添加命令**：在 `.claude/commands/` 下创建 `.md` 文件，重新安装即可
+- **修改规则**：编辑 `CLAUDE.md`，重新安装。标记块机制不影响你本机的其他规则
+- **项目级规则**：这套系统是全局教练，你的项目可以有自己的 CLAUDE.md，两者共存不冲突
 
 ## License
 

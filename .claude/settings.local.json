@@ -4,7 +4,9 @@
       "Bash(powershell -ExecutionPolicy Bypass -File \".\\\\scripts\\\\sync.ps1\" -Direction push)",
       "Bash(xxd:*)",
       "Bash(powershell -Command:*)",
-      "Bash(powershell -ExecutionPolicy Bypass -File \".\\\\scripts\\\\sync.ps1\" -Direction pull)"
+      "Bash(powershell -ExecutionPolicy Bypass -File \".\\\\scripts\\\\sync.ps1\" -Direction pull)",
+      "Bash(./scripts/sync.sh push:*)",
+      "Bash(chmod +x:*)"
     ]
   }
 }
