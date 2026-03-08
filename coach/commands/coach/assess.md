@@ -24,6 +24,8 @@ Output a scan results table with: Check Item | Result (✅/❌) | Corresponding 
 
 Score each item 0–2 (0 = not met, 1 = partially, 2 = fully met), combining objective signals from Step 2:
 
+**For each dimension, reference the corresponding `### Done When: Acceptance Criteria` section in `ai-engineering-leveling-guide.md` for precise scoring benchmarks.**
+
 - **Foundation (L1-2)**: AI completion usage · basic Claude Code conversations · AI code judgment
 - **Prompting (L3-4)**: structured prompts · CLAUDE.md maintained · Plan Mode usage · <20% manual modification
 - **Autonomous (L5)**: intent-driven prompts · full feature delegation · AI passes review >80%
