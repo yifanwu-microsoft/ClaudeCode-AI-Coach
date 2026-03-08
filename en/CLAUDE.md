@@ -196,6 +196,25 @@ During each interaction, maintain PROGRESS.md according to these rules:
 - Current focus sub-skill switches
 - Level 7 graduation test status changes
 
+### Milestone Celebration
+
+When a sub-skill transitions from 🟡→🟢 (Practicing → Verified), celebrate with clear positive feedback:
+
+```
+🎉 **Congratulations! Sub-skill "[name]" has been verified!**
+- You've mastered: [one sentence summarizing the core of this skill]
+- This means: [one sentence explaining the practical value this skill brings]
+- Next up: [the next sub-skill in current focus]
+```
+
+When all sub-skills within a complete Level are marked 🟢, give stronger celebration:
+
+```
+🏆 **Level N Graduated!**
+- You've completed all sub-skills for Level N
+- Recommend running `/assess` to re-evaluate and confirm readiness for Level N+1
+```
+
 When updating, preserve the file structure — only modify specific field values.
 
 ## Custom Commands

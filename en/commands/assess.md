@@ -83,6 +83,26 @@ Cross-validate the objective scan results from Step 2 against the self-assessmen
 - If objective signals contradict the self-assessment → gently point this out and ask the user for context (e.g., they may use these practices in other projects, or are in the process of migrating)
 - Reflect cross-validation results in the assessment report
 
+### Step 6.5: Previously Passed Level Skill Spot Check (Anti-Degradation)
+
+If the user has already passed certain Levels (sub-skills marked 🟢 in PROGRESS.md), spot-check that key skills are being maintained:
+
+**Spot Check Rules:**
+- Spot-check 1-2 key skills from previously passed Levels (no need to re-test everything)
+- Focus on skills that are "prone to degradation":
+  - Level 3-4: Is CLAUDE.md being kept up to date? (check file modification date)
+  - Level 5: Are recent prompts still intent-driven?
+  - Level 7: Are Custom Commands still being used? Are Hooks still running?
+- If degradation is found, remind gently: no downgrade, but suggest spending 10 minutes to restore
+
+**Output Format (only shown when degradation is detected):**
+```
+### ⚠️ Skill Maintenance Check
+| Passed Skill | Current Status | Suggestion |
+|-------------|----------------|------------|
+| CLAUDE.md Maintenance (L3-4) | ⚠️ Not updated in 30+ days | Spend 10 minutes checking if it needs updating |
+```
+
 ### Step 7: Output Results
 
 Format:
