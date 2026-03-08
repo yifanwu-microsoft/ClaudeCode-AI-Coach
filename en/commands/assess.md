@@ -15,7 +15,7 @@ Before the questionnaire assessment, automatically scan the current project and 
 3. **Hooks Configuration**: Check `.claude/settings.json` or `.claude/settings.local.json` for Hooks configuration
 4. **CI/CD AI Integration**: Check `.github/workflows/` for AI-related workflows (e.g., ai-review.yml, ai-autofix.yml, ai-triage.yml)
 5. **Git Conventions**: Review the last 10 git log entries, check if commit messages follow conventional commits format
-6. **Test Coverage**: Check for test files (*.test.ts, *.test.tsx, *.spec.ts, etc.) and their ratio to source files
+6. **Test Coverage**: Check for test files (e.g., *_test.go, *.test.ts, *.spec.ts, test_*.py, *Test.java, etc.) and their ratio to source files
 7. **Project Structure**: Scan project directory structure to understand the tech stack and project scale
 
 **Output Scan Report:**
@@ -75,6 +75,25 @@ Compare the current assessment with the previous one in PROGRESS.md, noting:
 - Which items improved (higher scores)
 - Which items remained the same (stagnant)
 - Which items need a focused breakthrough
+
+### Step 5.5: Adjust Output Detail Based on Assessed Level
+
+Adjust the level of detail in subsequent output based on the assessed Level to avoid information overload:
+
+- **If assessed Level is 1-2**:
+  - Use concise language to explain each Level (one sentence summary) to help the user build an overall understanding
+  - Only show detailed sub-skill lists for Level 1-2 and Level 3-4
+  - Summarize Level 5-8 in one line each (e.g., "Level 7: Workflow Orchestration — Automate repetitive processes with Commands and Hooks")
+  - Emphasize "what to do next" rather than displaying the full skill tree
+
+- **If assessed Level is 3-5**:
+  - Show detailed sub-skill status for the current Level and the next Level
+  - Present Level 6+ sub-skills as brief summaries (one line per Level)
+  - Focus on the specific upgrade path from the current Level to the next
+
+- **If assessed Level is 6+**:
+  - Show full sub-skill details including status for all Levels
+  - Include advanced metrics (parallel efficiency, automation coverage, etc.)
 
 ### Step 6: Cross-Validation
 
