@@ -51,18 +51,18 @@ err()   { echo -e "${RED}[ERROR]${NC} $1"; }
 preflight_check() {
     local has_error=0
 
-    if [ ! -f "$REPO_ROOT/CLAUDE.md" ]; then
+    if [ ! -f "$REPO_ROOT/coach/CLAUDE.md" ]; then
         err "CLAUDE.md not found in repo root ($REPO_ROOT)"
         err "Are you running this script from the correct repository?"
         has_error=1
     fi
 
-    if [ ! -f "$REPO_ROOT/PROGRESS.md" ]; then
+    if [ ! -f "$REPO_ROOT/coach/PROGRESS.md" ]; then
         err "PROGRESS.md not found in repo root ($REPO_ROOT)"
         has_error=1
     fi
 
-    if [ ! -f "$REPO_ROOT/ai-engineering-leveling-guide.md" ]; then
+    if [ ! -f "$REPO_ROOT/coach/ai-engineering-leveling-guide.md" ]; then
         err "ai-engineering-leveling-guide.md not found in repo root ($REPO_ROOT)"
         has_error=1
     fi
@@ -76,10 +76,10 @@ preflight_check() {
 }
 
 set_source_paths() {
-    CLAUDE_MD_SOURCE="$REPO_ROOT/CLAUDE.md"
-    PROGRESS_SOURCE="$REPO_ROOT/PROGRESS.md"
-    GUIDE_SOURCE="$REPO_ROOT/ai-engineering-leveling-guide.md"
-    COMMANDS_SOURCE="$REPO_ROOT/.claude/commands"
+    CLAUDE_MD_SOURCE="$REPO_ROOT/coach/CLAUDE.md"
+    PROGRESS_SOURCE="$REPO_ROOT/coach/PROGRESS.md"
+    GUIDE_SOURCE="$REPO_ROOT/coach/ai-engineering-leveling-guide.md"
+    COMMANDS_SOURCE="$REPO_ROOT/coach/commands"
 }
 
 # Post-install verification

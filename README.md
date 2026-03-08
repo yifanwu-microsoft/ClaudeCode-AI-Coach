@@ -20,7 +20,7 @@ You use Claude Code normally to write code, and this system **automatically appe
 - Benefit: AI will decide between client-side filtering or server-side search, potentially giving you a better solution
 ```
 
-It's based on the [AI Engineering Skills Complete Guide](ai-engineering-leveling-guide.md) (Level 1→8), with core capabilities:
+It's based on the [AI Engineering Skills Complete Guide](coach/ai-engineering-leveling-guide.md) (Level 1→8), with core capabilities:
 
 - **Auto-detection**: Identifies your operational level from prompt patterns (Level 3-8)
 - **Progressive resistance**: When you give low-level prompts, suggests higher-level alternatives
@@ -103,7 +103,7 @@ Claude will ask about your AI tool usage, score each dimension, and determine yo
 | 7 | Designing standardized workflows, AI executes by process | Automation pipeline |
 | 8 | Configuring event triggers, AI runs autonomously | Infrastructure |
 
-> See [Complete Level Definitions & Acceptance Criteria](ai-engineering-leveling-guide.md)
+> See [Complete Level Definitions & Acceptance Criteria](coach/ai-engineering-leveling-guide.md)
 
 ## Multi-device Usage
 
@@ -132,29 +132,34 @@ The install script updates configs and commands but **won't overwrite your local
 ClaudeCode-AI-Coach/
 ├── README.md                            ← English README
 ├── README.zh.md                         ← Chinese README
-├── CLAUDE.md                            ← Core: coaching rules
-├── PROGRESS.md                          ← Progress template
-├── ai-engineering-leveling-guide.md     ← Full Level 1-8 guide
-├── .claude/commands/
-│   └── coach/                           ← Coach commands
-│       ├── assess.md
-│       ├── install.md
-│       ├── practice.md
-│       ├── progress-report.md
-│       ├── review-prompt.md
-│       └── uninstall.md
+├── CLAUDE.md                            ← Dev config (for project contributors)
+├── coach/                               ← Distributable source files
+│   ├── CLAUDE.md                        ← Core: coaching rules
+│   ├── PROGRESS.md                      ← Progress template
+│   ├── ai-engineering-leveling-guide.md ← Full Level 1-8 guide
+│   └── commands/
+│       └── coach/                       ← Coach commands
+│           ├── assess.md
+│           ├── install.md
+│           ├── practice.md
+│           ├── progress-report.md
+│           ├── review-prompt.md
+│           └── uninstall.md
+├── .claude/
+│   └── settings.local.json              ← Project-level Claude settings
 └── scripts/
     ├── install.sh                       ← macOS/Linux install
     ├── install.ps1                      ← Windows install
     ├── uninstall.sh                     ← macOS/Linux uninstall
-    └── uninstall.ps1                    ← Windows uninstall
+    ├── uninstall.ps1                    ← Windows uninstall
+    └── test-worktree.sh                 ← Test worktree setup
 ```
 
 ## Customization & Extension
 
-- **Add commands**: Create `.md` files in `.claude/commands/coach/`, then reinstall
-- **Modify rules**: Edit `CLAUDE.md`, then reinstall. The marker-block mechanism won't affect your other local rules
-- **Project-level rules**: This is a global coach — your project can have its own CLAUDE.md, both coexist without conflict
+- **Add commands**: Create `.md` files in `coach/commands/coach/`, then reinstall
+- **Modify rules**: Edit `coach/CLAUDE.md`, then reinstall. The marker-block mechanism won't affect your other local rules
+- **Project-level rules**: The root `CLAUDE.md` is for project contributors developing this coach system. The coaching rules live in `coach/CLAUDE.md` and get installed globally
 
 ## License
 

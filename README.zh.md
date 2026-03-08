@@ -20,7 +20,7 @@
 - 好处：AI 会自己判断用前端过滤还是后端搜索，可能给你更好的方案
 ```
 
-它基于 [AI 工程能力提升完整指南](ai-engineering-leveling-guide.md)（Level 1→8），核心能力：
+它基于 [AI 工程能力提升完整指南](coach/ai-engineering-leveling-guide.md)（Level 1→8），核心能力：
 
 - **自动检测**：从你的 prompt 模式判断操作层级（Level 3-8）
 - **渐进式阻力**：当你给出低层级 prompt 时，给出更高层级的表达示例
@@ -103,7 +103,7 @@ Claude 会询问你的 AI 工具使用情况，逐项打分，确定你的起始
 | 7 | 设计标准化流程，AI 按流程执行 | 自动化流水线 |
 | 8 | 配置事件触发器，AI 自主运转 | 基础设施 |
 
-> 详见 [完整 Level 定义与验收标准](ai-engineering-leveling-guide.md)
+> 详见 [完整 Level 定义与验收标准](coach/ai-engineering-leveling-guide.md)
 
 ## 多设备使用
 
@@ -130,31 +130,36 @@ git pull
 
 ```
 ClaudeCode-AI-Coach/
-├── README.md                        ← English README
-├── README.zh.md                     ← 中文 README
-├── CLAUDE.md                        ← 核心：教练系统的行为规则（英文）
-├── PROGRESS.md                      ← 进度模板（安装后本机独立维护）
-├── ai-engineering-leveling-guide.md ← Level 1-8 完整定义和验收标准（英文）
-├── .claude/commands/
-│   └── coach/                       ← coach 命名空间
-│       ├── assess.md                ← /coach:assess 全面评估
-│       ├── install.md               ← /coach:install 安装到本机
-│       ├── practice.md              ← /coach:practice 练习任务
-│       ├── progress-report.md       ← /coach:progress-report 进度汇报
-│       ├── review-prompt.md         ← /coach:review-prompt 审查 prompt
-│       └── uninstall.md             ← /coach:uninstall 卸载系统
+├── README.md                            ← English README
+├── README.zh.md                         ← 中文 README
+├── CLAUDE.md                            ← 开发配置（项目贡献者用）
+├── coach/                               ← 可分发的源文件
+│   ├── CLAUDE.md                        ← 核心：教练系统的行为规则
+│   ├── PROGRESS.md                      ← 进度模板（安装后本机独立维护）
+│   ├── ai-engineering-leveling-guide.md ← Level 1-8 完整定义和验收标准
+│   └── commands/
+│       └── coach/                       ← coach 命名空间
+│           ├── assess.md                ← /coach:assess 全面评估
+│           ├── install.md               ← /coach:install 安装到本机
+│           ├── practice.md              ← /coach:practice 练习任务
+│           ├── progress-report.md       ← /coach:progress-report 进度汇报
+│           ├── review-prompt.md         ← /coach:review-prompt 审查 prompt
+│           └── uninstall.md             ← /coach:uninstall 卸载系统
+├── .claude/
+│   └── settings.local.json              ← 项目级 Claude 设置
 └── scripts/
-    ├── install.sh                   ← macOS/Linux 安装脚本
-    ├── install.ps1                  ← Windows 安装脚本
-    ├── uninstall.sh                 ← macOS/Linux 卸载脚本
-    └── uninstall.ps1                ← Windows 卸载脚本
+    ├── install.sh                       ← macOS/Linux 安装脚本
+    ├── install.ps1                      ← Windows 安装脚本
+    ├── uninstall.sh                     ← macOS/Linux 卸载脚本
+    ├── uninstall.ps1                    ← Windows 卸载脚本
+    └── test-worktree.sh                 ← 测试 worktree 设置
 ```
 
 ## 自定义与扩展
 
-- **添加命令**：在 `.claude/commands/coach/` 下创建 `.md` 文件，重新安装即可
-- **修改规则**：编辑 `CLAUDE.md`，重新安装。标记块机制不影响你本机的其他规则
-- **项目级规则**：这套系统是全局教练，你的项目可以有自己的 CLAUDE.md，两者共存不冲突
+- **添加命令**：在 `coach/commands/coach/` 下创建 `.md` 文件，重新安装即可
+- **修改规则**：编辑 `coach/CLAUDE.md`，重新安装。标记块机制不影响你本机的其他规则
+- **项目级规则**：根目录的 `CLAUDE.md` 是项目贡献者的开发配置，教练规则在 `coach/CLAUDE.md` 中，安装后全局生效
 
 ## License
 

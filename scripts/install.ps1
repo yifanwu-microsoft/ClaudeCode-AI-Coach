@@ -27,18 +27,18 @@ function Remove-TempFiles {
 function Test-Preflight {
     $hasError = $false
 
-    if (-not (Test-Path (Join-Path $RepoRoot "CLAUDE.md"))) {
+    if (-not (Test-Path (Join-Path $RepoRoot "coach" "CLAUDE.md"))) {
         Write-Err "CLAUDE.md not found in repo root ($RepoRoot)"
         Write-Err "Are you running this script from the correct repository?"
         $hasError = $true
     }
 
-    if (-not (Test-Path (Join-Path $RepoRoot "PROGRESS.md"))) {
+    if (-not (Test-Path (Join-Path $RepoRoot "coach" "PROGRESS.md"))) {
         Write-Err "PROGRESS.md not found in repo root ($RepoRoot)"
         $hasError = $true
     }
 
-    if (-not (Test-Path (Join-Path $RepoRoot "ai-engineering-leveling-guide.md"))) {
+    if (-not (Test-Path (Join-Path $RepoRoot "coach" "ai-engineering-leveling-guide.md"))) {
         Write-Err "ai-engineering-leveling-guide.md not found in repo root ($RepoRoot)"
         $hasError = $true
     }
@@ -82,10 +82,10 @@ function Test-PostInstall {
 
 function Get-SourcePaths {
     return @{
-        ClaudeMd = Join-Path $RepoRoot "CLAUDE.md"
-        Progress = Join-Path $RepoRoot "PROGRESS.md"
-        Guide    = Join-Path $RepoRoot "ai-engineering-leveling-guide.md"
-        Commands = Join-Path $RepoRoot ".claude\commands"
+        ClaudeMd = Join-Path $RepoRoot "coach" "CLAUDE.md"
+        Progress = Join-Path $RepoRoot "coach" "PROGRESS.md"
+        Guide    = Join-Path $RepoRoot "coach" "ai-engineering-leveling-guide.md"
+        Commands = Join-Path $RepoRoot "coach\commands"
     }
 }
 
@@ -193,7 +193,7 @@ function Install-CoachSystem {
         else {
             $progressSource = $paths.Progress
             if (-not (Test-Path $progressSource)) {
-                $progressSource = Join-Path $RepoRoot "PROGRESS.md"
+                $progressSource = Join-Path $RepoRoot "coach" "PROGRESS.md"
             }
             Copy-Item $progressSource $ClaudeHome -Force
             Write-Info "PROGRESS.md created (initial state)"
