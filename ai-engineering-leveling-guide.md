@@ -1,8 +1,9 @@
 # AI 工程能力提升完整指南 (Level 1 → Level 8)
 
-> **适用对象**：前端为主的全栈工程师（React/Next.js 技术栈）
+> **适用对象**：所有使用 AI 辅助编程的软件工程师
 > **核心工具**：Claude Code CLI
 > **使用方式**：每个 Level 有明确的验收 Checklist，全部打勾才进入下一阶段
+> **示例说明**：本指南的代码示例以 React/Next.js（TypeScript）为主，但 Level 定义和验收标准适用于任何技术栈。请将示例中的具体技术替换为你的项目技术栈。
 
 ---
 
@@ -31,8 +32,8 @@
 | 4 | 提示词工程 | 写结构化 Prompt，管理项目上下文 | 听指令的初级工程师 |
 | 5 | 意图驱动 | 描述业务意图，审查 AI 的方案 | 能独立交付的中级工程师 |
 | 6 | 多 Agent 并行 | 同时管理多条 AI 任务流 | 一个可并行的开发团队 |
-| 7 | 工作流编排 | 设计标准化流程，AI 按流程执行 | 自动化流水线 |
-| 8 | 自动化系统 | 配置事件触发器，AI 7x24 自主运转 | 基础设施 |
+| 7 | 工作流编排 | 设计标准化流程，AI 按流程执行 | 开发时自动化流水线 |
+| 8 | 自动化系统 | 配置事件触发器，AI 7x24 自主运转 | 无人值守的基础设施 |
 
 ### 自我评估（每项 0-2 分）
 
@@ -49,12 +50,12 @@
 
 **自主开发（Level 5）**
 - [ ] 描述业务意图而非技术实现，AI 自主选择方案
-- [ ] 能独立委托完整 Feature（前端+API+测试）
+- [ ] 能独立委托完整 Feature（包含多个模块和测试）
 - [ ] AI 的方案一次通过架构审查的比例 > 80%
 
 **并行与编排（Level 6-7）**
-- [ ] 能同时管理 3+ 个 Claude Code 实例并行开发
-- [ ] 熟练使用 Git Worktree 隔离并行任务
+- [ ] 能同时管理 3+ 个并行 AI 任务流（内置并行或多实例）
+- [ ] 能正确区分可并行 vs 必须串行的任务
 - [ ] 有 5+ 个 Custom Slash Commands
 - [ ] 配置了 Hooks 自动化质量检查
 
@@ -93,10 +94,16 @@ claude
 ```
 
 **每天练习**：写代码时有意识地让 AI 补全以下内容：
-- React 组件的 JSX 结构
-- TypeScript 类型/接口定义
-- `useEffect`、`useCallback` 等 Hook 的依赖数组
-- 重复性代码（map 渲染、表单字段）
+- 组件/类的结构骨架
+- 类型定义/接口定义
+- 重复性模式代码（如循环、条件分支、配置项）
+- 样板代码（boilerplate）
+
+> 以下以 React/TypeScript 为例，请替换为你的技术栈：
+> - React 组件的 JSX 结构
+> - TypeScript 类型/接口定义
+> - `useEffect`、`useCallback` 等 Hook 的依赖数组
+> - 重复性代码（map 渲染、表单字段）
 
 #### 第 2 周：学会在 Claude Code 中提问
 
@@ -127,12 +134,14 @@ claude
 - [ ] AI 贡献了 20-30% 的代码（非关键路径）
 - [ ] 对每段 AI 代码都有"接受/修改/拒绝"的判断习惯
 
+> **💡 自测方法**：回顾你今天写的代码，有多少是 AI 补全/生成的？如果超过 5 处，说明已经形成习惯。"接受/修改/拒绝"不需要记录数字，只要你发现自己在看 AI 代码时会自然地思考"这行对不对"，就算达标。
+
 **毕业测试**：用 AI 辅助完成一个 3 组件的小 Feature（如表单+列表+详情）。AI 贡献 20%+ 代码，你能解释每一行。
 
 ### Practice：练习任务
 
-1. **类型生成**：给 Claude 一个 API 的 JSON 响应样本，让它生成 TypeScript 类型。对比你手写的版本
-2. **组件骨架**：让 Claude 生成一个 `<DataTable>` 组件（支持排序+分页），逐行标注需要修改的地方
+1. **类型生成**：给 Claude 一个 API 的 JSON 响应样本，让它生成对应的类型定义（TypeScript interface / Python dataclass / Go struct 等）。对比你手写的版本
+2. **组件骨架**：让 Claude 生成一个数据展示组件（如 `<DataTable>`，支持排序+分页），逐行标注需要修改的地方
 3. **代码解释**：找项目中一段你不太理解的代码，让 Claude 解释，然后验证准确性
 
 ### Anti-patterns：常见陷阱
@@ -284,6 +293,8 @@ npm run lint   → ESLint
 - [ ] 复杂任务（跨 3+ 文件）100% 使用 Plan Mode
 - [ ] AI 代码贡献 50-60%，手动修改 < 20%
 
+> **💡 自测方法**：回顾最近 5 个任务，每个任务和 AI 对话了几轮？如果 ≥4 个任务在 3 轮内搞定，就达标。"手动修改 < 20%" 的简单判断：AI 写完后你只需要改个别地方（变量名、边界处理），而不是大段重写。
+
 **毕业测试**：完成一个带筛选+排序+分页的数据表格。使用 Plan Mode 规划，1-3 轮 Prompt 完成。AI 代码需手动修改的比例 < 20%。
 
 ### Practice：练习任务
@@ -401,13 +412,49 @@ AI 给出方案后，用这个 checklist 审查：
 
 测试通过 = 你可以信任代码。这比逐行审查效率高 10 倍。
 
+#### Step 4：任务拆解与依赖分析（第 7-8 周）
+
+这是 Level 6（多 Agent 并行）的前置技能。先学会拆解，再学并行。
+
+**练习：把一个 Feature 拆成独立的子任务**
+
+```
+需求：订单管理页面
+
+拆解：
+├── 子任务 1：订单数据模型 + API（独立）
+├── 子任务 2：订单列表组件（依赖子任务 1 的类型定义）
+├── 子任务 3：订单详情组件（依赖子任务 1 的类型定义）
+├── 子任务 4：筛选/搜索功能（依赖子任务 2）
+└── 子任务 5：测试（依赖子任务 1-4）
+
+依赖图：
+  1 ──→ 2 ──→ 4
+  │     │
+  └──→ 3     5（最后）
+
+可并行的组合：
+  - 约定类型定义后：子任务 2 和子任务 3 可以并行
+  - 子任务 4 必须等子任务 2 完成
+```
+
+**关键技能：**
+- 识别任务间的依赖关系（数据依赖、文件依赖、逻辑依赖）
+- 找到"接口点"——可以先约定接口再独立开发的分界线
+- 评估拆分的粒度——太细管理开销大，太粗无法并行
+
+> 💡 在 Level 5 阶段，你仍然用单 Agent 串行执行这些子任务。但学会拆解后，到 Level 6 时只需要把"串行执行"改成"并行执行"，门槛会低很多。
+
 ### Done When：验收标准
 
 - [ ] Prompt 中 What/Why 占比 > 70%（审查最近 10 个 Prompt）
 - [ ] 完成过 3+ 个 Feature 级委托（前端+API+测试）
 - [ ] AI 方案一次通过架构审查的比例 > 80%
+- [ ] 能将复杂 Feature 拆解为 3+ 个子任务，并画出依赖关系
 - [ ] Feature 完成速度对比纯手写快 2x+（记录 3 个 Feature 对比）
 - [ ] AI 代码贡献 60-75%
+
+> **💡 自测方法**：翻看最近 10 条 prompt，数一下有几条在描述"要什么/为什么"而不是"怎么做"，≥7 条就是 70%。"一次通过架构审查"的判断：最近 5 次让 AI 出方案，有几次你看完觉得"可以直接用"而不是"需要大改"？≥4 次就是 80%。
 
 **毕业测试**：完成一个完整 Feature（前端+API+数据库），全程意图描述不指定实现方式。AI 方案一次通过架构审查，总耗时比纯手写快 2x+。
 
@@ -416,6 +463,7 @@ AI 给出方案后，用这个 checklist 审查：
 1. **意图重写**：找最近 5 个 Prompt，用意图驱动方式重写，对比两个版本的 AI 输出质量
 2. **方案 PK**：同一需求分别用 How 和 What 方式提问，对比哪个方案更完善
 3. **Feature 委托**：选一个 4-8 小时的 Feature 交给 AI。记录总耗时、Prompt 轮数、手动修改比例
+4. **任务拆解**：选一个中等复杂度的 Feature，画出子任务依赖图，标注哪些可以并行
 
 ### Anti-patterns：常见陷阱
 
@@ -569,6 +617,8 @@ Phase 4: 整合（15-30 分钟）
 - [ ] 3 分钟内完成 Agent 间切换和审查
 - [ ] AI 代码贡献 75-85%
 
+> **💡 自测方法**："2x 提速"的简单判断：一个你估计串行要 2 小时的任务，并行后 1 小时内完成（含管理开销），就算 2x。"冲突 < 10%"：最近 10 次并行合并，如果 ≤1 次有冲突，就达标。
+
 **毕业测试**：同时启动 3 个 Agent 完成一个 Feature 的不同部分（API + 组件 + 测试），总耗时比串行快 2x+，合并后测试全部通过。
 
 ### Practice：练习任务
@@ -591,10 +641,12 @@ Phase 4: 整合（15-30 分钟）
 
 ## 6. Level 7：工作流编排
 
-### Why：从"手动管理 Agent"到"系统自动编排"
+### Why：从"手动管理 Agent"到"开发时自动编排"
 
 Level 6 时你是项目经理——手动分配、监控、整合。
-Level 7 时你是系统架构师——设计工作流，系统自动执行。
+Level 7 时你是系统架构师——设计工作流，**开发时** AI 按流程自动执行。
+
+> **Level 7 vs Level 8 的核心区别**：Level 7 的自动化发生在**你在场时**（开发过程中），你触发命令、AI 按流程执行、你审查结果。Level 8 的自动化发生在**你不在场时**（CI/CD 事件触发，AI 自主运转）。
 
 **编排的三大支柱**：
 1. **CLAUDE.md**（进阶版）— 项目级的 AI 操作手册
@@ -796,9 +848,10 @@ mkdir -p .claude/commands
 
 ## 7. Level 8：自动化编排系统
 
-### Why：从"人触发 AI 执行"到"事件触发 AI 自主执行"
+### Why：从"开发时编排"到"无人值守编排"
 
-Level 7 的你还在手动输入 `/new-feature`。Level 8 时，系统自动响应事件：
+Level 7 的自动化需要你在场——你输入 `/new-feature`，AI 按流程执行。
+Level 8 的自动化是**事件驱动、无人值守**的——系统自动响应事件，AI 7x24 自主运转：
 
 - PR 提交 → AI 自动 Code Review
 - CI 失败 → AI 自动尝试修复
@@ -932,7 +985,8 @@ jobs:
 
              Analyze the failure and fix it.
              Only fix the actual error. Do not refactor or change unrelated code." \
-            --allowedTools "Read,Write,Edit,Bash"
+            --allowedTools "Read,Write,Edit"
+          # ⚠️ 安全提醒：不要在 CI 中给 AI Bash 权限，避免执行任意命令
 
       - name: Verify fix
         run: npm test
@@ -942,7 +996,9 @@ jobs:
         run: |
           BRANCH="fix/auto-ci-$(date +%s)"
           git checkout -b "$BRANCH"
-          git add -A
+          # ⚠️ 安全提醒：只 add 特定类型文件，避免提交非预期文件（如 .env、secrets）
+          git add '*.ts' '*.tsx' '*.js' '*.jsx' '*.json' '*.css'
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
           git commit -m "fix: auto-fix CI failure"
           git push origin "$BRANCH"
           gh pr create \
@@ -988,9 +1044,18 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const triage = require('./triage.json');
-            const result = JSON.parse(triage.result || '{}');
-            const labels = [result.type, `size-${result.size}`].filter(Boolean);
+            const fs = require('fs');
+            // ⚠️ 安全提醒：AI 输出可能不是合法 JSON，必须加容错处理
+            let result = {};
+            try {
+              const raw = fs.readFileSync('./triage.json', 'utf8');
+              const triage = JSON.parse(raw);
+              result = JSON.parse(triage.result || '{}');
+            } catch (e) {
+              console.log('Failed to parse AI triage output:', e.message);
+              return; // 解析失败时优雅退出，不阻塞 Issue 流程
+            }
+            const labels = [result.type, result.size ? `size-${result.size}` : null].filter(Boolean);
             if (labels.length > 0) {
               await github.rest.issues.addLabels({
                 owner: context.repo.owner,
@@ -1156,18 +1221,20 @@ alias cc='claude'
 alias ccp='claude -p'
 ```
 
-### D. 进阶路线图
+### D. 参考节奏
+
+以下是一个参考节奏，**实际进度因人、项目和使用频率而异**。有人可能 3 个月到 Level 5，也有人半年才到 Level 4——两种都完全正常。
 
 ```
-Week 1-4:    Level 1-2  ← 建立 AI 使用习惯
-Week 5-8:    Level 3-4  ← 提示词工程 + CLAUDE.md
-Week 9-14:   Level 5    ← 意图驱动开发
-Week 15-20:  Level 6    ← 多 Agent 并行
-Week 21-26:  Level 7    ← 工作流编排
-Week 27-32:  Level 8    ← 自动化系统（按需）
+Level 1-2  ← 建立 AI 使用习惯（通常 2-4 周）
+Level 3-4  ← 提示词工程 + CLAUDE.md（通常 3-6 周）
+Level 5    ← 意图驱动开发（通常 4-8 周）
+Level 6    ← 多 Agent 并行（通常 4-8 周）
+Level 7    ← 工作流编排（通常 4-8 周）
+Level 8    ← 自动化系统（按需，不是所有人都需要）
 ```
 
-每个 Level 的毕业测试通过再往下走。进度比时间表快是好事，比时间表慢也正常——关键是每一步都扎实。
+**关键原则**：扎实比快速更重要。每个 Level 的毕业测试通过再往下走。跳级带来的能力空洞会在后面的 Level 暴露出来。
 
 ### E. 何时降级
 
