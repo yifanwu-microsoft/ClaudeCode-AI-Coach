@@ -10,10 +10,14 @@ Read `PROGRESS.md` to confirm:
 
 ### Step 2: Scan Current Project Context (automated)
 
+**If the user doesn't have a project yet (e.g., just starting out), provide the following guided exercises:**
+- **Level 1-2**: Suggest creating a simple practice project (e.g., a to-do app, calculator, or CLI tool) to practice basic conversations. Any familiar language works: Python, JavaScript, Go, Java, etc.
+- **Level 3-4**: Suggest creating a CLAUDE.md in an existing project, or using a small project to practice Plan Mode. The project doesn't need to be complex — a small project with a few modules is enough to start practicing structured prompts and context management.
+
 Before generating practice tasks, analyze the current project's actual state to produce **targeted, project-relevant exercises**:
 
 **Scan Items:**
-1. **Project Tech Stack**: Check package.json, requirements.txt, go.mod, etc. to identify languages and frameworks
+1. **Project Tech Stack**: Check package.json, requirements.txt, go.mod, pom.xml, Cargo.toml, build.gradle, etc. to identify languages and frameworks
 2. **CLAUDE.md Status**: Does it exist? Is it comprehensive? Does it need updating?
 3. **Test Status**: Which source files have corresponding tests? Which don't? What test framework is used?
 4. **Commands Status**: How many commands are in `.claude/commands/`? What scenarios do they cover?
@@ -22,9 +26,10 @@ Before generating practice tasks, analyze the current project's actual state to 
 7. **Recent Activity**: Recent git log to understand what the user has been working on
 
 **Generation Strategy:**
-- **Prefer project-specific tasks**: e.g., "Your `src/components/UserList.tsx` has no tests — use Level 5 techniques to delegate test writing to AI"
+- **Prefer project-specific tasks**: e.g., "One of your modules has no tests — use Level 5 techniques to delegate test writing to AI"
 - **Fall back to generic tasks**: If the project doesn't offer suitable practice scenarios, use tasks from the generic practice library
 - Practice tasks should deliver real value to the project (e.g., adding tests, improving CLAUDE.md), not just be "exercises"
+- **Tech stack adaptation**: Adjust specific tools and commands in practice tasks based on the detected tech stack (e.g., pytest for Python projects, go test for Go projects)
 
 ### Step 3: Select from Practice Library Based on Current Level
 
@@ -48,7 +53,7 @@ Sub-skill 1: AI Code Completion Habits
 
 Sub-skill 2: Basic Claude Code Conversations
 - Beginner: Select a piece of unfamiliar code in the project, ask Claude to explain what it does, and verify the explanation's accuracy
-- Intermediate: Have Claude generate TypeScript type definitions for an existing function and compare them against a manually written version
+- Intermediate: Have Claude generate type definitions / interface declarations for an existing function (e.g., TypeScript types, Python type hints, Go interfaces, Java interfaces) and compare them against a manually written version
 - Advanced: Complete a small feature request (e.g., adding a utility function) entirely through conversational collaboration with Claude
 
 Sub-skill 3: AI Code Judgment
@@ -77,7 +82,7 @@ Sub-skill 3: Structured Prompts (CRATE)
 
 Sub-skill 4: CLAUDE.md Configuration & Maintenance
 - Beginner: Check if the current project has a CLAUDE.md; if not, create one that includes tech stack and conventions
-- Intermediate: Have Claude create a new component and verify that it automatically follows the conventions in CLAUDE.md
+- Intermediate: Have Claude create a new module and verify that it automatically follows the conventions in CLAUDE.md
 - Advanced: After using CLAUDE.md for 1 week, review and add new rules for things Claude frequently gets wrong
 
 ---
@@ -98,6 +103,11 @@ Sub-skill 3: Architecture Review Capability
 - Beginner: Have Claude implement a feature, then review it against an architecture checklist (soundness / edge cases / performance / security)
 - Intermediate: Over 3 consecutive feature delegations, track the first-pass architecture review approval rate
 - Advanced: Achieve > 80% first-pass architecture review approval rate for AI-generated solutions
+
+Sub-skill 4: Task Decomposition & Dependency Analysis
+- Beginner: Pick a pending feature in the current project, list all sub-tasks, and label their dependencies
+- Intermediate: Draw a sub-task dependency graph, identify which sub-tasks can run in parallel and which must be sequential
+- Advanced: Decompose 3 different features, finding "interface points" (boundaries where you can agree on types/APIs first and then develop independently)
 
 ---
 
@@ -128,9 +138,9 @@ Sub-skill 4: Multi-Agent Management (3+)
 **Level 7: Workflow Orchestration**
 
 Sub-skill 1: CLAUDE.md Workflow Rules
-- Beginner: Add file creation rules to the project's CLAUDE.md (component + types + tests must be created together)
-- Intermediate: Add Git conventions (branch naming, Conventional Commits) and API routing rules
-- Advanced: Add security rules (no hardcoded secrets, XSS protection, etc.) and verify Claude's compliance rate
+- Beginner: Add file creation rules to the project's CLAUDE.md (module + type definitions/interfaces + tests must be created together)
+- Intermediate: Add Git conventions (branch naming, Conventional Commits) and routing/API rules
+- Advanced: Add security rules (no hardcoded secrets, injection protection, etc.) and verify Claude's compliance rate
 
 Sub-skill 2: Custom Slash Commands
 - Beginner: Create your first Command (e.g., /new-feature) with a complete workflow
@@ -138,9 +148,9 @@ Sub-skill 2: Custom Slash Commands
 - Advanced: After 1 week of using Commands, iterate and optimize — ensure 80% of dev tasks have an applicable Command
 
 Sub-skill 3: Hooks Automated Quality Checks
-- Beginner: Configure a PostToolUse Hook to automatically run type checking after writing .ts files
+- Beginner: Configure a PostToolUse Hook to automatically run type checking or static analysis after saving source files (e.g., tsc, mypy, go vet, javac)
 - Intermediate: Add a Hook for auto-running tests, tracking the number of errors caught by Hooks over 1 week
-- Advanced: Full Hook pipeline (type checking + tests + lint), verified to not slow down development speed
+- Advanced: Full Hook pipeline (type checking/static analysis + tests + lint), verified to not slow down development speed
 
 ---
 
@@ -148,7 +158,7 @@ Sub-skill 3: Hooks Automated Quality Checks
 
 Sub-skill 1: Headless Mode Scripting
 - Beginner: Run `claude -p "analyze this code"` to complete a non-interactive invocation
-- Intermediate: Write a script to batch-generate test files for components that lack tests
+- Intermediate: Write a script to batch-generate test files for modules that lack tests
 - Advanced: Use `--output-format json` to parse AI output and perform downstream processing
 
 Sub-skill 2: CI/CD PR Auto-Review
@@ -177,12 +187,12 @@ Sub-skill 5: Cost Monitoring & Metrics
 ## Practice Tasks (Current Focus: [sub-skill name], Level N)
 
 ### 📍 Project Scan Findings
-[Briefly list scan findings relevant to the current focused sub-skill, e.g., "Project has 12 components, 5 of which have no test files"]
+[Briefly list scan findings relevant to the current focused sub-skill, e.g., "Project has 12 modules, 5 of which have no test files"]
 
 ### Task 1: [Name] (Project-Specific / Generic Exercise)
 - **Difficulty**: Beginner / Intermediate / Advanced
 - **Estimated Time**: X minutes/hours
-- **Project Value**: [Actual benefit to the project upon completion, e.g., "Add test coverage for 5 components"]
+- **Project Value**: [Actual benefit to the project upon completion, e.g., "Add test coverage for 5 modules"]
 - **Steps**:
   1. ...
   2. ...
