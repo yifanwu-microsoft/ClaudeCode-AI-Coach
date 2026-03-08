@@ -88,8 +88,8 @@ function Test-PostInstall {
         $hasError = $true
     }
 
-    if (-not (Test-Path (Join-Path $ClaudeHome "commands" "assess.md"))) {
-        Write-Err "Verification failed: commands/assess.md not found in $ClaudeHome"
+    if (-not (Test-Path (Join-Path $ClaudeHome "commands" "coach" "assess.md"))) {
+        Write-Err "Verification failed: commands/coach/assess.md not found in $ClaudeHome"
         $hasError = $true
     }
 
@@ -144,12 +144,16 @@ function Install-CoachSystem {
         # 1. Install commands/
         $sourceCommands = $paths.Commands
         if (Test-Path $sourceCommands) {
-            $commandFiles = Get-ChildItem "$sourceCommands\*.md" -ErrorAction SilentlyContinue
+            # Create coach subdirectory
+            $coachDir = Join-Path $commandsDir "coach"
+            New-Item -ItemType Directory -Force -Path $coachDir | Out-Null
+            # Copy coach namespace commands
+            $commandFiles = Get-ChildItem (Join-Path $sourceCommands "coach" "*.md") -ErrorAction SilentlyContinue
             foreach ($file in $commandFiles) {
-                Copy-Item $file.FullName $commandsDir -Force
+                Copy-Item $file.FullName $coachDir -Force
             }
             # Verify critical command files were copied
-            $criticalCommands = @("assess.md", "install.md", "practice.md", "progress-report.md", "review-prompt.md")
+            $criticalCommands = @("coach\assess.md", "coach\install.md", "coach\practice.md", "coach\progress-report.md", "coach\review-prompt.md")
             $verifyFailed = $false
             foreach ($cmd in $criticalCommands) {
                 if (-not (Test-Path (Join-Path $commandsDir $cmd))) {

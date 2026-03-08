@@ -16,13 +16,13 @@ $MarkerEnd = "<!-- AI-COACH-END -->"
 
 # Coach command files installed by install.ps1
 $CoachCommands = @(
-    "assess.md",
-    "install.md",
-    "uninstall.md",
-    "practice.md",
-    "progress-report.md",
-    "review-prompt.md",
-    "i18n.md"
+    "coach\assess.md",
+    "coach\install.md",
+    "coach\uninstall.md",
+    "coach\practice.md",
+    "coach\progress-report.md",
+    "coach\review-prompt.md",
+    "coach\i18n.md"
 )
 
 function Write-Info { param($Msg) Write-Host "[INFO] $Msg" -ForegroundColor Green }
@@ -47,6 +47,16 @@ function Remove-CoachCommands {
     }
 
     Write-Info "Removed $removed command file(s)"
+
+    # Remove coach directory if empty
+    $coachDir = Join-Path $commandsDir "coach"
+    if (Test-Path $coachDir) {
+        $coachRemaining = Get-ChildItem $coachDir -ErrorAction SilentlyContinue
+        if ($null -eq $coachRemaining -or $coachRemaining.Count -eq 0) {
+            Remove-Item $coachDir -Force
+            Write-Info "Removed empty coach/ directory"
+        }
+    }
 
     # Remove commands/ dir if empty
     $remaining = Get-ChildItem $commandsDir -ErrorAction SilentlyContinue
