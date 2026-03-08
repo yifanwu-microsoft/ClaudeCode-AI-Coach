@@ -188,6 +188,17 @@ function Uninstall-CoachSystem {
         Write-Info "Uninstalling AI Coach from $ClaudeHome ..."
     }
 
+    # Confirm uninstall
+    if ($Lang -eq "en") {
+        $confirm = Read-Host "Are you sure you want to uninstall? [y/N]"
+    } else {
+        $confirm = Read-Host "Are you sure you want to uninstall? [y/N]"
+    }
+    if ($confirm -notmatch '^[Yy]$') {
+        Write-Info "Uninstall cancelled."
+        return
+    }
+
     # Step 1: Remove commands
     Remove-CoachCommands
 

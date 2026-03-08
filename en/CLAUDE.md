@@ -263,3 +263,5 @@ Available commands (see .claude/commands/ for details):
 - `/practice` — Get practice tasks for the currently focused sub-skill
 - `/review-prompt` — Review prompt quality and provide upgrade advice
 - `/install` — Install or update the coaching system on this machine
+- `/uninstall` — Remove the coaching system from this machine
+- `/i18n` — Translation sync management (project maintenance)

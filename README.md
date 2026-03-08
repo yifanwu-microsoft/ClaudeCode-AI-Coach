@@ -141,19 +141,25 @@ ClaudeCode-AI-Coach/
 │   ├── ai-engineering-leveling-guide.md ← Full guide (English)
 │   └── commands/                        ← English commands
 │       ├── assess.md
+│       ├── i18n.md
 │       ├── install.md
 │       ├── practice.md
 │       ├── progress-report.md
-│       └── review-prompt.md
+│       ├── review-prompt.md
+│       └── uninstall.md
 ├── .claude/commands/                    ← Chinese commands
 │   ├── assess.md
+│   ├── i18n.md
 │   ├── install.md
 │   ├── practice.md
 │   ├── progress-report.md
-│   └── review-prompt.md
+│   ├── review-prompt.md
+│   └── uninstall.md
 └── scripts/
     ├── install.sh                       ← macOS/Linux install (--lang en|zh)
-    └── install.ps1                      ← Windows install (-Lang en|zh)
+    ├── install.ps1                      ← Windows install (-Lang en|zh)
+    ├── uninstall.sh                     ← macOS/Linux uninstall
+    └── uninstall.ps1                    ← Windows uninstall
 ```
 
 ## Customization & Extension
