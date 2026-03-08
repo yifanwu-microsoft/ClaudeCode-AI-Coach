@@ -2,11 +2,28 @@
 # Usage: .\scripts\install.ps1 [-Lang en|zh]
 
 param(
-    [ValidateSet("en", "zh")]
-    [string]$Lang = "zh"
+    [ValidateSet("en", "zh", "")]
+    [string]$Lang = ""
 )
 
 $ErrorActionPreference = "Stop"
+
+# Interactive prompt when no -Lang flag was provided
+if ($Lang -eq "") {
+    while ($true) {
+        Write-Host ""
+        Write-Host "Please select your language / 请选择语言:"
+        Write-Host "  1) 中文 (Chinese)"
+        Write-Host "  2) English"
+        $choice = Read-Host "Your choice / 请输入选项 [1/2]"
+        switch ($choice) {
+            { $_ -eq "1" -or $_ -eq "" } { $Lang = "zh"; break }
+            "2" { $Lang = "en"; break }
+            default { Write-Host "Invalid choice. Please enter 1 or 2." }
+        }
+        if ($Lang -ne "") { break }
+    }
+}
 
 $RepoRoot = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 $ClaudeHome = Join-Path $env:USERPROFILE ".claude"

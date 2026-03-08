@@ -22,8 +22,8 @@ cleanup() {
 }
 trap cleanup EXIT ERR INT TERM
 
-# Default language: zh (Chinese)
-LANG_CHOICE="zh"
+# Language: empty means "not provided, prompt interactively"
+LANG_CHOICE=""
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -44,10 +44,37 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Validate language
-if [[ "$LANG_CHOICE" != "en" && "$LANG_CHOICE" != "zh" ]]; then
-    echo "Invalid language: $LANG_CHOICE (valid: en, zh)"
-    exit 1
+# If --lang was explicitly passed, validate it
+if [[ -n "$LANG_CHOICE" ]]; then
+    if [[ "$LANG_CHOICE" != "en" && "$LANG_CHOICE" != "zh" ]]; then
+        echo "Invalid language: $LANG_CHOICE (valid: en, zh)"
+        exit 1
+    fi
+fi
+
+# Interactive prompt when no --lang flag was provided
+if [[ -z "$LANG_CHOICE" ]]; then
+    while true; do
+        echo ""
+        echo "Please select your language / 请选择语言:"
+        echo "  1) 中文 (Chinese)"
+        echo "  2) English"
+        printf "Your choice / 请输入选项 [1/2]: "
+        read -r choice
+        case "$choice" in
+            1|"")
+                LANG_CHOICE="zh"
+                break
+                ;;
+            2)
+                LANG_CHOICE="en"
+                break
+                ;;
+            *)
+                echo "Invalid choice. Please enter 1 or 2."
+                ;;
+        esac
+    done
 fi
 
 # Color output
