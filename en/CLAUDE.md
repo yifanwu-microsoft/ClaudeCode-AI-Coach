@@ -71,6 +71,14 @@ When a user operates at a low Level, use the following examples as reference for
 | "Build me a login page" | "Create a login page matching the style of our existing `/register` page. It needs email + password fields, using our existing Form component." | Give constraints and references, not a vague request |
 | "How do I use this API?" | "I need to call `/api/users`. Check the existing request patterns in `src/lib/api.ts` and add a new method following the same pattern." | Point to specific code so AI aligns with existing patterns |
 
+**Generic Examples (applicable to any tech stack):**
+
+| Low-Level Prompt (1-2) | Higher-Level Prompt (3-4) | Key Improvement |
+|------------------------|--------------------------|-----------------|
+| "Write me a function" | "Following the style of the existing `utils/` directory, create a date formatting function that supports both ISO and locale formats" | Provide project context, reference location, and specific constraints |
+| "How do I fix this error?" | "Running command X produces error Y, environment is version Z, related code is in `src/service/`" | Provide complete error context and environment info |
+| "Add an API endpoint" | "Following the existing patterns in `controller/` or `handler/`, add a user query endpoint with pagination and filter parameters" | Align with existing project patterns; specify functional requirements |
+
 ### Level 3-4 → Level 5 Upgrade Examples
 
 | Low-Level Prompt (3-4) | Higher-Level Prompt (5) | Key Improvement |
@@ -80,6 +88,15 @@ When a user operates at a low Level, use the following examples as reference for
 | "Add caching with react-query" | "This page is accessed frequently — optimize load times" | Describe the problem and goal — let the AI choose the approach |
 | "Write an axios GET request" | "Fetch data from /api/users with 2 retries on failure" | Describe the behavior you need, not the tool to use |
 
+**Generic Examples (applicable to any tech stack):**
+
+| Low-Level Prompt (3-4) | Higher-Level Prompt (5) | Key Improvement |
+|------------------------|------------------------|-----------------|
+| "Write a database query" | "Users need to search orders by multiple filter combinations; dataset is ~100K rows" | Describe the business need and data scale — let AI choose the query strategy |
+| "Add Redis caching" | "This endpoint is slow (>2s) — needs to be under 200ms" | Describe the performance goal, don't prescribe the technology |
+| "Write a cron job script" | "We need to purge expired data older than 30 days every night; table has ~5M rows" | Give the business scenario and data constraints — let AI consider performance |
+| "Add a message queue" | "After an order is placed, notifications need to be sent asynchronously; peak load is ~100 orders/sec" | Describe the async requirement and concurrency — let AI pick the approach |
+
 ### Level 5 → Level 6 Upgrade Examples
 
 | Low-Level Prompt (5) | Higher-Level Prompt (6) | Key Improvement |
@@ -87,6 +104,13 @@ When a user operates at a low Level, use the following examples as reference for
 | "Implement search, pagination, and sorting" | "These three features have no dependencies — help me plan them for parallel development" | Proactively request task decomposition |
 | "Do A, then B, then C" | "A and C are independent — run them in parallel. Help me set up worktrees to isolate them" | Identify parallelism opportunities |
 | "This feature has both frontend and backend work" | "Frontend and backend can be developed in parallel — let's define the API contract first, then split the work" | Define interfaces first, then parallelize |
+
+**Generic Examples (applicable to any tech stack):**
+
+| Low-Level Prompt (5) | Higher-Level Prompt (6) | Key Improvement |
+|----------------------|------------------------|-----------------|
+| "Implement the user module, order module, and notification module" | "These three modules only have a dependency at order→notification. User and order modules can be parallelized — let's define the inter-module interfaces first" | Analyze dependencies; maximize parallelism |
+| "Refactor this service" | "The refactoring has three steps: extract interfaces, migrate implementation, update callers. The first two can be done in parallel on separate branches" | Break down refactoring steps; identify parallelism opportunities |
 
 ### Level 6 → Level 7 Upgrade Examples
 
@@ -96,6 +120,13 @@ When a user operates at a low Level, use the following examples as reference for
 | "I always manually check types after writing code" | "Set up a Hook to auto-check types whenever a .ts file is saved" | Manual checks → automation |
 | "Help me plan how to implement this feature" | "/new-feature feature description" | Use predefined workflows |
 
+**Generic Examples (applicable to any tech stack):**
+
+| Low-Level Prompt (6) | Higher-Level Prompt (7) | Key Improvement |
+|----------------------|------------------------|-----------------|
+| "I manually run tests and lint after every code change" | "Set up a Hook to automatically run tests and static analysis when source files are saved" | Manual checks → event-driven automation |
+| "I manually create directories and boilerplate for every new module" | "Create a /new-module Command that auto-generates the directory structure and template files following project conventions" | Repetitive scaffolding → one-click Command |
+
 ### Level 7 → Level 8 Upgrade Examples
 
 | Low-Level Prompt (7) | Higher-Level Prompt (8) | Key Improvement |
@@ -103,6 +134,13 @@ When a user operates at a low Level, use the following examples as reference for
 | "I manually run /review on every PR" | "Set up a GitHub Action to trigger AI review automatically when a PR is created" | Manual trigger → event-driven |
 | "When CI fails, I ask Claude to fix it" | "Set up an auto-fix pipeline on CI failure — AI attempts the fix and opens a PR" | Reactive response → automated pipeline |
 | "I manually triage these Issues" | "Set up auto-triage: AI labels issues, estimates scope, and suggests relevant files" | Manual triage → automated classification |
+
+**Generic Examples (applicable to any tech stack):**
+
+| Low-Level Prompt (7) | Higher-Level Prompt (8) | Key Improvement |
+|----------------------|------------------------|-----------------|
+| "I manually run AI checks before every deploy" | "Add an AI code review step to the CI pipeline that runs automatically before merges" | Manual checks → CI-integrated automatic trigger |
+| "I periodically ask AI to analyze code quality" | "Set up a scheduled task (cron/scheduled workflow) to auto-generate a weekly code quality report" | Periodic manual effort → automated scheduled task |
 
 ### Upgrade Advice Format
 
