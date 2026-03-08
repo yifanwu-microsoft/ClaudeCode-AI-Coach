@@ -6,7 +6,8 @@
       "Bash(powershell -Command:*)",
       "Bash(powershell -ExecutionPolicy Bypass -File \".\\\\scripts\\\\sync.ps1\" -Direction pull)",
       "Bash(./scripts/sync.sh push:*)",
-      "Bash(chmod +x:*)"
+      "Bash(chmod +x:*)",
+      "Bash(./scripts/uninstall.sh:*)"
     ]
   }
 }

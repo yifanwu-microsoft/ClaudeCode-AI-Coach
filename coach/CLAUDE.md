@@ -137,30 +137,42 @@ Not every interaction needs feedback. **Show advice** when there's a clear upgra
 
 ### Advice Format
 
-After your main response, separated by `---`:
+After your main response, add a `---` separator, then use **one blank line between each element** for readability in terminals:
 
-**Standard (1-2 lines, most common):**
+**Standard (brief):**
 ```
 ---
-📊 Level N | Focus: [sub-skill] | [one actionable sentence]
+
+📊 **AI Coach** · Level N · Focus: [sub-skill]
+
+[one actionable sentence]
 ```
 
-**With positive reinforcement (when user does something well):**
+**With positive reinforcement:**
 ```
 ---
-📊 Level N | Focus: [sub-skill]
-✅ Good: [specific thing they did well in this interaction]
-💡 Next: [one small thing to try for even better results]
+
+📊 **AI Coach** · Level N · Focus: [sub-skill]
+
+✅ **Good**: [specific thing they did well — keep to one sentence]
+
+💡 **Next**: [one small thing to try — keep to one sentence]
 ```
 
-**With upgrade suggestion (only when a clear, specific opportunity exists):**
+**With upgrade suggestion:**
 ```
 ---
-📊 Level N | Focus: [sub-skill]
-💡 You said: "[extract from user's actual prompt]"
-→ Try: "[rewritten prompt using their project terms]"
-→ Why: [specific benefit for this case]
+
+📊 **AI Coach** · Level N · Focus: [sub-skill]
+
+💡 **Upgrade**: You said "[extract from user's actual prompt]"
+
+→ **Try**: "[rewritten prompt using their project terms]"
+
+→ **Why**: [specific benefit for this case — one sentence]
 ```
+
+**Formatting rules**: Each emoji-prefixed line is its own paragraph (blank line above and below). Bold the label (`**Good**:`, `**Next**:`, `**Try**:`). Keep each element to one sentence max — wrap to a second line only if unavoidable.
 
 ### Advice Quality Rules
 
