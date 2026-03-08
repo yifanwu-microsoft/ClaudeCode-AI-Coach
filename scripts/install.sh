@@ -14,13 +14,22 @@ MARKER_END="<!-- AI-COACH-END -->"
 # Track temp files for cleanup
 TEMP_FILES=()
 
+# Track whether installation started (for rollback messaging)
+INSTALL_STARTED=0
+
 # Trap handler: clean up temp files on error or exit
 cleanup() {
     for f in "${TEMP_FILES[@]}"; do
         rm -f "$f" 2>/dev/null || true
     done
+    if [ "$INSTALL_STARTED" -eq 1 ] && [ "${EXIT_CODE:-1}" -ne 0 ]; then
+        echo ""
+        err "Installation failed partway through. To clean up, run:"
+        err "  ./scripts/uninstall.sh"
+    fi
 }
-trap cleanup EXIT ERR INT TERM
+trap 'EXIT_CODE=$?; cleanup' EXIT
+trap 'EXIT_CODE=1; cleanup; exit 1' ERR INT TERM
 
 # Language: empty means "not provided, prompt interactively"
 LANG_CHOICE=""
@@ -171,12 +180,27 @@ main() {
         info "开始安装 AI 教练系统到 $CLAUDE_HOME ..."
     fi
 
+    INSTALL_STARTED=1
+
     # Create directories
     mkdir -p "$CLAUDE_HOME/commands"
 
     # 1. Sync commands/
     if [ -d "$COMMANDS_SOURCE" ]; then
         cp -f "$COMMANDS_SOURCE/"*.md "$CLAUDE_HOME/commands/" 2>/dev/null || true
+        # Verify critical command files were copied
+        local verify_failed=0
+        for cmd in assess.md install.md practice.md progress-report.md review-prompt.md; do
+            if [ ! -f "$CLAUDE_HOME/commands/$cmd" ]; then
+                err "Critical command file missing after copy: $cmd"
+                verify_failed=1
+            fi
+        done
+        if [ "$verify_failed" -eq 1 ]; then
+            err "Command installation failed. Please check source directory: $COMMANDS_SOURCE"
+            err "To clean up a partial install, run: ./scripts/uninstall.sh"
+            exit 1
+        fi
         info "Commands installed"
     fi
 

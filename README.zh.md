@@ -135,13 +135,17 @@ ClaudeCode-AI-Coach/
 ├── ai-engineering-leveling-guide.md ← Level 1-8 完整定义和验收标准
 ├── .claude/commands/
 │   ├── assess.md                    ← /assess 全面评估
+│   ├── i18n.md                      ← /i18n 翻译管理（维护用）
 │   ├── install.md                   ← /install 安装到本机
 │   ├── practice.md                  ← /practice 练习任务
 │   ├── progress-report.md           ← /progress-report 进度汇报
-│   └── review-prompt.md             ← /review-prompt 审查 prompt
+│   ├── review-prompt.md             ← /review-prompt 审查 prompt
+│   └── uninstall.md                 ← /uninstall 卸载系统
 └── scripts/
     ├── install.sh                   ← macOS/Linux 安装脚本
-    └── install.ps1                  ← Windows 安装脚本
+    ├── install.ps1                  ← Windows 安装脚本
+    ├── uninstall.sh                 ← macOS/Linux 卸载脚本
+    └── uninstall.ps1                ← Windows 卸载脚本
 ```
 
 ## 自定义与扩展

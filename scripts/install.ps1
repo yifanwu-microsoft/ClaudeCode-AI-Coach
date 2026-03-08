@@ -121,11 +121,13 @@ function Get-SourcePaths {
 }
 
 function Install-CoachSystem {
+    $installStarted = $false
     try {
         # Pre-flight validation
         Test-Preflight
 
         $paths = Get-SourcePaths
+        $installStarted = $true
 
         if ($Lang -eq "en") {
             Write-Info "Installing AI Coach System (English) to $ClaudeHome ..."
@@ -145,6 +147,20 @@ function Install-CoachSystem {
             $commandFiles = Get-ChildItem "$sourceCommands\*.md" -ErrorAction SilentlyContinue
             foreach ($file in $commandFiles) {
                 Copy-Item $file.FullName $commandsDir -Force
+            }
+            # Verify critical command files were copied
+            $criticalCommands = @("assess.md", "install.md", "practice.md", "progress-report.md", "review-prompt.md")
+            $verifyFailed = $false
+            foreach ($cmd in $criticalCommands) {
+                if (-not (Test-Path (Join-Path $commandsDir $cmd))) {
+                    Write-Err "Critical command file missing after copy: $cmd"
+                    $verifyFailed = $true
+                }
+            }
+            if ($verifyFailed) {
+                Write-Err "Command installation failed. Please check source directory: $sourceCommands"
+                Write-Err "To clean up a partial install, run: .\scripts\uninstall.ps1"
+                exit 1
             }
             Write-Info "Commands installed"
         }
@@ -178,18 +194,25 @@ function Install-CoachSystem {
                     $before = $targetContent.Substring(0, $startIdx)
                     $after = $targetContent.Substring($endIdx + $MarkerEnd.Length)
                     $newContent = $before + $coachBlock + $after
-                    Set-Content $targetFile $newContent -Encoding UTF8 -NoNewline
+                    [System.IO.File]::WriteAllText($targetFile, $newContent, [System.Text.UTF8Encoding]::new($false))
                     Write-Info "CLAUDE.md coach block updated (preserving existing rules)"
                 }
             }
             else {
                 $newContent = $targetContent.TrimEnd() + "`r`n`r`n" + $coachBlock + "`r`n"
-                Set-Content $targetFile $newContent -Encoding UTF8 -NoNewline
+                [System.IO.File]::WriteAllText($targetFile, $newContent, [System.Text.UTF8Encoding]::new($false))
                 Write-Info "CLAUDE.md coach block appended (existing rules unaffected)"
+            }
+
+            # Clean up backup file after successful update
+            if (Test-Path "$targetFile.bak") {
+                Remove-Item "$targetFile.bak" -Force
+                Write-Info "Removed CLAUDE.md.bak (update successful)"
             }
         }
         else {
-            Set-Content $targetFile $coachBlock -Encoding UTF8 -NoNewline
+            $coachContent = $coachBlock + "`r`n"
+            [System.IO.File]::WriteAllText($targetFile, $coachContent, [System.Text.UTF8Encoding]::new($false))
             Write-Info "CLAUDE.md created"
         }
 
@@ -233,6 +256,13 @@ function Install-CoachSystem {
     finally {
         Remove-TempFiles
     }
+}
+
+trap {
+    Write-Err "Installation failed: $_"
+    Write-Err "To clean up a partial install, run: .\scripts\uninstall.ps1"
+    Remove-TempFiles
+    exit 1
 }
 
 Install-CoachSystem

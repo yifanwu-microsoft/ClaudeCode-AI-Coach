@@ -227,6 +227,22 @@ main() {
         info "正在从 $CLAUDE_HOME 卸载 AI 教练系统 ..."
     fi
 
+    # Confirm uninstall
+    if [[ "$LANG_CHOICE" == "en" ]]; then
+        printf "Are you sure you want to uninstall? [y/N]: "
+    else
+        printf "确定要卸载吗？[y/N]: "
+    fi
+    read -r confirm
+    if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
+        if [[ "$LANG_CHOICE" == "en" ]]; then
+            info "Uninstall cancelled."
+        else
+            info "卸载已取消。"
+        fi
+        exit 0
+    fi
+
     # Step 1: Remove commands
     remove_commands
 
