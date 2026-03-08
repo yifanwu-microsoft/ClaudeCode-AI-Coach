@@ -41,7 +41,7 @@ cd ClaudeCode-AI-Coach
 在 repo 目录中打开 Claude Code，输入：
 
 ```
-/install
+/coach:install
 ```
 
 Claude 会自动检测系统并执行安装脚本。
@@ -66,7 +66,7 @@ chmod +x scripts/install.sh
 打开 Claude Code（任意项目都行），输入：
 
 ```
-/assess
+/coach:assess
 ```
 
 Claude 会询问你的 AI 工具使用情况，逐项打分，确定你的起始 Level。
@@ -87,10 +87,10 @@ Claude 会询问你的 AI 工具使用情况，逐项打分，确定你的起始
 
 | 场景 | 做什么 |
 |------|--------|
-| 想看看自己进步了没 | `/assess` — 重新全面评估 |
-| 想练习但不知道做什么 | `/practice` — 获取当前聚焦子技能的练习任务 |
-| 想提升 prompt 质量 | `/review-prompt <你的prompt>` — 分析并给出升级建议 |
-| 需要给 leader 汇报 | `/progress-report` — 生成结构化进度报告 |
+| 想看看自己进步了没 | `/coach:assess` — 重新全面评估 |
+| 想练习但不知道做什么 | `/coach:practice` — 获取当前聚焦子技能的练习任务 |
+| 想提升 prompt 质量 | `/coach:review-prompt <你的prompt>` — 分析并给出升级建议 |
+| 需要给 leader 汇报 | `/coach:progress-report` — 生成结构化进度报告 |
 
 ### Level 是什么意思？
 
@@ -110,7 +110,7 @@ Claude 会询问你的 AI 工具使用情况，逐项打分，确定你的起始
 每台电脑的进度独立维护。换电脑时：
 
 ```bash
-git clone → ./scripts/install.sh → /assess
+git clone → ./scripts/install.sh → /coach:assess
 ```
 
 重新评估会根据你当前的实际能力快速定位 Level，无需手动迁移数据。
@@ -134,13 +134,14 @@ ClaudeCode-AI-Coach/
 ├── PROGRESS.md                      ← 进度模板（安装后本机独立维护）
 ├── ai-engineering-leveling-guide.md ← Level 1-8 完整定义和验收标准
 ├── .claude/commands/
-│   ├── assess.md                    ← /assess 全面评估
-│   ├── i18n.md                      ← /i18n 翻译管理（维护用）
-│   ├── install.md                   ← /install 安装到本机
-│   ├── practice.md                  ← /practice 练习任务
-│   ├── progress-report.md           ← /progress-report 进度汇报
-│   ├── review-prompt.md             ← /review-prompt 审查 prompt
-│   └── uninstall.md                 ← /uninstall 卸载系统
+│   └── coach/                       ← coach 命名空间
+│       ├── assess.md                ← /coach:assess 全面评估
+│       ├── i18n.md                  ← /coach:i18n 翻译管理（维护用）
+│       ├── install.md               ← /coach:install 安装到本机
+│       ├── practice.md              ← /coach:practice 练习任务
+│       ├── progress-report.md       ← /coach:progress-report 进度汇报
+│       ├── review-prompt.md         ← /coach:review-prompt 审查 prompt
+│       └── uninstall.md             ← /coach:uninstall 卸载系统
 └── scripts/
     ├── install.sh                   ← macOS/Linux 安装脚本
     ├── install.ps1                  ← Windows 安装脚本
@@ -150,7 +151,7 @@ ClaudeCode-AI-Coach/
 
 ## 自定义与扩展
 
-- **添加命令**：在 `.claude/commands/` 下创建 `.md` 文件，重新安装即可
+- **添加命令**：在 `.claude/commands/coach/` 下创建 `.md` 文件，重新安装即可
 - **修改规则**：编辑 `CLAUDE.md`，重新安装。标记块机制不影响你本机的其他规则
 - **项目级规则**：这套系统是全局教练，你的项目可以有自己的 CLAUDE.md，两者共存不冲突
 

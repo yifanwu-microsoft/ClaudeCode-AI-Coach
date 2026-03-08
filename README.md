@@ -41,7 +41,7 @@ cd ClaudeCode-AI-Coach
 Open Claude Code in the repo directory, and type:
 
 ```
-/install
+/coach:install
 ```
 
 Claude will auto-detect your system and run the install script.
@@ -66,7 +66,7 @@ The install script deploys the configuration to `~/.claude/`, taking effect glob
 Open Claude Code (in any project), and type:
 
 ```
-/assess
+/coach:assess
 ```
 
 Claude will ask about your AI tool usage, score each dimension, and determine your starting Level.
@@ -87,10 +87,10 @@ Claude will ask about your AI tool usage, score each dimension, and determine yo
 
 | Scenario | What to Do |
 |----------|-----------|
-| Want to check your progress | `/assess` — Full re-assessment |
-| Want practice but unsure what to do | `/practice` — Get practice tasks for your current focus |
-| Want to improve prompt quality | `/review-prompt <your prompt>` — Analysis with upgrade suggestions |
-| Need to report to your leader | `/progress-report` — Generate a structured progress report |
+| Want to check your progress | `/coach:assess` — Full re-assessment |
+| Want practice but unsure what to do | `/coach:practice` — Get practice tasks for your current focus |
+| Want to improve prompt quality | `/coach:review-prompt <your prompt>` — Analysis with upgrade suggestions |
+| Need to report to your leader | `/coach:progress-report` — Generate a structured progress report |
 
 ### What Do the Levels Mean?
 
@@ -110,7 +110,7 @@ Claude will ask about your AI tool usage, score each dimension, and determine yo
 Progress is maintained independently on each machine. When switching devices:
 
 ```bash
-git clone → ./scripts/install.sh --lang en → /assess
+git clone → ./scripts/install.sh --lang en → /coach:assess
 ```
 
 Re-assessment will quickly locate your Level based on your current skills — no manual data migration needed.
@@ -140,6 +140,16 @@ ClaudeCode-AI-Coach/
 │   ├── PROGRESS.md                      ← Progress template (English)
 │   ├── ai-engineering-leveling-guide.md ← Full guide (English)
 │   └── commands/                        ← English commands
+│       └── coach/
+│           ├── assess.md
+│           ├── i18n.md
+│           ├── install.md
+│           ├── practice.md
+│           ├── progress-report.md
+│           ├── review-prompt.md
+│           └── uninstall.md
+├── .claude/commands/
+│   └── coach/                           ← Chinese commands (coach namespace)
 │       ├── assess.md
 │       ├── i18n.md
 │       ├── install.md
@@ -147,14 +157,6 @@ ClaudeCode-AI-Coach/
 │       ├── progress-report.md
 │       ├── review-prompt.md
 │       └── uninstall.md
-├── .claude/commands/                    ← Chinese commands
-│   ├── assess.md
-│   ├── i18n.md
-│   ├── install.md
-│   ├── practice.md
-│   ├── progress-report.md
-│   ├── review-prompt.md
-│   └── uninstall.md
 └── scripts/
     ├── install.sh                       ← macOS/Linux install (--lang en|zh)
     ├── install.ps1                      ← Windows install (-Lang en|zh)
@@ -164,7 +166,7 @@ ClaudeCode-AI-Coach/
 
 ## Customization & Extension
 
-- **Add commands**: Create `.md` files in `.claude/commands/` (or `en/commands/` for English), then reinstall
+- **Add commands**: Create `.md` files in `.claude/commands/coach/` (or `en/commands/coach/` for English), then reinstall
 - **Modify rules**: Edit `CLAUDE.md` (or `en/CLAUDE.md`), then reinstall. The marker-block mechanism won't affect your other local rules
 - **Project-level rules**: This is a global coach — your project can have its own CLAUDE.md, both coexist without conflict
 

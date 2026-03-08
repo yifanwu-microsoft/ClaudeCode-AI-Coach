@@ -15,7 +15,7 @@
 
 如果读取 PROGRESS.md 发现「当前 Level」为「待评估」，说明这是新用户或首次使用：
 1. 不要假设用户的 Level，主动询问用户的 AI 工具使用情况
-2. 引导用户执行 `/assess` 进行首次评估
+2. 引导用户执行 `/coach:assess` 进行首次评估
 3. 评估完成后，帮助用户更新 PROGRESS.md 中的初始状态
 
 ## Level 检测规则
@@ -250,18 +250,18 @@
 ```
 🏆 **Level N 毕业！**
 - 你已完成 Level N 的所有子技能
-- 建议执行 `/assess` 重新评估，确认是否可以进入 Level N+1
+- 建议执行 `/coach:assess` 重新评估，确认是否可以进入 Level N+1
 ```
 
 更新时保持文件结构不变，只修改具体字段值。
 
 ## 自定义命令
 
-可用命令（详见 .claude/commands/）：
-- `/assess` — 全面评估当前 Level，逐项打分
-- `/progress-report` — 生成可发给 leader 的进度汇报
-- `/practice` — 获取当前聚焦子技能的练习任务
-- `/review-prompt` — 审查 prompt 质量并给出升级建议
-- `/install` — 安装/更新教练系统到本机
-- `/uninstall` — 从本机卸载教练系统
-- `/i18n` — 翻译同步管理（项目维护用）
+可用命令（详见 .claude/commands/coach/）：
+- `/coach:assess` — 全面评估当前 Level，逐项打分
+- `/coach:progress-report` — 生成可发给 leader 的进度汇报
+- `/coach:practice` — 获取当前聚焦子技能的练习任务
+- `/coach:review-prompt` — 审查 prompt 质量并给出升级建议
+- `/coach:install` — 安装/更新教练系统到本机
+- `/coach:uninstall` — 从本机卸载教练系统
+- `/coach:i18n` — 翻译同步管理（项目维护用）
