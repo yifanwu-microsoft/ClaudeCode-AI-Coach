@@ -24,6 +24,8 @@ If PROGRESS.md shows "Current Level" as "Pending Assessment", this is a new user
 5. Unlock the 🎯 First Contact achievement
 6. For a deeper assessment, suggest `/coach:assess`
 
+**Note**: If the user ran `/coach:install`, the install command already performs this inline quick assessment automatically. In that case, PROGRESS.md will no longer show "Pending Assessment" and this section will not trigger. This avoids duplicate assessments.
+
 ## Level Detection Rules
 
 Determine the user's current proficiency level from their prompt patterns:

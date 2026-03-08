@@ -63,13 +63,15 @@ The install script deploys the configuration to `~/.claude/`, taking effect glob
 
 ### Step 3: Initial Assessment
 
-Open Claude Code (in any project), and type:
+If you used `/coach:install`, the initial assessment starts **automatically** right after installation — no need to exit or switch projects. Claude will ask 3 quick questions to calibrate your Level.
+
+If you installed manually via the shell script, open Claude Code in any project and the coach will detect first-time setup and start the assessment automatically. You can also run:
 
 ```
 /coach:assess
 ```
 
-Claude will ask about your AI tool usage, score each dimension, and determine your starting Level.
+for a deeper project-specific assessment at any time.
 
 **Done!** Just use Claude Code normally from now on — the coaching system works automatically.
 
@@ -110,7 +112,7 @@ Claude will ask about your AI tool usage, score each dimension, and determine yo
 Progress is maintained independently on each machine. When switching devices:
 
 ```bash
-git clone → ./scripts/install.sh → /coach:assess
+git clone → ./scripts/install.sh → auto assessment (or /coach:assess)
 ```
 
 Re-assessment will quickly locate your Level based on your current skills — no manual data migration needed.

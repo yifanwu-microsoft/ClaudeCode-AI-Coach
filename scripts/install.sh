@@ -212,7 +212,11 @@ main() {
 
     echo ""
     info "✅ Installation complete! AI Coach is now globally active."
-    info "Open Claude Code in any project and run /coach:assess for initial evaluation."
+    if [ -f "$CLAUDE_HOME/PROGRESS.md" ] && grep -q "Pending Assessment" "$CLAUDE_HOME/PROGRESS.md"; then
+        info "Initial assessment will begin automatically — stay in this session."
+    else
+        info "Configuration updated. Your progress has been preserved."
+    fi
 }
 
 main

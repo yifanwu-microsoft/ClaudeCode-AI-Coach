@@ -63,13 +63,15 @@ chmod +x scripts/install.sh
 
 ### Step 3：首次评估
 
-打开 Claude Code（任意项目都行），输入：
+如果你使用 `/coach:install` 安装，首次评估会在安装完成后**自动开始** — 无需退出或切换项目。Claude 会问你 3 个简短问题来确定你的 Level。
+
+如果你通过 shell 脚本手动安装，打开 Claude Code（任意项目），教练系统会自动检测首次安装并启动评估。你也可以随时运行：
 
 ```
 /coach:assess
 ```
 
-Claude 会询问你的 AI 工具使用情况，逐项打分，确定你的起始 Level。
+进行更深入的项目级评估。
 
 **完成！** 之后正常使用 Claude Code 即可，教练系统会自动工作。
 
@@ -110,7 +112,7 @@ Claude 会询问你的 AI 工具使用情况，逐项打分，确定你的起始
 每台电脑的进度独立维护。换电脑时：
 
 ```bash
-git clone → ./scripts/install.sh → /coach:assess
+git clone → ./scripts/install.sh → 自动评估（或 /coach:assess）
 ```
 
 重新评估会根据你当前的实际能力快速定位 Level，无需手动迁移数据。
