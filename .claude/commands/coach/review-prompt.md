@@ -1,95 +1,59 @@
-分析用户提供的 prompt，评估其 AI 工程操作层级，并给出升级建议。
+Analyze a prompt provided by the user, assess its AI engineering operation level, and provide upgrade recommendations.
 
-用户需要提供一个他们日常使用的 prompt：$ARGUMENTS
+The user should provide a prompt they use in their daily workflow: $ARGUMENTS
 
-## 分析流程
+## Analysis Process
 
-### Step 1：识别 Prompt 层级
+### Step 1: Identify Prompt Level
 
-按以下标准分类：
+Use the Level Detection Rules from CLAUDE.md to classify the prompt (Level 1-2 through Level 8). Key signals:
+- **L1-2**: No context, vague, copy-pasted errors
+- **L3-4**: Specifies How (concrete tech/implementation), provides structured context
+- **L5**: Describes Why/What (business intent, constraints), no implementation details
+- **L6**: Task decomposition, parallelism, interface contracts
+- **L7**: Custom Commands, workflow definitions, systematic processes
+- **L8**: Event triggers, CI/CD integration, monitoring, unattended operation
 
-**Level 1-2 特征（基础问答）**
-- 没有上下文的简单问题（"怎么用这个？"、"这个报错了"）
-- 直接复制粘贴错误信息，不提供相关文件或环境信息
-- 一句话的空泛请求（"帮我写个函数"、"帮我修这个 bug"）
-- 不包含项目背景、文件位置或预期行为
+### Step 2: Quantitative Analysis
 
-**Level 3-4 特征（提示词工程）**
-- 指定具体技术实现方式（"用 useState"、"加个 useEffect"、"写一个 for 循环"）
-- 告诉 AI 每一步怎么做
-- 提供了上下文和参考文件，但缺少业务背景和约束条件
-- How > Why/What
+Analyze the prompt for:
+- How statements vs. Why/What statements ratio
+- Technical details vs. business context ratio
+- Whether it includes acceptance criteria
+- Whether it includes constraints and boundary conditions
 
-**Level 5 特征（意图驱动）**
-- 描述业务场景和用户需求
-- 提供约束条件但不指定实现
-- Why/What > How
-- 包含性能要求、数据规模等上下文
+### Step 3: Generate Upgraded Version
 
-**Level 6 特征（多 Agent 并行）**
-- 任务拆分和接口契约定义
-- 并行度分析
-- 跨 Agent 上下文同步
-
-**Level 7 特征（工作流编排）**
-- 使用 Custom Command 模板
-- 定义工作流步骤和检查点
-- 系统化的质量审查流程
-
-**Level 8 特征（自动化系统）**
-- 事件触发器设计
-- CI/CD 集成配置
-- 监控和成本控制
-- 无人值守运行
-
-### Step 2：量化分析
-
-统计 prompt 中：
-- How 语句数量 vs Why/What 语句数量
-- 技术细节 vs 业务上下文的比例
-- 是否包含验收标准
-- 是否包含约束和边界条件
-
-### Step 3：生成升级版本
-
-将用户的 prompt 重写为更高 Level 的版本，展示对比。根据检测到的 Level，展示**逐级升级路径**：
+Rewrite the user's prompt at a higher Level, showing a step-by-step upgrade path:
 
 ```
-## Prompt 分析结果
+## Prompt Analysis Results
 
-**原始 Prompt**：
-> [用户的原始 prompt]
+**Original Prompt**:
+> [user's original prompt]
 
-**检测层级**：Level N
-**How/What 比例**：X% How / Y% What
+**Detected Level**: Level N
+**How/What Ratio**: X% How / Y% What
 
-### 问题诊断
-- [指出 prompt 中可以改进的具体部分]
+### Diagnosis
+- [Point out specific parts that can be improved]
 
-### 逐级升级路径
+### Step-by-Step Upgrade Path
 
-**当前（Level N）：**
-> [用户的原始 prompt]
+**Current (Level N):**
+> [user's original prompt]
 
-**升级到 Level N+1：**
-> [重写后的下一层级 prompt]
-> 改进要点：[一句话说明改了什么]
+**Upgrade to Level N+1:**
+> [rewritten prompt at the next level]
+> Key improvement: [one sentence explaining what changed]
 
-**再升级到 Level N+2（展望）：**
-> [更高层级的 prompt 示例]
-> 改进要点：[一句话说明进一步改了什么]
+**Further upgrade to Level N+2 (outlook):**
+> [prompt example at an even higher level]
+> Key improvement: [one sentence explaining the further improvement]
 ```
 
-**各 Level 升级示例参考：**
+Refer to the Prompt Upgrade Examples table in CLAUDE.md for the upgrade direction at each level transition.
 
-| 原始 Level | 升级方向 | 示例 |
-|-----------|---------|------|
-| Level 1-2 → 3-4 | 添加上下文和参考 | "这个报错了" → "这段代码在调用 X 时报 Y 错误，相关文件在 src/service/ 目录" |
-| Level 3-4 → 5 | 用意图替代实现 | "用 X 库实现缓存" → "这个接口响应慢（>2s），需要优化到 200ms 以内" |
-| Level 5 → 6 | 识别并行机会 | "帮我实现 A、B、C 三个模块" → "A 和 C 无依赖可并行，先定好模块接口再分头实现" |
-| Level 6 → 7 | 流程固化为 Command | "每次做这个都要分三步" → "把这个流程变成 /xxx Command，一键执行" |
-| Level 7 → 8 | 手动触发变事件驱动 | "每次 PR 我手动跑 /review" → "配置 CI，PR 创建时自动触发 AI Review" |
+### Step 4: Provide Practice Recommendations
 
-### Step 4：给出练习建议
-
-建议用户在接下来的 5 次 AI 交互中尝试使用更高层级的表达方式，并记录结果差异。
+Suggest that the user try using the higher-level expression style in their next 5 AI interactions and track the differences in results.

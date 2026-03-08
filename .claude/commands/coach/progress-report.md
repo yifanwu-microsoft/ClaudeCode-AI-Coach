@@ -1,143 +1,48 @@
-基于用户的 AI 工程能力进度，生成一份结构化的进度汇报。这份汇报应该专业、简洁，适合发送给团队 leader 或管理者。
+Generate a structured progress report based on the user's AI engineering capability progress. This report should be professional, concise, and suitable for sharing with a team leader or manager.
 
-## 生成流程
+## Generation Process
 
-### Step 1：收集数据
-1. 读取 `PROGRESS.md` 获取当前进度和里程碑
-2. 查看 git log 了解最近的提交和活动
-3. 如果有 `.github/workflows/` 目录，检查 CI/CD 配置状态
+### Step 1: Collect Data
+1. Read `PROGRESS.md` to get current progress and milestones
+2. Review git log to understand recent commits and activity
+3. If a `.github/workflows/` directory exists, check CI/CD configuration status
 
-### Step 2：根据用户 Level 生成对应详细度的汇报
+### Step 2: Generate a Report Matching the User's Level
 
-根据用户当前 Level，选择合适的汇报模板：
-
----
-
-**Level 1-4 用户：简化版汇报（聚焦学习成长）**
+Use the base template below. Add level-specific sections based on the user's current Level.
 
 ```markdown
-# AI 工程能力学习进度
+# AI Engineering Capability Progress Report
 
-**汇报人**：[用户名]
-**汇报日期**：[今天日期]
-**当前 Level**：[从 PROGRESS.md 读取]
-**目标 Level**：[从 PROGRESS.md 读取]
+**Author**: [username]
+**Report Date**: [today's date]
+**Current Level**: [from PROGRESS.md]
+**Target Level**: [from PROGRESS.md]
 
-## 本周期学到了什么
+## Completed This Period
 
-- [用通俗语言列出已掌握的技能和完成的里程碑]
+- [List completed milestones and sub-skills]
 
-## 当前在学什么
+## Currently In Progress
 
-- **聚焦子技能**：[从 PROGRESS.md 读取]
-- **学习进展**：[基于 git 活动和文件变更总结]
+- **Focused Sub-Skill**: [from PROGRESS.md]
+- **Progress Summary**: [from git activity and file changes]
 
-## 遇到的困难
+## Blockers
 
-- [如有，列出学习中的困惑和阻碍]
+- [If any, list current blockers and support needed]
 
-## 下一步计划
+## Next Steps
 
-- [列出接下来要学习/练习的 1-3 件事]
+- [1-3 action items]
 ```
 
----
+**Level-specific additions:**
 
-**Level 5-6 用户：标准版汇报（含效率指标）**
+- **Level 1-4**: Use simpler headings ("What I Learned" / "What I'm Learning" / "Difficulties"). Omit metrics.
+- **Level 5-6**: Add an "Efficiency Metrics" section with: AI delegation success rate, average prompt rounds, parallel task count.
+- **Level 7-8**: Add "Automation Infrastructure Status" table (CLAUDE.md rules, Commands, Hooks) and "Automation Runtime Metrics" table (PR review coverage, auto-fix success rate, AI API weekly cost, issue triage accuracy — each with trend arrows ↑/↓/→).
 
-```markdown
-# AI 工程能力进度汇报
+### Step 3: Review and Output
 
-**汇报人**：[用户名]
-**汇报日期**：[今天日期]
-**当前 Level**：[从 PROGRESS.md 读取]
-**目标 Level**：[从 PROGRESS.md 读取]
-
-## 本周期已完成
-
-- [列出已完成的里程碑和子技能]
-
-## 当前进行中
-
-- **聚焦子技能**：[从 PROGRESS.md 读取]
-- **进展描述**：[基于 git 活动和文件变更总结]
-- **预计完成**：[基于进度估算]
-
-## 效率指标
-
-| 指标 | 数值 | 说明 |
-|------|------|------|
-| AI 委托成功率 | [从实际使用中估算] | Feature 委托后一次通过的比例 |
-| 平均 Prompt 轮数 | [从交互历史估算] | 完成一个任务的平均对话轮数 |
-| 并行任务数 | [从 git 分支/worktree 统计] | 同时进行的独立任务数 |
-
-## 遇到的阻碍
-
-- [如有，列出当前阻碍和需要的支持]
-
-## 下一步计划
-
-- [列出接下来要做的 1-3 件事]
-```
-
----
-
-**Level 7-8 用户：完整版汇报（含自动化指标）**
-
-```markdown
-# AI 工程能力进度汇报
-
-**汇报人**：[用户名]
-**汇报日期**：[今天日期]
-**当前 Level**：[从 PROGRESS.md 读取]
-**目标 Level**：8（自动化编排系统）
-
-## 本周期已完成
-
-- [列出已完成的里程碑和子技能]
-
-## 当前进行中
-
-- **聚焦子技能**：[从 PROGRESS.md 读取]
-- **进展描述**：[基于 git 活动和文件变更总结]
-- **预计完成**：[基于进度估算]
-
-## 自动化基础设施状态
-
-| 组件 | 状态 | 备注 |
-|------|------|------|
-| CLAUDE.md 工作流规则 | [状态] | [规则数量和覆盖度] |
-| Custom Commands | [状态] | [命令数量和使用频率] |
-| Hooks 自动质检 | [状态] | [Hook 数量和拦截率] |
-
-## Level 8 子技能进度总览
-
-| 子技能 | 状态 | 完成度 |
-|--------|------|--------|
-| Headless 模式脚本 | [状态] | [进度条] |
-| PR 自动 Review | [状态] | [进度条] |
-| CI 自动修复 | [状态] | [进度条] |
-| Issue 自动分类 | [状态] | [进度条] |
-| 成本监控 | [状态] | [进度条] |
-
-## 自动化运行指标（Level 8）
-
-| 指标 | 本周期 | 趋势 |
-|------|--------|------|
-| PR Review 覆盖率 | [百分比] | [↑/↓/→] |
-| 自动修复成功率 | [百分比] | [↑/↓/→] |
-| AI API 周成本 | [金额] | [↑/↓/→] |
-| Issue 分类准确率 | [百分比] | [↑/↓/→] |
-
-## 遇到的阻碍
-
-- [如有，列出当前阻碍和需要的支持]
-
-## 下一步计划
-
-- [列出接下来要做的 1-3 件事]
-```
-
-### Step 3：确认与输出
-
-生成后询问用户是否需要调整措辞或补充内容，然后输出最终版本。
+After generating the report, ask the user if they'd like to adjust the wording or add supplementary content, then output the final version.
