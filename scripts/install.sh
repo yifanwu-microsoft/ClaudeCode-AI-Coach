@@ -89,29 +89,33 @@ main() {
 
     local source_content
     source_content=$(cat "$CLAUDE_MD_SOURCE")
-    local coach_block
-    coach_block=$(printf '%s\n%s\n%s' "$MARKER_START" "$source_content" "$MARKER_END")
 
     local target_file="$CLAUDE_HOME/CLAUDE.md"
+    local tmp_block
+    tmp_block=$(mktemp)
+    printf '%s\n%s\n%s\n' "$MARKER_START" "$source_content" "$MARKER_END" > "$tmp_block"
+
     if [ -f "$target_file" ]; then
         local target_content
         target_content=$(cat "$target_file")
         if echo "$target_content" | grep -qF "$MARKER_START"; then
-            awk -v start="$MARKER_START" -v end="$MARKER_END" -v new="$coach_block" '
-                $0 == start { skip=1; print new; next }
+            awk -v start="$MARKER_START" -v end="$MARKER_END" -v blockfile="$tmp_block" '
+                $0 == start { skip=1; while ((getline line < blockfile) > 0) print line; close(blockfile); next }
                 $0 == end { skip=0; next }
                 !skip { print }
             ' "$target_file" > "$target_file.tmp"
             mv "$target_file.tmp" "$target_file"
             info "CLAUDE.md coach block updated (preserving existing rules)"
         else
-            printf '\n\n%s\n' "$coach_block" >> "$target_file"
+            printf '\n\n' >> "$target_file"
+            cat "$tmp_block" >> "$target_file"
             info "CLAUDE.md coach block appended (existing rules unaffected)"
         fi
     else
-        echo "$coach_block" > "$target_file"
+        cp "$tmp_block" "$target_file"
         info "CLAUDE.md created"
     fi
+    rm -f "$tmp_block"
 
     # 3. Sync PROGRESS.md (only create if not exists — protect local progress)
     if [ -f "$CLAUDE_HOME/PROGRESS.md" ]; then
