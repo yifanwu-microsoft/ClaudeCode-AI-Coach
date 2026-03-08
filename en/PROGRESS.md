@@ -6,6 +6,49 @@
 - **Target Level**: Pending Assessment
 - **Assessment Date**: Pending Assessment
 
+## Level 1-2 Sub-skills Status (AI-Assisted Programming Basics)
+
+| # | Sub-skill | Status | Acceptance Criteria |
+|---|-----------|--------|-------------------|
+| 1 | AI Code Completion Habits | 🔴 Not Started | Naturally uses AI completion in daily development |
+| 2 | Claude Code Basic Dialogue | 🔴 Not Started | 3+ effective conversations per day |
+| 3 | AI Code Judgment | 🔴 Not Started | Has a habit of accepting/modifying/rejecting each piece of AI-generated code |
+
+Graduation Test: Use AI assistance to complete 3 small component features (form + list + detail view), with AI contributing 20%+ of the code, and be able to explain every line.
+
+## Level 3-4 Sub-skills Status (Prompt Engineering + Context Management)
+
+| # | Sub-skill | Status | Acceptance Criteria |
+|---|-----------|--------|-------------------|
+| 1 | Claude Code Core Functions | 🔴 Not Started | Proficient with /init, /plan, /compact, /cost |
+| 2 | Plan Mode Usage | 🔴 Not Started | 100% use of Plan Mode for complex tasks (3+ files) |
+| 3 | Structured Prompts (CRATE) | 🔴 Not Started | Average 1-3 prompt rounds to get satisfactory results |
+| 4 | CLAUDE.md Configuration & Maintenance | 🔴 Not Started | Includes tech stack, conventions, directory structure; kept up to date |
+
+Graduation Test: Complete a data table with filtering + sorting + pagination, using Plan Mode, within 1-3 prompt rounds, with manual modifications < 20%.
+
+## Level 5 Sub-skills Status (Intent-Driven Development)
+
+| # | Sub-skill | Status | Acceptance Criteria |
+|---|-----------|--------|-------------------|
+| 1 | Intent Description (Why/What, not How) | 🔴 Not Started | >70% of recent 10 prompts use What/Why framing |
+| 2 | Feature-Level Delegation | 🔴 Not Started | Completed 3+ full feature delegations (frontend + API + tests) |
+| 3 | Architecture Review Ability | 🔴 Not Started | AI solutions pass review on first attempt >80% of the time |
+| 4 | Task Decomposition & Dependency Analysis | 🔴 Not Started | Can break complex features into 3+ sub-tasks and map dependencies |
+
+Graduation Test: Complete a full feature (frontend + API + database), fully intent-driven without specifying implementation, AI solution passes review on first attempt, total time 2x+ faster than manual.
+
+## Level 6 Sub-skills Status (Multi-Agent Parallelism)
+
+| # | Sub-skill | Status | Acceptance Criteria |
+|---|-----------|--------|-------------------|
+| 1 | Parallel Task Identification | 🔴 Not Started | Can correctly distinguish parallelizable vs sequential tasks |
+| 2 | Git Worktree Isolation | 🔴 Not Started | Proficient with worktree for managing parallel branches |
+| 3 | Interface Contracts First | 🔴 Not Started | Defines interfaces before parallel development begins |
+| 4 | Multi-Agent Management (3+) | 🔴 Not Started | Stably manages 3+ concurrent agents, task throughput 2x+ |
+
+Graduation Test: 3 agents simultaneously complete different parts of a feature (API + component + tests), total time 2x+ faster than serial, all tests pass after merge.
+
 ## Level 7 Graduation Test
 
 - **Status**: ❌ Not Passed

@@ -11,6 +11,17 @@ CLAUDE_HOME="$HOME/.claude"
 MARKER_START="<!-- AI-COACH-START -->"
 MARKER_END="<!-- AI-COACH-END -->"
 
+# Track temp files for cleanup
+TEMP_FILES=()
+
+# Trap handler: clean up temp files on error or exit
+cleanup() {
+    for f in "${TEMP_FILES[@]}"; do
+        rm -f "$f" 2>/dev/null || true
+    done
+}
+trap cleanup EXIT ERR INT TERM
+
 # Default language: zh (Chinese)
 LANG_CHOICE="zh"
 
@@ -42,10 +53,40 @@ fi
 # Color output
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
+RED='\033[0;31m'
 NC='\033[0m'
 
 info()  { echo -e "${GREEN}[INFO]${NC} $1"; }
 warn()  { echo -e "${YELLOW}[WARN]${NC} $1"; }
+err()   { echo -e "${RED}[ERROR]${NC} $1"; }
+
+# Pre-flight validation
+preflight_check() {
+    local has_error=0
+
+    if [ ! -f "$REPO_ROOT/CLAUDE.md" ]; then
+        err "CLAUDE.md not found in repo root ($REPO_ROOT)"
+        err "Are you running this script from the correct repository?"
+        has_error=1
+    fi
+
+    if [ ! -f "$REPO_ROOT/PROGRESS.md" ]; then
+        err "PROGRESS.md not found in repo root ($REPO_ROOT)"
+        has_error=1
+    fi
+
+    if [ ! -f "$REPO_ROOT/ai-engineering-leveling-guide.md" ]; then
+        err "ai-engineering-leveling-guide.md not found in repo root ($REPO_ROOT)"
+        has_error=1
+    fi
+
+    if [ "$has_error" -eq 1 ]; then
+        err "Pre-flight check failed. Aborting installation."
+        exit 1
+    fi
+
+    info "Pre-flight check passed"
+}
 
 # Set source paths based on language
 set_source_paths() {
@@ -62,7 +103,39 @@ set_source_paths() {
     fi
 }
 
+# Post-install verification
+verify_install() {
+    local has_error=0
+
+    info "Running post-install verification..."
+
+    if [ ! -f "$CLAUDE_HOME/CLAUDE.md" ]; then
+        err "Verification failed: CLAUDE.md not found in $CLAUDE_HOME"
+        has_error=1
+    fi
+
+    if [ ! -f "$CLAUDE_HOME/PROGRESS.md" ]; then
+        err "Verification failed: PROGRESS.md not found in $CLAUDE_HOME"
+        has_error=1
+    fi
+
+    if [ ! -f "$CLAUDE_HOME/commands/assess.md" ]; then
+        err "Verification failed: commands/assess.md not found in $CLAUDE_HOME"
+        has_error=1
+    fi
+
+    if [ "$has_error" -eq 1 ]; then
+        err "Post-install verification failed. Installation may be incomplete."
+        return 1
+    fi
+
+    info "Post-install verification passed"
+}
+
 main() {
+    # Pre-flight validation
+    preflight_check
+
     set_source_paths
 
     if [[ "$LANG_CHOICE" == "en" ]]; then
@@ -93,9 +166,14 @@ main() {
     local target_file="$CLAUDE_HOME/CLAUDE.md"
     local tmp_block
     tmp_block=$(mktemp)
+    TEMP_FILES+=("$tmp_block")
     printf '%s\n%s\n%s\n' "$MARKER_START" "$source_content" "$MARKER_END" > "$tmp_block"
 
     if [ -f "$target_file" ]; then
+        # Backup before modifying
+        cp "$target_file" "$target_file.bak"
+        info "Backed up existing CLAUDE.md to CLAUDE.md.bak"
+
         local target_content
         target_content=$(cat "$target_file")
         if echo "$target_content" | grep -qF "$MARKER_START"; then
@@ -104,6 +182,7 @@ main() {
                 $0 == end { skip=0; next }
                 !skip { print }
             ' "$target_file" > "$target_file.tmp"
+            TEMP_FILES+=("$target_file.tmp")
             mv "$target_file.tmp" "$target_file"
             info "CLAUDE.md coach block updated (preserving existing rules)"
         else
@@ -143,6 +222,9 @@ main() {
         cp -f "$REPO_ROOT/ai-engineering-leveling-guide.md" "$CLAUDE_HOME/ai-engineering-leveling-guide.md"
         info "Guide installed (fallback to Chinese)"
     fi
+
+    # Post-install verification
+    verify_install
 
     echo ""
     if [[ "$LANG_CHOICE" == "en" ]]; then
