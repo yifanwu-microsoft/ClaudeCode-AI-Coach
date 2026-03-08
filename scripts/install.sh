@@ -204,9 +204,10 @@ main() {
         local target_content
         target_content=$(cat "$target_file")
         if echo "$target_content" | grep -qF "$MARKER_START"; then
-            awk -v start="$MARKER_START" -v end="$MARKER_END" -v blockfile="$tmp_block" '
-                $0 == start { skip=1; while ((getline line < blockfile) > 0) print line; close(blockfile); next }
-                $0 == end { skip=0; next }
+            # Use index() for robust substring matching (handles trailing whitespace, BOM, etc.)
+            awk -v blockfile="$tmp_block" '
+                index($0, "AI-COACH-START") > 0 { skip=1; while ((getline line < blockfile) > 0) print line; close(blockfile); next }
+                index($0, "AI-COACH-END") > 0 { skip=0; next }
                 !skip { print }
             ' "$target_file" > "$target_file.tmp"
             TEMP_FILES+=("$target_file.tmp")

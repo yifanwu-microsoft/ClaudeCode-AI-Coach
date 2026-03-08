@@ -93,10 +93,7 @@ remove_claude_block() {
         return
     fi
 
-    local content
-    content=$(cat "$target_file")
-
-    if ! echo "$content" | grep -qF "$MARKER_START"; then
+    if ! grep -q "AI-COACH-START" "$target_file"; then
         info "No AI Coach block found in CLAUDE.md, skipping"
         return
     fi
@@ -106,10 +103,12 @@ remove_claude_block() {
     info "Backed up CLAUDE.md to CLAUDE.md.bak"
 
     # Remove the marker block and trim blank lines
-    awk -v start="$MARKER_START" -v end="$MARKER_END" '
-        $0 == start { skip=1; next }
-        $0 == end   { skip=0; next }
-        !skip       { print }
+    # Use index() for substring matching instead of exact $0 == to handle
+    # trailing whitespace, BOM, or encoding variations
+    awk -v start="AI-COACH-START" -v end="AI-COACH-END" '
+        index($0, start) > 0 { skip=1; next }
+        index($0, end) > 0   { skip=0; next }
+        !skip                 { print }
     ' "$target_file.bak" | awk '
         # Trim leading and trailing blank lines
         NF { found=1 }
@@ -120,6 +119,15 @@ remove_claude_block() {
             for (i = 1; i <= n; i++) print lines[i]
         }
     ' > "$target_file.tmp"
+
+    # Secondary check: verify no coach content leaked through
+    if grep -qF "AI Coach Assessment" "$target_file.tmp" 2>/dev/null && \
+       grep -qF "PROGRESS.md" "$target_file.tmp" 2>/dev/null && \
+       grep -qF "sub-skill" "$target_file.tmp" 2>/dev/null; then
+        warn "Residual coach content detected after marker removal, performing fallback cleanup"
+        # Fallback: use sed to remove everything between markers (inclusive)
+        sed -n '/AI-COACH-START/,/AI-COACH-END/!p' "$target_file.bak" > "$target_file.tmp"
+    fi
 
     # Check if file is empty after removing the block
     if [ ! -s "$target_file.tmp" ] || ! grep -q '[^[:space:]]' "$target_file.tmp"; then
@@ -186,7 +194,7 @@ verify_uninstall() {
 
     # Check CLAUDE.md marker block is gone
     if [ -f "$CLAUDE_HOME/CLAUDE.md" ]; then
-        if grep -qF "$MARKER_START" "$CLAUDE_HOME/CLAUDE.md"; then
+        if grep -q "AI-COACH-START" "$CLAUDE_HOME/CLAUDE.md"; then
             err "Verification failed: AI Coach block still present in CLAUDE.md"
             has_error=1
         fi
