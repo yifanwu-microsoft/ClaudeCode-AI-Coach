@@ -1,18 +1,5 @@
-<#
-.SYNOPSIS
-    将 AI 教练系统同步到/从全局 ~/.claude/ 目录
-
-.DESCRIPTION
-    push: 部署 repo 配置到本机 $env:USERPROFILE\.claude\
-    pull: 拉取本机 PROGRESS.md 回 repo
-
-.PARAMETER Direction
-    同步方向：push 或 pull
-
-.EXAMPLE
-    .\scripts\sync.ps1 -Direction push
-    .\scripts\sync.ps1 -Direction pull
-#>
+# AI Coach System Sync Tool
+# Usage: .\scripts\sync.ps1 -Direction push|pull
 
 param(
     [Parameter(Mandatory = $true)]
@@ -32,80 +19,94 @@ function Write-Info { param($Msg) Write-Host "[INFO] $Msg" -ForegroundColor Gree
 function Write-Warn { param($Msg) Write-Host "[WARN] $Msg" -ForegroundColor Yellow }
 
 function Push-ToGlobal {
-    Write-Info "开始部署到 $ClaudeHome ..."
+    Write-Info "Deploying to $ClaudeHome ..."
 
-    # 创建目录
+    # Create directory
     $commandsDir = Join-Path $ClaudeHome "commands"
-    New-Item -ItemType Directory -Path $commandsDir -Force | Out-Null
-
-    # 1. 同步 commands/
-    $sourceCommands = Join-Path $RepoRoot ".claude\commands"
-    if (Test-Path $sourceCommands) {
-        Get-ChildItem "$sourceCommands\*.md" | ForEach-Object {
-            Copy-Item $_.FullName $commandsDir -Force
-        }
-        Write-Info "Commands 已同步"
+    if (-not (Test-Path $commandsDir)) {
+        New-Item -ItemType Directory -Path $commandsDir -Force | Out-Null
     }
 
-    # 2. 同步 CLAUDE.md（标记块合并）
-    $sourceContent = Get-Content (Join-Path $RepoRoot "CLAUDE.md") -Raw -Encoding UTF8
-    $coachBlock = "$MarkerStart`r`n$sourceContent`r`n$MarkerEnd"
+    # 1. Sync commands/
+    $sourceCommands = Join-Path $RepoRoot ".claude\commands"
+    if (Test-Path $sourceCommands) {
+        $commandFiles = Get-ChildItem "$sourceCommands\*.md" -ErrorAction SilentlyContinue
+        foreach ($file in $commandFiles) {
+            Copy-Item $file.FullName $commandsDir -Force
+        }
+        Write-Info "Commands synced"
+    }
 
+    # 2. Sync CLAUDE.md (marker block merge)
+    $sourceFile = Join-Path $RepoRoot "CLAUDE.md"
     $targetFile = Join-Path $ClaudeHome "CLAUDE.md"
+
+    $sourceContent = Get-Content $sourceFile -Raw -Encoding UTF8
+    $coachBlock = $MarkerStart + "`r`n" + $sourceContent + "`r`n" + $MarkerEnd
+
     if (Test-Path $targetFile) {
         $targetContent = Get-Content $targetFile -Raw -Encoding UTF8
-        if ($targetContent -match [regex]::Escape($MarkerStart)) {
-            # 替换已有的教练块
-            $pattern = "(?s)" + [regex]::Escape($MarkerStart) + ".*?" + [regex]::Escape($MarkerEnd)
-            $targetContent = $targetContent -replace $pattern, $coachBlock
-            Set-Content $targetFile $targetContent -Encoding UTF8 -NoNewline
-            Write-Info "CLAUDE.md 教练块已更新（保留原有规则）"
+
+        if ($targetContent.Contains($MarkerStart)) {
+            # Replace existing coach block
+            $startIdx = $targetContent.IndexOf($MarkerStart)
+            $endIdx = $targetContent.IndexOf($MarkerEnd, $startIdx)
+
+            if ($endIdx -gt $startIdx) {
+                $before = $targetContent.Substring(0, $startIdx)
+                $after = $targetContent.Substring($endIdx + $MarkerEnd.Length)
+                $newContent = $before + $coachBlock + $after
+                Set-Content $targetFile $newContent -Encoding UTF8 -NoNewline
+                Write-Info "CLAUDE.md coach block updated (preserving existing rules)"
+            }
         }
         else {
-            # 追加教练块
-            $targetContent = $targetContent.TrimEnd() + "`r`n`r`n$coachBlock`r`n"
-            Set-Content $targetFile $targetContent -Encoding UTF8 -NoNewline
-            Write-Info "CLAUDE.md 教练块已追加（原有规则不受影响）"
+            # Append coach block
+            $newContent = $targetContent.TrimEnd() + "`r`n`r`n" + $coachBlock + "`r`n"
+            Set-Content $targetFile $newContent -Encoding UTF8 -NoNewline
+            Write-Info "CLAUDE.md coach block appended (existing rules unaffected)"
         }
     }
     else {
         Set-Content $targetFile $coachBlock -Encoding UTF8 -NoNewline
-        Write-Info "CLAUDE.md 已创建"
+        Write-Info "CLAUDE.md created"
     }
 
-    # 3. 同步 PROGRESS.md
+    # 3. Sync PROGRESS.md
     Copy-Item (Join-Path $RepoRoot "PROGRESS.md") $ClaudeHome -Force
-    Write-Info "PROGRESS.md 已同步"
+    Write-Info "PROGRESS.md synced"
 
-    # 4. 同步参考文档
+    # 4. Sync guide
     $guideFile = Join-Path $RepoRoot "ai-engineering-leveling-guide.md"
     if (Test-Path $guideFile) {
         Copy-Item $guideFile $ClaudeHome -Force
-        Write-Info "参考文档已同步"
+        Write-Info "Guide synced"
     }
 
     Write-Host ""
-    Write-Info "✅ 部署完成！教练系统已在本机全局生效。"
-    Write-Info "在任何项目中打开 Claude Code 即可使用。"
+    Write-Info "Deploy complete! AI Coach is now globally active."
+    Write-Info "You can use it in any project with Claude Code."
 }
 
 function Pull-FromGlobal {
-    Write-Info "从 $ClaudeHome 拉取进度 ..."
+    Write-Info "Pulling progress from $ClaudeHome ..."
 
     $globalProgress = Join-Path $ClaudeHome "PROGRESS.md"
     if (Test-Path $globalProgress) {
         Copy-Item $globalProgress (Join-Path $RepoRoot "PROGRESS.md") -Force
-        Write-Info "✅ PROGRESS.md 已拉取到 repo"
+        Write-Info "PROGRESS.md pulled to repo"
         Write-Host ""
-        Write-Info "下一步：git add PROGRESS.md && git commit -m 'chore: sync progress' && git push"
+        Write-Info "Next: git add PROGRESS.md ; git commit -m 'chore: sync progress' ; git push"
     }
     else {
-        Write-Warn "未找到 $globalProgress，无需拉取"
+        Write-Warn "No PROGRESS.md found at $globalProgress"
     }
 }
 
-# 主逻辑
-switch ($Direction) {
-    "push" { Push-ToGlobal }
-    "pull" { Pull-FromGlobal }
+# Main logic
+if ($Direction -eq "push") {
+    Push-ToGlobal
+}
+elseif ($Direction -eq "pull") {
+    Pull-FromGlobal
 }

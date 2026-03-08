@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -ExecutionPolicy Bypass -File \".\\\\scripts\\\\sync.ps1\" -Direction push)",
+      "Bash(xxd:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(powershell -ExecutionPolicy Bypass -File \".\\\\scripts\\\\sync.ps1\" -Direction pull)"
+    ]
+  }
+}

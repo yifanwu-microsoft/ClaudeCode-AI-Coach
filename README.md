@@ -72,6 +72,7 @@ chmod +x scripts/sync.sh
 | `/practice` | 获取当前聚焦子技能的练习任务 | 想练习但不知道做什么时 |
 | `/progress-report` | 生成向上汇报 | 需要给 leader 汇报进度时 |
 | `/review-prompt` | 分析 prompt 层级并给出升级建议 | 想提升 prompt 质量时 |
+| `/sync` | AI 辅助的跨设备同步 | 换电脑或想备份进度时 |
 
 ## 跨电脑同步
 
