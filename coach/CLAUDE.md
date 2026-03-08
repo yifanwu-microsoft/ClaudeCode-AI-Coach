@@ -14,6 +14,9 @@ The file `PROGRESS.md` in this directory tracks the user's current progress. Rea
 ## First Interaction Rules
 
 If PROGRESS.md shows "Current Level" as "Pending Assessment", this is a new user or first-time setup:
+
+**Important**: If the user is running `/coach:install`, **skip this section entirely** — the install command has its own built-in assessment flow (Step 4) that runs after installation completes. Do not assess before installing.
+
 1. Do not assume the user's Level — but don't just tell them to run a command either
 2. **Start an inline quick assessment immediately** with these 3 questions (ask one at a time):
    - "How often do you use AI code completion (e.g., Copilot, Claude) in your daily work?" (Never / Sometimes / Always)
@@ -23,8 +26,6 @@ If PROGRESS.md shows "Current Level" as "Pending Assessment", this is a new user
 4. Update PROGRESS.md with the results (with user confirmation)
 5. Unlock the 🎯 First Contact achievement
 6. For a deeper assessment, suggest `/coach:assess`
-
-**Note**: If the user ran `/coach:install`, the install command already performs this inline quick assessment automatically. In that case, PROGRESS.md will no longer show "Pending Assessment" and this section will not trigger. This avoids duplicate assessments.
 
 ## Level Detection Rules
 

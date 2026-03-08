@@ -1,5 +1,7 @@
 AI coaching system one-click install with automatic initial assessment. Running this command will complete the installation and calibrate the coaching experience — no manual steps required.
 
+**IMPORTANT**: Execute steps in strict order. Do NOT read PROGRESS.md or start any assessment before Step 1 (installation) completes successfully. The install must finish first.
+
 ## Steps
 
 ### Step 1: Detect Environment and Run Installation
