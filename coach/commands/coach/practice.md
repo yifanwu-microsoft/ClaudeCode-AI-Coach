@@ -20,7 +20,12 @@ Read `PROGRESS.md` to confirm: current Level, focused sub-skill, and sub-skill s
 
 ### Step 3: Generate Practice Tasks
 
-Generate 1-3 tasks based on current Level and focused sub-skill. Reference `ai-engineering-leveling-guide.md` for acceptance criteria.
+Generate 1-3 tasks based on current Level and focused sub-skill.
+
+**Use the leveling guide actively:**
+- Look up `### Practice: Exercises` in the user's current Level section for inspiration
+- Look up `### Anti-patterns: Common Pitfalls` to design tasks that counter common mistakes
+- Look up `### Done When: Acceptance Criteria` to align task acceptance criteria with Level graduation requirements
 
 - Status "not started" → beginner tasks; "in progress" → intermediate/advanced
 - Each task should have 3 difficulty tiers (Beginner / Intermediate / Advanced)
