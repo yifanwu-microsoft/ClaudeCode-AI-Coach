@@ -1,29 +1,7 @@
 # AI Coach System Install Tool
-# Usage: .\scripts\install.ps1 [-Lang en|zh]
-
-param(
-    [ValidateSet("en", "zh", "")]
-    [string]$Lang = ""
-)
+# Usage: .\scripts\install.ps1
 
 $ErrorActionPreference = "Stop"
-
-# Interactive prompt when no -Lang flag was provided
-if ($Lang -eq "") {
-    while ($true) {
-        Write-Host ""
-        Write-Host "Please select your language / 请选择语言:"
-        Write-Host "  1) 中文 (Chinese)"
-        Write-Host "  2) English"
-        $choice = Read-Host "Your choice / 请输入选项 [1/2]"
-        switch ($choice) {
-            { $_ -eq "1" -or $_ -eq "" } { $Lang = "zh"; break }
-            "2" { $Lang = "en"; break }
-            default { Write-Host "Invalid choice. Please enter 1 or 2." }
-        }
-        if ($Lang -ne "") { break }
-    }
-}
 
 $RepoRoot = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
 $ClaudeHome = Join-Path $env:USERPROFILE ".claude"
@@ -103,20 +81,11 @@ function Test-PostInstall {
 }
 
 function Get-SourcePaths {
-    if ($Lang -eq "en") {
-        return @{
-            ClaudeMd = Join-Path $RepoRoot "en\CLAUDE.md"
-            Progress = Join-Path $RepoRoot "en\PROGRESS.md"
-            Guide    = Join-Path $RepoRoot "en\ai-engineering-leveling-guide.md"
-            Commands = Join-Path $RepoRoot "en\commands"
-        }
-    } else {
-        return @{
-            ClaudeMd = Join-Path $RepoRoot "CLAUDE.md"
-            Progress = Join-Path $RepoRoot "PROGRESS.md"
-            Guide    = Join-Path $RepoRoot "ai-engineering-leveling-guide.md"
-            Commands = Join-Path $RepoRoot ".claude\commands"
-        }
+    return @{
+        ClaudeMd = Join-Path $RepoRoot "CLAUDE.md"
+        Progress = Join-Path $RepoRoot "PROGRESS.md"
+        Guide    = Join-Path $RepoRoot "ai-engineering-leveling-guide.md"
+        Commands = Join-Path $RepoRoot ".claude\commands"
     }
 }
 
@@ -129,11 +98,7 @@ function Install-CoachSystem {
         $paths = Get-SourcePaths
         $installStarted = $true
 
-        if ($Lang -eq "en") {
-            Write-Info "Installing AI Coach System (English) to $ClaudeHome ..."
-        } else {
-            Write-Info "Installing AI Coach to $ClaudeHome ..."
-        }
+        Write-Info "Installing AI Coach System to $ClaudeHome ..."
 
         # Create directory
         $commandsDir = Join-Path $ClaudeHome "commands"
@@ -173,10 +138,9 @@ function Install-CoachSystem {
         $sourceFile = $paths.ClaudeMd
         $targetFile = Join-Path $ClaudeHome "CLAUDE.md"
 
-        # Fallback to Chinese if English not found
         if (-not (Test-Path $sourceFile)) {
-            Write-Warn "CLAUDE.md source not found at $sourceFile, falling back to Chinese"
-            $sourceFile = Join-Path $RepoRoot "CLAUDE.md"
+            Write-Err "CLAUDE.md not found at $sourceFile"
+            exit 1
         }
 
         $sourceContent = Get-Content $sourceFile -Raw -Encoding UTF8
@@ -240,22 +204,17 @@ function Install-CoachSystem {
         if (Test-Path $guideSource) {
             Copy-Item $guideSource $ClaudeHome -Force
             Write-Info "Guide installed"
-        } elseif (Test-Path (Join-Path $RepoRoot "ai-engineering-leveling-guide.md")) {
-            Copy-Item (Join-Path $RepoRoot "ai-engineering-leveling-guide.md") $ClaudeHome -Force
-            Write-Info "Guide installed (fallback to Chinese)"
+        } else {
+            Write-Err "Guide not found at $guideSource"
+            exit 1
         }
 
         # Post-install verification
         Test-PostInstall | Out-Null
 
         Write-Host ""
-        if ($Lang -eq "en") {
-            Write-Info "Install complete! AI Coach is now globally active."
-            Write-Info "Open Claude Code in any project and run /assess for initial evaluation."
-        } else {
-            Write-Info "Install complete! AI Coach is now globally active."
-            Write-Info "Open Claude Code in any project and run /assess for initial evaluation."
-        }
+        Write-Info "Install complete! AI Coach is now globally active."
+        Write-Info "Open Claude Code in any project and run /coach:assess for initial evaluation."
     }
     finally {
         Remove-TempFiles

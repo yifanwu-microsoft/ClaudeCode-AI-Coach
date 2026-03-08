@@ -1,93 +1,100 @@
-# PROGRESS.md — AI 工程能力进度追踪
+# PROGRESS.md — AI Engineering Skills Progress Tracker
 
-## 当前总体评估
+## Overall Assessment
 
-- **当前 Level**：待评估
-- **目标 Level**：待评估
-- **评估日期**：待评估
+- **Current Level**: Pending Assessment
+- **Target Level**: Pending Assessment
+- **Assessment Date**: Pending Assessment
 
-## Level 1-2 子技能状态（AI 辅助编程入门）
+## Level 1-2 Sub-skills Status (AI-Assisted Programming Basics)
 
-| # | 子技能 | 状态 | 验收标准 |
-|---|--------|------|---------|
-| 1 | AI 代码补全习惯 | 🔴 未开始 | 日常开发中自然使用 AI 补全 |
-| 2 | Claude Code 基本对话 | 🔴 未开始 | 每天 3+ 次有效对话 |
-| 3 | AI 代码判断能力 | 🔴 未开始 | 对每段 AI 代码有接受/修改/拒绝的习惯 |
+| # | Sub-skill | Status | Acceptance Criteria |
+|---|-----------|--------|-------------------|
+| 1 | AI Code Completion Habits | 🔴 Not Started | Naturally uses AI completion in daily development |
+| 2 | Claude Code Basic Dialogue | 🔴 Not Started | 3+ effective conversations per day |
+| 3 | AI Code Judgment | 🔴 Not Started | Has a habit of accepting/modifying/rejecting each piece of AI-generated code |
 
-毕业测试：用 AI 辅助完成 3 个组件的小 Feature（表单+列表+详情），AI 贡献 20%+ 代码，能解释每一行。
+Graduation Test: Use AI assistance to complete 3 small component features (form + list + detail view), with AI contributing 20%+ of the code, and be able to explain every line.
 
-## Level 3-4 子技能状态（提示词工程 + 上下文管理）
+## Level 3-4 Sub-skills Status (Prompt Engineering + Context Management)
 
-| # | 子技能 | 状态 | 验收标准 |
-|---|--------|------|---------|
-| 1 | Claude Code 核心功能掌握 | 🔴 未开始 | 熟练使用 /init、/plan、/compact、/cost |
-| 2 | Plan Mode 使用 | 🔴 未开始 | 复杂任务（3+ 文件）100% 使用 Plan Mode |
-| 3 | 结构化 Prompt（CRATE） | 🔴 未开始 | 平均 1-3 轮 prompt 得到满意结果 |
-| 4 | CLAUDE.md 配置与维护 | 🔴 未开始 | 包含技术栈、规范、目录结构，保持更新 |
+| # | Sub-skill | Status | Acceptance Criteria |
+|---|-----------|--------|-------------------|
+| 1 | Claude Code Core Functions | 🔴 Not Started | Proficient with /init, /plan, /compact, /cost |
+| 2 | Plan Mode Usage | 🔴 Not Started | 100% use of Plan Mode for complex tasks (3+ files) |
+| 3 | Structured Prompts (CRATE) | 🔴 Not Started | Average 1-3 prompt rounds to get satisfactory results |
+| 4 | CLAUDE.md Configuration & Maintenance | 🔴 Not Started | Includes tech stack, conventions, directory structure; kept up to date |
 
-毕业测试：完成带过滤+排序+分页的数据表，使用 Plan Mode，1-3 轮 prompt，手动修改 < 20%。
+Graduation Test: Complete a data table with filtering + sorting + pagination, using Plan Mode, within 1-3 prompt rounds, with manual modifications < 20%.
 
-## Level 5 子技能状态（意图驱动开发）
+## Level 5 Sub-skills Status (Intent-Driven Development)
 
-| # | 子技能 | 状态 | 验收标准 |
-|---|--------|------|---------|
-| 1 | 意图描述（Why/What 而非 How） | 🔴 未开始 | 最近 10 条 prompt 中 What/Why 占比 > 70% |
-| 2 | Feature 级别委托 | 🔴 未开始 | 完成 3+ 次完整 Feature 委托（前端+API+测试） |
-| 3 | 架构审查能力 | 🔴 未开始 | AI 方案一次通过审查比例 > 80% |
-| 4 | 任务拆解与依赖分析 | 🔴 未开始 | 能将复杂 Feature 拆为 3+ 子任务并画出依赖图 |
+| # | Sub-skill | Status | Acceptance Criteria |
+|---|-----------|--------|-------------------|
+| 1 | Intent Description (Why/What, not How) | 🔴 Not Started | >70% of recent 10 prompts use What/Why framing |
+| 2 | Feature-Level Delegation | 🔴 Not Started | Completed 3+ full feature delegations (frontend + API + tests) |
+| 3 | Architecture Review Ability | 🔴 Not Started | AI solutions pass review on first attempt >80% of the time |
+| 4 | Task Decomposition & Dependency Analysis | 🔴 Not Started | Can break complex features into 3+ sub-tasks and map dependencies |
 
-毕业测试：完成完整 Feature（前端+API+数据库），全程意图驱动不指定实现，AI 方案一次通过审查，总耗时比纯手动快 2x+。
+Graduation Test: Complete a full feature (frontend + API + database), fully intent-driven without specifying implementation, AI solution passes review on first attempt, total time 2x+ faster than manual.
 
-## Level 6 子技能状态（多 Agent 并行）
+## Level 6 Sub-skills Status (Multi-Agent Parallelism)
 
-| # | 子技能 | 状态 | 验收标准 |
-|---|--------|------|---------|
-| 1 | 并行任务识别 | 🔴 未开始 | 能正确区分可并行 vs 必须串行的任务 |
-| 2 | Git Worktree 隔离 | 🔴 未开始 | 熟练使用 worktree 管理并行分支 |
-| 3 | 接口契约先行 | 🔴 未开始 | 并行前先定义接口，再分头开发 |
-| 4 | 多 Agent 管理（3+） | 🔴 未开始 | 稳定管理 3+ 并发 Agent，任务吞吐量 2x+ |
+| # | Sub-skill | Status | Acceptance Criteria |
+|---|-----------|--------|-------------------|
+| 1 | Parallel Task Identification | 🔴 Not Started | Can correctly distinguish parallelizable vs sequential tasks |
+| 2 | Git Worktree Isolation | 🔴 Not Started | Proficient with worktree for managing parallel branches |
+| 3 | Interface Contracts First | 🔴 Not Started | Defines interfaces before parallel development begins |
+| 4 | Multi-Agent Management (3+) | 🔴 Not Started | Stably manages 3+ concurrent agents, task throughput 2x+ |
 
-毕业测试：3 个 Agent 同时完成 Feature 各部分（API+组件+测试），总耗时比串行快 2x+，合并后全部测试通过。
+Graduation Test: 3 agents simultaneously complete different parts of a feature (API + component + tests), total time 2x+ faster than serial, all tests pass after merge.
 
-## Level 7 子技能状态（工作流编排）
+## Level 7 Graduation Test
 
-| # | 子技能 | 状态 | 验收标准 |
-|---|--------|------|---------|
-| 1 | CLAUDE.md 工作流规则 | 🔴 未开始 | 包含文件创建规则、Git 规范、测试规则 |
-| 2 | Custom Slash Commands | 🔴 未开始 | 有 5+ 个 Commands 覆盖日常场景 |
-| 3 | Hooks 自动化质检 | 🔴 未开始 | 配置写文件后自动类型检查 |
+- **Status**: ❌ Not Passed
+- **Test Content**: A fresh Claude instance independently completes a CRUD page using only CLAUDE.md + Custom Commands
+- **Notes**: Must pass this test before starting Level 8 CI/CD configuration
 
-毕业测试：全新 Claude 实例仅靠 CLAUDE.md + Custom Commands 独立完成 CRUD 页面，代码质量达标。
+## Level 7 Sub-skills Status
 
-## Level 8 子技能状态（自动化编排系统）
+| # | Sub-skill | Status | Acceptance Criteria |
+|---|-----------|--------|-------------------|
+| 1 | CLAUDE.md Workflow Rules | 🔴 Not Started | Includes file creation rules, Git conventions, testing rules |
+| 2 | Custom Slash Commands | 🔴 Not Started | 5+ Commands covering daily scenarios |
+| 3 | Hooks Automated QA | 🔴 Not Started | Auto type-checking configured after writing files |
 
-| # | 子技能 | 状态 | 验收标准 |
-|---|--------|------|---------|
-| 1 | Headless 模式脚本编写 | 🔴 未开始 | 能用 `claude -p` 批量生成测试文件 |
-| 2 | CI/CD PR 自动 Review | 🔴 未开始 | GitHub Action 运行 2 周，覆盖率 100% |
-| 3 | CI 失败自动修复 Pipeline | 🔴 未开始 | 运行 2 周，成功率 >30% |
-| 4 | Issue 自动分类系统 | 🔴 未开始 | 至少 10 个 Issue 被自动分类 |
-| 5 | 成本监控与度量体系 | 🔴 未开始 | API 花费可追踪，有费用告警 |
+Status Legend: 🔴 Not Started / 🟡 Practicing / 🟢 Verified
 
-状态说明：🔴 未开始 / 🟡 练习中 / 🟢 已验收
+## Level 8 Sub-skills Status
 
-## 当前聚焦
+| # | Sub-skill | Status | Acceptance Criteria |
+|---|-----------|--------|-------------------|
+| 1 | Headless Mode Scripting | 🔴 Not Started | Can batch-generate test files with `claude -p` |
+| 2 | CI/CD PR Auto Review | 🔴 Not Started | GitHub Action running for 2 weeks, 100% coverage |
+| 3 | CI Failure Auto-fix Pipeline | 🔴 Not Started | Running for 2 weeks, success rate >30% |
+| 4 | Issue Auto-triage System | 🔴 Not Started | At least 10 issues auto-classified |
+| 5 | Cost Monitoring & Metrics | 🔴 Not Started | API spend trackable, cost alerts configured |
 
-- **聚焦子技能**：待评估（请执行 `/coach:assess` 进行首次评估）
-- **原因**：—
-- **下一步**：—
+Status Legend: 🔴 Not Started / 🟡 Practicing / 🟢 Verified
 
-## 里程碑记录
+## Current Focus
 
-| 日期 | 里程碑 | 备注 |
-|------|--------|------|
+- **Focus Sub-skill**: Pending Assessment (run `/coach:assess` for initial assessment)
+- **Reason**: —
+- **Next Step**: —
+
+## Milestone Log
+
+| Date | Milestone | Notes |
+|------|-----------|-------|
 
 <!-- 
-更新指南：
-- 首次使用时执行 /coach:assess 进行评估，系统会自动填充以上字段
-- 完成一个子技能的验收后，将状态从 🔴/🟡 改为 🟢
-- 开始练习一个子技能后，将状态从 🔴 改为 🟡
-- 每次评估后更新「当前总体评估」和「评估日期」
-- 完成重要里程碑时添加到「里程碑记录」表格
-- 换电脑时无需同步，重新执行 /coach:assess 即可
+Update Guide:
+- Run /coach:assess on first use for assessment, the system will auto-fill the fields above
+- After completing a sub-skill verification, change status from 🔴/🟡 to 🟢
+- After starting practice on a sub-skill, change status from 🔴 to 🟡
+- Update "Overall Assessment" and "Assessment Date" after each assessment
+- Add entries to "Milestone Log" when important milestones are reached
+- Update Level 7 Graduation Test status after passing
+- When switching devices, no sync needed — just run /coach:assess again
 -->

@@ -1,206 +1,206 @@
-基于用户当前的进度状态，生成具体的、可在当前项目中执行的练习任务。
+Generate specific, actionable practice tasks that can be executed in the current project, based on the user's current progress.
 
-## 生成流程
+## Generation Process
 
-### Step 1：读取当前状态
-读取 `PROGRESS.md`，确认：
-- 当前 Level 是什么
-- 当前聚焦的子技能是什么
-- 该子技能的当前状态（未开始/练习中/已验收）
+### Step 1: Read Current State
+Read `PROGRESS.md` to confirm:
+- What is the current Level
+- What is the current focused sub-skill
+- What is the sub-skill's current status (not started / in progress / validated)
 
-### Step 2：扫描当前项目上下文（自动执行）
+### Step 2: Scan Current Project Context (automated)
 
-**如果用户尚未有项目（比如刚开始学习），提供以下引导练习：**
-- **Level 1-2**：建议创建一个简单练习项目（如待办事项应用、计算器、命令行工具），在其中练习基本对话。可以用任何熟悉的语言：Python、JavaScript、Go、Java 等均可。
-- **Level 3-4**：建议在现有项目中创建 CLAUDE.md，或用一个小项目练习 Plan Mode。项目不需要复杂——一个包含几个模块的小型项目即可开始练习结构化 Prompt 和上下文管理。
+**If the user doesn't have a project yet (e.g., just starting out), provide the following guided exercises:**
+- **Level 1-2**: Suggest creating a simple practice project (e.g., a to-do app, calculator, or CLI tool) to practice basic conversations. Any familiar language works: Python, JavaScript, Go, Java, etc.
+- **Level 3-4**: Suggest creating a CLAUDE.md in an existing project, or using a small project to practice Plan Mode. The project doesn't need to be complex — a small project with a few modules is enough to start practicing structured prompts and context management.
 
-在生成练习任务之前，先分析当前项目的实际状态，以便生成**与项目相关的针对性练习**：
+Before generating practice tasks, analyze the current project's actual state to produce **targeted, project-relevant exercises**:
 
-**扫描内容：**
-1. **项目技术栈**：检查 package.json、requirements.txt、go.mod、pom.xml、Cargo.toml、build.gradle 等，识别语言和框架
-2. **CLAUDE.md 状态**：是否存在？内容是否完善？是否需要更新？
-3. **测试状态**：哪些源代码文件有对应测试？哪些没有？测试框架是什么？
-4. **Commands 状态**：`.claude/commands/` 中有几个命令？覆盖哪些场景？
-5. **Hooks 状态**：是否配置了 Hooks？配置了哪些？
-6. **项目结构**：主要目录和文件组织方式
-7. **最近活动**：最近的 git log，了解用户在做什么
+**Scan Items:**
+1. **Project Tech Stack**: Check package.json, requirements.txt, go.mod, pom.xml, Cargo.toml, build.gradle, etc. to identify languages and frameworks
+2. **CLAUDE.md Status**: Does it exist? Is it comprehensive? Does it need updating?
+3. **Test Status**: Which source files have corresponding tests? Which don't? What test framework is used?
+4. **Commands Status**: How many commands are in `.claude/commands/`? What scenarios do they cover?
+5. **Hooks Status**: Are Hooks configured? Which ones?
+6. **Project Structure**: Main directories and file organization
+7. **Recent Activity**: Recent git log to understand what the user has been working on
 
-**生成策略：**
-- **优先生成项目相关任务**：如"你的某个模块没有测试，用 Level 5 方式委托 AI 编写"
-- **次选通用任务**：如果项目中没有合适的练习场景，回退到通用练习库
-- 练习任务应该直接为项目带来价值（如补测试、优化 CLAUDE.md），而不只是"练习"
-- **技术栈适配**：根据扫描到的技术栈调整练习内容中的具体工具和命令（如 Python 项目用 pytest、Go 项目用 go test）
+**Generation Strategy:**
+- **Prefer project-specific tasks**: e.g., "One of your modules has no tests — use Level 5 techniques to delegate test writing to AI"
+- **Fall back to generic tasks**: If the project doesn't offer suitable practice scenarios, use tasks from the generic practice library
+- Practice tasks should deliver real value to the project (e.g., adding tests, improving CLAUDE.md), not just be "exercises"
+- **Tech stack adaptation**: Adjust specific tools and commands in practice tasks based on the detected tech stack (e.g., pytest for Python projects, go test for Go projects)
 
-### Step 3：根据当前 Level 选择练习库
+### Step 3: Select from Practice Library Based on Current Level
 
-从以下对应 Level 的练习库中选择 1-3 个合适的任务。选择原则：
-- 如果子技能状态是「未开始」，从初级开始
-- 如果子技能状态是「练习中」，选中级或高级
-- **最优先**：能在当前项目中直接执行且为项目带来实际价值的任务（如补测试、完善 CLAUDE.md）
-- **次优先**：能在当前项目中直接执行的通用练习任务
-- **兜底**：使用下方练习库中的模板任务
+Choose 1-3 appropriate tasks from the practice library for the corresponding Level. Selection criteria:
+- If the sub-skill status is "not started," begin with Beginner tasks
+- If the sub-skill status is "in progress," choose Intermediate or Advanced tasks
+- **Top priority**: Tasks that can be executed directly in the current project AND deliver real value (e.g., adding tests, improving CLAUDE.md)
+- **Second priority**: Generic practice tasks that can be executed in the current project
+- **Fallback**: Use template tasks from the library below
 
-### 练习库
-
----
-
-**Level 1-2：AI 辅助编程入门**
-
-子技能 1：AI 代码补全习惯
-- 初级：打开项目，写一个新函数，有意识地观察 AI 补全建议，记录接受/拒绝次数
-- 中级：用 AI 补全完成一个完整的工具函数，只通过 Tab 接受补全，不手动输入实现
-- 高级：连续 1 小时开发中保持使用 AI 补全，统计补全接受率
-
-子技能 2：Claude Code 基本对话
-- 初级：选一段项目中你不熟悉的代码，让 Claude 解释它的作用，验证解释是否准确
-- 中级：让 Claude 为一个现有函数生成类型定义/接口声明（如 TypeScript 类型、Python type hints、Go interface、Java interface），对比手写版本
-- 高级：用 Claude 完成一个小需求（如添加一个工具函数），全程对话式协作
-
-子技能 3：AI 代码判断能力
-- 初级：让 Claude 生成一段代码，逐行标注哪些可以直接用、哪些需要修改、哪些要拒绝
-- 中级：给 Claude 一段有 bug 的代码让它修复，评估修复方案的正确性
-- 高级：让 Claude 为同一需求生成 2 种实现，比较优劣并选择更好的方案
+### Practice Library
 
 ---
 
-**Level 3-4：提示词工程 + 上下文管理**
+**Level 1-2: AI-Assisted Programming Basics**
 
-子技能 1：Claude Code 核心功能掌握
-- 初级：在当前项目中使用 /init 生成 CLAUDE.md，检查生成质量
-- 中级：对一个复杂任务先用 Plan Mode 规划，再执行，记录规划与实际的偏差
-- 高级：在长对话中主动使用 /compact 压缩上下文，对比压缩前后 AI 的回答质量
+Sub-skill 1: AI Code Completion Habits
+- Beginner: Open the project, write a new function, consciously observe AI completion suggestions, and record how many you accept vs. reject
+- Intermediate: Complete an entire utility function using only AI completions — accept suggestions with Tab without manually typing the implementation
+- Advanced: Maintain AI completion usage for 1 continuous hour of development, tracking your acceptance rate
 
-子技能 2：Plan Mode 使用
-- 初级：挑一个涉及 2+ 文件的任务，先进 Plan Mode 让 Claude 规划步骤
-- 中级：一个 3+ 文件的 Feature，全程用 Plan Mode，记录 AI 规划 vs 实际执行的偏差
-- 高级：在 Plan Mode 中主动要求 Claude 考虑边界情况和错误处理
+Sub-skill 2: Basic Claude Code Conversations
+- Beginner: Select a piece of unfamiliar code in the project, ask Claude to explain what it does, and verify the explanation's accuracy
+- Intermediate: Have Claude generate type definitions / interface declarations for an existing function (e.g., TypeScript types, Python type hints, Go interfaces, Java interfaces) and compare them against a manually written version
+- Advanced: Complete a small feature request (e.g., adding a utility function) entirely through conversational collaboration with Claude
 
-子技能 3：结构化 Prompt（CRATE）
-- 初级：对比实验——同一个任务，先用一句话 prompt，再用 CRATE 格式，比较结果差异
-- 中级：为 5 个日常任务写 CRATE 格式的 prompt，记录每个的 prompt 轮数
-- 高级：达到平均 1-3 轮 prompt 就得到满意结果
-
-子技能 4：CLAUDE.md 配置与维护
-- 初级：检查当前项目的 CLAUDE.md 是否存在，如果没有就创建一个包含技术栈和规范的版本
-- 中级：让 Claude 创建一个新模块，检查是否自动遵循了 CLAUDE.md 中的规范
-- 高级：CLAUDE.md 使用 1 周后回顾，补充 Claude 经常做错的地方作为新规则
+Sub-skill 3: AI Code Judgment
+- Beginner: Have Claude generate a code snippet, then annotate each line: what can be used as-is, what needs modification, what should be rejected
+- Intermediate: Give Claude a piece of buggy code to fix, then evaluate the correctness of its fix
+- Advanced: Have Claude generate 2 different implementations for the same requirement, compare their trade-offs, and choose the better approach
 
 ---
 
-**Level 5：意图驱动开发**
+**Level 3-4: Prompt Engineering + Context Management**
 
-子技能 1：意图描述（Why/What 而非 How）
-- 初级：找出你最近 5 条 prompt，改写成意图驱动的版本，对比 AI 输出质量
-- 中级：一个新需求全程用 What/Why 描述，不提任何具体技术，让 AI 自主选择方案
-- 高级：连续 1 天的开发中保持意图驱动，统计 What/Why 占比是否 > 70%
+Sub-skill 1: Claude Code Core Features
+- Beginner: Use /init in the current project to generate a CLAUDE.md, then review the quality of the generated content
+- Intermediate: Use Plan Mode to plan a complex task before executing it, then record deviations between the plan and actual execution
+- Advanced: Proactively use /compact during long conversations to compress context, and compare AI response quality before and after compression
 
-子技能 2：Feature 级别委托
-- 初级：把一个 2-4 小时的 Feature 完整委托给 Claude，记录总耗时和 prompt 轮数
-- 中级：委托一个包含前端+API 的 Feature，只描述业务需求，不指定架构
-- 高级：委托包含前端+API+测试的完整 Feature，手动修改比例 < 15%
+Sub-skill 2: Plan Mode Usage
+- Beginner: Pick a task that touches 2+ files, enter Plan Mode and have Claude plan the steps
+- Intermediate: For a 3+ file feature, use Plan Mode throughout and record deviations between AI's plan vs. actual execution
+- Advanced: In Plan Mode, proactively ask Claude to consider edge cases and error handling
 
-子技能 3：架构审查能力
-- 初级：让 Claude 实现一个功能，用架构审查清单（合理性/边界/性能/安全）逐项检查
-- 中级：连续 3 次 Feature 委托，记录一次通过架构审查的比例
-- 高级：达到 AI 方案一次通过审查比例 > 80%
+Sub-skill 3: Structured Prompts (CRATE)
+- Beginner: Run a comparison experiment — same task with a one-line prompt first, then with CRATE format, and compare the results
+- Intermediate: Write CRATE-format prompts for 5 common tasks, tracking the number of prompt rounds for each
+- Advanced: Achieve an average of 1-3 prompt rounds to get satisfactory results
 
-子技能 4：任务拆解与依赖分析
-- 初级：选一个当前项目中的待开发 Feature，列出所有子任务，标注依赖关系
-- 中级：画出子任务依赖图，识别哪些子任务可以并行执行，哪些必须串行
-- 高级：对 3 个不同 Feature 做拆解练习，找到"接口点"（可以先约定类型/API 再分头开发的分界线）
-
----
-
-**Level 6：多 Agent 并行**
-
-子技能 1：并行任务识别
-- 初级：列出当前项目的 3-5 个待办任务，标注哪些可以并行、哪些有依赖必须串行
-- 中级：画一个任务依赖图，找出最优并行路径
-- 高级：对一个大 Feature 做拆分，识别出 3+ 个无依赖的并行单元
-
-子技能 2：Git Worktree 隔离
-- 初级：用 `git worktree add` 创建一个工作目录，在其中完成一个独立任务
-- 中级：同时开 2 个 worktree，各自完成一个任务后合并回主分支
-- 高级：3 个 worktree + 3 个 Claude 实例，合并时冲突 < 10%
-
-子技能 3：接口契约先行
-- 初级：在并行之前，先花 5 分钟写一个接口定义（类型/API 格式），再分头实现
-- 中级：前后端并行——先约定 API 接口，Agent A 做后端，Agent B 用 mock 数据做前端
-- 高级：3 个 Agent 并行，所有交互通过预定义的接口契约，集成时零接口问题
-
-子技能 4：多 Agent 管理（3+）
-- 初级：同时开 2 个 Claude 实例处理 2 个独立 bug fix，记录 vs 串行的耗时差
-- 中级：3 个 Agent 并行完成一个 Feature 的不同部分，管理切换时间 < 3 分钟
-- 高级：稳定日常 3+ Agent 并行，任务吞吐量达到串行的 2x+
+Sub-skill 4: CLAUDE.md Configuration & Maintenance
+- Beginner: Check if the current project has a CLAUDE.md; if not, create one that includes tech stack and conventions
+- Intermediate: Have Claude create a new module and verify that it automatically follows the conventions in CLAUDE.md
+- Advanced: After using CLAUDE.md for 1 week, review and add new rules for things Claude frequently gets wrong
 
 ---
 
-**Level 7：工作流编排**
+**Level 5: Intent-Driven Development**
 
-子技能 1：CLAUDE.md 工作流规则
-- 初级：在项目 CLAUDE.md 中添加文件创建规则（模块+类型定义/接口+测试必须同时创建）
-- 中级：添加 Git 规范（分支命名、Conventional Commits）和路由/接口规则
-- 高级：完善安全规则（禁止硬编码密钥、注入防护等），验证 Claude 遵循率
+Sub-skill 1: Intent Description (Why/What over How)
+- Beginner: Find your 5 most recent prompts, rewrite them as intent-driven versions, and compare AI output quality
+- Intermediate: Handle an entire new feature using only What/Why descriptions — no specific technologies mentioned — and let AI choose the approach
+- Advanced: Maintain intent-driven prompting for a full day of development, tracking whether What/Why statements make up > 70%
 
-子技能 2：Custom Slash Commands
-- 初级：创建第一个 Command（如 /new-feature），包含完整的工作流步骤
-- 中级：创建 5 个 Commands 覆盖日常场景（new-feature/fix-bug/review/add-test/refactor）
-- 高级：使用 Commands 1 周后迭代优化，确保 80% 的开发任务有可用 Command
+Sub-skill 2: Feature-Level Delegation
+- Beginner: Fully delegate a 2-4 hour feature to Claude, recording total time spent and number of prompt rounds
+- Intermediate: Delegate a feature that includes frontend + API, describing only business requirements without specifying architecture
+- Advanced: Delegate a complete feature including frontend + API + tests, with manual modifications < 15%
 
-子技能 3：Hooks 自动化质检
-- 初级：配置 PostToolUse Hook，保存源代码文件后自动运行类型检查或静态分析（如 tsc、mypy、go vet、javac）
-- 中级：添加测试自动运行的 Hook，记录 1 周内 Hook 拦截的错误数
-- 高级：完整的 Hook 流水线（类型检查/静态分析 + 测试 + lint），验证不影响开发速度
+Sub-skill 3: Architecture Review Capability
+- Beginner: Have Claude implement a feature, then review it against an architecture checklist (soundness / edge cases / performance / security)
+- Intermediate: Over 3 consecutive feature delegations, track the first-pass architecture review approval rate
+- Advanced: Achieve > 80% first-pass architecture review approval rate for AI-generated solutions
+
+Sub-skill 4: Task Decomposition & Dependency Analysis
+- Beginner: Pick a pending feature in the current project, list all sub-tasks, and label their dependencies
+- Intermediate: Draw a sub-task dependency graph, identify which sub-tasks can run in parallel and which must be sequential
+- Advanced: Decompose 3 different features, finding "interface points" (boundaries where you can agree on types/APIs first and then develop independently)
 
 ---
 
-**Level 8：自动化编排系统**
+**Level 6: Multi-Agent Parallelism**
 
-子技能 1：Headless 模式脚本编写
-- 初级：用 `claude -p "分析这段代码"` 完成一次非交互式调用
-- 中级：写一个脚本批量为无测试的模块生成测试文件
-- 高级：用 `--output-format json` 解析 AI 输出并做后续处理
+Sub-skill 1: Parallel Task Identification
+- Beginner: List 3-5 pending tasks in the current project and label which can be parallelized vs. which have dependencies requiring sequential execution
+- Intermediate: Draw a task dependency graph and identify the optimal parallel execution path
+- Advanced: Break down a large feature into 3+ independent parallel units with no dependencies
 
-子技能 2：CI/CD PR 自动 Review
-- 初级：在本地模拟 PR Review 流程（用 git diff 输出喂给 claude -p）
-- 中级：编写 `.github/workflows/ai-review.yml` 并在测试仓库部署
-- 高级：运行 1 周后评估 Review 质量，调优 Prompt 降低噪音
+Sub-skill 2: Git Worktree Isolation
+- Beginner: Use `git worktree add` to create a working directory and complete an independent task in it
+- Intermediate: Run 2 worktrees simultaneously, complete a task in each, then merge both back to the main branch
+- Advanced: 3 worktrees + 3 Claude instances, with merge conflicts < 10%
 
-子技能 3：CI 失败自动修复 Pipeline
-- 初级：手动模拟：故意让测试失败，用 claude -p 尝试修复
-- 中级：编写 `.github/workflows/ai-autofix.yml` 并配置验证步骤
-- 高级：运行 2 周，记录修复成功率，优化到 >30%
+Sub-skill 3: Interface Contract First
+- Beginner: Before starting parallel work, spend 5 minutes writing an interface definition (types / API format), then implement separately
+- Intermediate: Parallel frontend + backend — agree on the API contract first, Agent A builds the backend, Agent B builds the frontend with mock data
+- Advanced: 3 Agents working in parallel, all interactions through pre-defined interface contracts, zero interface issues at integration
 
-子技能 4：Issue 自动分类系统
-- 初级：手动用 claude -p 分类 5 个真实 Issue
-- 中级：编写 `.github/workflows/ai-triage.yml`
-- 高级：运行 2 周，检查分类准确率
+Sub-skill 4: Multi-Agent Management (3+)
+- Beginner: Run 2 Claude instances simultaneously on 2 independent bug fixes, comparing time spent vs. sequential execution
+- Intermediate: 3 Agents working in parallel on different parts of a feature, with context-switching overhead < 3 minutes
+- Advanced: Sustain 3+ Agents in daily parallel work, achieving 2x+ task throughput compared to sequential
 
-子技能 5：成本监控与度量体系
-- 初级：在 Claude Code 中用 `/cost` 检查当前会话成本
-- 中级：编写 `scripts/ai-metrics.sh` 自动统计周报数据
-- 高级：配置费用告警，设置每小时调用次数限制
+---
 
-### Step 4：输出格式
+**Level 7: Workflow Orchestration**
+
+Sub-skill 1: CLAUDE.md Workflow Rules
+- Beginner: Add file creation rules to the project's CLAUDE.md (module + type definitions/interfaces + tests must be created together)
+- Intermediate: Add Git conventions (branch naming, Conventional Commits) and routing/API rules
+- Advanced: Add security rules (no hardcoded secrets, injection protection, etc.) and verify Claude's compliance rate
+
+Sub-skill 2: Custom Slash Commands
+- Beginner: Create your first Command (e.g., /new-feature) with a complete workflow
+- Intermediate: Create 5 Commands covering common scenarios (new-feature / fix-bug / review / add-test / refactor)
+- Advanced: After 1 week of using Commands, iterate and optimize — ensure 80% of dev tasks have an applicable Command
+
+Sub-skill 3: Hooks Automated Quality Checks
+- Beginner: Configure a PostToolUse Hook to automatically run type checking or static analysis after saving source files (e.g., tsc, mypy, go vet, javac)
+- Intermediate: Add a Hook for auto-running tests, tracking the number of errors caught by Hooks over 1 week
+- Advanced: Full Hook pipeline (type checking/static analysis + tests + lint), verified to not slow down development speed
+
+---
+
+**Level 8: Automated Orchestration Systems**
+
+Sub-skill 1: Headless Mode Scripting
+- Beginner: Run `claude -p "analyze this code"` to complete a non-interactive invocation
+- Intermediate: Write a script to batch-generate test files for modules that lack tests
+- Advanced: Use `--output-format json` to parse AI output and perform downstream processing
+
+Sub-skill 2: CI/CD PR Auto-Review
+- Beginner: Simulate the PR Review process locally (feed `git diff` output to `claude -p`)
+- Intermediate: Write `.github/workflows/ai-review.yml` and deploy it to a test repository
+- Advanced: After 1 week of operation, evaluate review quality and tune the prompt to reduce noise
+
+Sub-skill 3: CI Failure Auto-Fix Pipeline
+- Beginner: Manual simulation: intentionally fail a test, then use `claude -p` to attempt a fix
+- Intermediate: Write `.github/workflows/ai-autofix.yml` with verification steps
+- Advanced: Run for 2 weeks, track fix success rate, optimize to > 30%
+
+Sub-skill 4: Issue Auto-Triage System
+- Beginner: Manually use `claude -p` to categorize 5 real issues
+- Intermediate: Write `.github/workflows/ai-triage.yml`
+- Advanced: Run for 2 weeks, measure classification accuracy
+
+Sub-skill 5: Cost Monitoring & Metrics
+- Beginner: Use `/cost` in Claude Code to check current session costs
+- Intermediate: Write `scripts/ai-metrics.sh` to automatically generate weekly report data
+- Advanced: Configure cost alerts and set per-hour invocation limits
+
+### Step 4: Output Format
 
 ```
-## 练习任务（当前聚焦：[子技能名称]，Level N）
+## Practice Tasks (Current Focus: [sub-skill name], Level N)
 
-### 📍 项目扫描发现
-[简要列出扫描中发现的与当前聚焦子技能相关的项目状态，如"项目有 12 个模块，其中 5 个没有测试文件"]
+### 📍 Project Scan Findings
+[Briefly list scan findings relevant to the current focused sub-skill, e.g., "Project has 12 modules, 5 of which have no test files"]
 
-### 任务 1：[名称]（项目相关 / 通用练习）
-- **难度**：初级/中级/高级
-- **预计耗时**：X 分钟/小时
-- **项目价值**：[完成后对项目的实际收益，如"补充 5 个模块的测试覆盖"]
-- **具体步骤**：
+### Task 1: [Name] (Project-Specific / Generic Exercise)
+- **Difficulty**: Beginner / Intermediate / Advanced
+- **Estimated Time**: X minutes/hours
+- **Project Value**: [Actual benefit to the project upon completion, e.g., "Add test coverage for 5 modules"]
+- **Steps**:
   1. ...
   2. ...
-- **验收标准**：[怎样算完成]
+- **Acceptance Criteria**: [What counts as complete]
 
-### 任务 2：...
+### Task 2: ...
 ```
 
-### Step 5：提醒更新 PROGRESS.md
+### Step 5: Remind to Update PROGRESS.md
 
-练习完成后，提醒用户更新 PROGRESS.md 中的子技能状态。
+After completing the practice, remind the user to update the sub-skill status in PROGRESS.md.

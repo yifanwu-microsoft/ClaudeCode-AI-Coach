@@ -1,164 +1,164 @@
-对用户进行全面的 AI 工程能力评估。
+Perform a comprehensive AI engineering capability assessment.
 
-## 评估流程
+## Assessment Process
 
-### Step 1：读取当前状态
-先读取项目根目录的 `PROGRESS.md`，了解用户的历史进度和当前聚焦。
+### Step 1: Read Current State
+Read the `PROGRESS.md` file in the project root to understand the user's historical progress and current focus.
 
-### Step 2：客观信号扫描（自动执行，不需要用户回答）
+### Step 2: Objective Signal Scan (automated, no user input required)
 
-在问答评估之前，先自动扫描当前项目和环境，收集客观证据：
+Before the questionnaire assessment, automatically scan the current project and environment to collect objective evidence:
 
-**扫描项目：**
-1. **CLAUDE.md 存在性与质量**：检查项目根目录是否有 CLAUDE.md，如有则评估内容（是否包含技术栈、规范、目录结构、工作流规则等）
-2. **Custom Commands**：检查是否存在 `.claude/commands/` 目录及其中的命令文件数量和内容
-3. **Hooks 配置**：检查 `.claude/settings.json` 或 `.claude/settings.local.json` 中是否配置了 Hooks
-4. **CI/CD AI 集成**：检查 `.github/workflows/` 中是否存在 AI 相关的 workflow（如 ai-review.yml、ai-autofix.yml、ai-triage.yml）
-5. **Git 规范**：查看最近 10 条 git log，检查 commit message 是否遵循 conventional commits 格式
-6. **测试覆盖**：检查项目中是否存在测试文件（如 *_test.go、*.test.ts、*.spec.ts、test_*.py、*Test.java 等）及其与源文件的比例
-7. **项目结构**：扫描项目目录结构，了解技术栈和项目规模
+**Scan Items:**
+1. **CLAUDE.md Existence & Quality**: Check if CLAUDE.md exists in the project root. If so, evaluate its content (does it include tech stack, conventions, directory structure, workflow rules, etc.)
+2. **Custom Commands**: Check if `.claude/commands/` directory exists and the number/content of command files
+3. **Hooks Configuration**: Check `.claude/settings.json` or `.claude/settings.local.json` for Hooks configuration
+4. **CI/CD AI Integration**: Check `.github/workflows/` for AI-related workflows (e.g., ai-review.yml, ai-autofix.yml, ai-triage.yml)
+5. **Git Conventions**: Review the last 10 git log entries, check if commit messages follow conventional commits format
+6. **Test Coverage**: Check for test files (e.g., *_test.go, *.test.ts, *.spec.ts, test_*.py, *Test.java, etc.) and their ratio to source files
+7. **Project Structure**: Scan project directory structure to understand the tech stack and project scale
 
-**输出扫描报告：**
+**Output Scan Report:**
 ```
-## 客观信号扫描结果
+## Objective Signal Scan Results
 
-| 检测项 | 结果 | 对应 Level |
-|--------|------|-----------|
-| CLAUDE.md | ✅ 存在，包含技术栈+规范 / ❌ 不存在 | Level 3-4 |
-| Custom Commands | ✅ X 个命令 / ❌ 未配置 | Level 7 |
-| Hooks 配置 | ✅ 已配置 / ❌ 未配置 | Level 7 |
-| CI/CD AI 集成 | ✅ X 个 workflow / ❌ 未配置 | Level 8 |
-| Git 规范 | ✅ conventional commits / ⚠️ 不规范 | Level 7 |
-| 测试文件 | ✅ X 个测试文件 / ❌ 无测试 | Level 5 |
-```
-
-将扫描结果作为后续评估的参考依据。如果扫描结果与用户自评矛盾（如用户声称 Level 7 但项目无 Commands），温和指出差异。
-
-### Step 3：逐项评估（基于 ai-engineering-leveling-guide.md 的自我评估 Checklist）
-
-结合 Step 2 的客观信号，对以下每项打分（0 = 完全不符合，1 = 部分符合，2 = 完全符合）：
-
-**基础能力（Level 1-2）**
-- 日常开发中使用 AI 代码补全
-- 会在 Claude Code 中进行基本对话
-- 能判断 AI 输出的代码是否可用
-
-**提示词能力（Level 3-4）**
-- 能写包含上下文+约束+期望输出的结构化 Prompt
-- 项目有 CLAUDE.md 且保持更新
-- 复杂任务会先用 Plan Mode 规划
-- AI 生成的代码需手动修改的比例 < 20%
-
-**自主开发（Level 5）**
-- 描述业务意图而非技术实现，AI 自主选择方案
-- 能独立委托完整 Feature（前端+API+测试）
-- AI 的方案一次通过架构审查的比例 > 80%
-
-**并行与编排（Level 6-7）**
-- 能同时管理 3+ 个 Claude Code 实例并行开发
-- 熟练使用 Git Worktree 隔离并行任务
-- 有 5+ 个 Custom Slash Commands
-- 配置了 Hooks 自动化质量检查
-
-**系统级（Level 8）**
-- CI/CD 中集成了 AI（Headless 模式）
-- 有 AI 自动修复失败 Pipeline 的能力
-- 有完整的 AI 工作流监控和成本控制
-
-### Step 4：计算得分与 Level
-
-评分标准：0-4 → Level 1-2 ｜ 5-8 → Level 3-4 ｜ 9-11 → Level 5 ｜ 12-15 → Level 6-7 ｜ 16-18 → Level 8
-
-### Step 5：对比历史
-
-将本次评估结果与 PROGRESS.md 中的上次评估对比，指出：
-- 哪些项目有进步（分数提升）
-- 哪些项目停滞（与上次相同）
-- 哪些项目需要重点突破
-
-### Step 5.5：按评估 Level 调整输出详细度
-
-根据评估出的 Level，调整后续输出的详细程度，避免信息过载：
-
-- **如果评估 Level 为 1-2**：
-  - 用简明语言解释每个 Level 的含义（一句话概括），帮助用户建立整体认知
-  - 仅详细展示 Level 1-2 和 Level 3-4 的子技能列表
-  - Level 5-8 各用一行总结（如"Level 7：工作流编排 — 用 Commands 和 Hooks 让重复流程自动化"）
-  - 重点突出"下一步该做什么"，而非展示完整技能树
-
-- **如果评估 Level 为 3-5**：
-  - 详细展示当前 Level 和下一 Level 的子技能状态
-  - Level 6+ 的子技能用简短总结呈现（每个 Level 一行）
-  - 侧重展示从当前 Level 到下一 Level 的具体升级路径
-
-- **如果评估 Level 为 6+**：
-  - 展示完整的子技能详情，包含所有 Level 的状态
-  - 包含高级指标（并行效率、自动化覆盖率等）
-
-### Step 6：交叉验证
-
-将 Step 2 的客观扫描结果与 Step 3 的自评打分进行交叉验证：
-- 如果客观信号支持自评 → 增强评估置信度
-- 如果客观信号与自评矛盾 → 温和指出，询问用户原因（可能是在其他项目中使用，或正在迁移中）
-- 将交叉验证结果体现在评估报告中
-
-### Step 6.5：已通过 Level 技能抽查（防退化）
-
-如果用户已经通过了某些 Level（PROGRESS.md 中有 🟢 的子技能），抽查关键技能是否保持：
-
-**抽查规则：**
-- 抽查已通过 Level 中的 1-2 个关键技能（不需要全部重测）
-- 重点关注"容易退化"的技能：
-  - Level 3-4：CLAUDE.md 是否保持更新？（检查文件修改日期）
-  - Level 5：最近的 prompt 是否还保持意图驱动？
-  - Level 7：Custom Commands 是否还在使用？Hooks 是否还在运行？
-- 如果发现退化，温和提醒：不降级，但建议花 10 分钟恢复
-
-**输出格式（仅在发现退化时显示）：**
-```
-### ⚠️ 技能保持检查
-| 已通过技能 | 当前状态 | 建议 |
-|-----------|---------|------|
-| CLAUDE.md 维护 (L3-4) | ⚠️ 超过 30 天未更新 | 花 10 分钟检查是否需要更新 |
+| Check Item | Result | Corresponding Level |
+|------------|--------|-------------------|
+| CLAUDE.md | ✅ Exists with tech stack + conventions / ❌ Not found | Level 3-4 |
+| Custom Commands | ✅ X commands / ❌ Not configured | Level 7 |
+| Hooks Config | ✅ Configured / ❌ Not configured | Level 7 |
+| CI/CD AI Integration | ✅ X workflows / ❌ Not configured | Level 8 |
+| Git Conventions | ✅ Conventional commits / ⚠️ Non-standard | Level 7 |
+| Test Files | ✅ X test files / ❌ No tests | Level 5 |
 ```
 
-### Step 7：输出结果
+Use scan results as reference for subsequent assessment. If scan results contradict the user's self-assessment (e.g., user claims Level 7 but project has no Commands), gently point out the discrepancy.
 
-格式：
+### Step 3: Item-by-Item Assessment (based on ai-engineering-leveling-guide.md Self-Assessment Checklist)
+
+Combining the objective signals from Step 2, score each item (0 = does not meet at all, 1 = partially meets, 2 = fully meets):
+
+**Foundation Skills (Level 1-2)**
+- Uses AI code completion in daily development
+- Can have basic conversations in Claude Code
+- Can judge whether AI-generated code is usable
+
+**Prompt Engineering (Level 3-4)**
+- Can write structured prompts with context + constraints + expected output
+- Project has a CLAUDE.md that is kept up to date
+- Uses Plan Mode for planning before complex tasks
+- Less than 20% of AI-generated code requires manual modification
+
+**Autonomous Development (Level 5)**
+- Describes business intent rather than technical implementation; AI independently selects the approach
+- Can independently delegate complete features (frontend + API + tests)
+- AI solutions pass architecture review on first attempt > 80% of the time
+
+**Parallel & Orchestration (Level 6-7)**
+- Can manage 3+ Claude Code instances in parallel development
+- Proficient with Git Worktree for isolating parallel tasks
+- Has 5+ Custom Slash Commands
+- Has configured Hooks for automated quality checks
+
+**System Level (Level 8)**
+- AI is integrated into CI/CD (Headless mode)
+- Has AI-powered auto-fix capability for failed pipelines
+- Has comprehensive AI workflow monitoring and cost controls
+
+### Step 4: Calculate Score & Level
+
+Scoring criteria: 0-4 → Level 1-2 ｜ 5-8 → Level 3-4 ｜ 9-11 → Level 5 ｜ 12-15 → Level 6-7 ｜ 16-18 → Level 8
+
+### Step 5: Compare with History
+
+Compare the current assessment with the previous one in PROGRESS.md, noting:
+- Which items improved (higher scores)
+- Which items remained the same (stagnant)
+- Which items need a focused breakthrough
+
+### Step 5.5: Adjust Output Detail Based on Assessed Level
+
+Adjust the level of detail in subsequent output based on the assessed Level to avoid information overload:
+
+- **If assessed Level is 1-2**:
+  - Use concise language to explain each Level (one sentence summary) to help the user build an overall understanding
+  - Only show detailed sub-skill lists for Level 1-2 and Level 3-4
+  - Summarize Level 5-8 in one line each (e.g., "Level 7: Workflow Orchestration — Automate repetitive processes with Commands and Hooks")
+  - Emphasize "what to do next" rather than displaying the full skill tree
+
+- **If assessed Level is 3-5**:
+  - Show detailed sub-skill status for the current Level and the next Level
+  - Present Level 6+ sub-skills as brief summaries (one line per Level)
+  - Focus on the specific upgrade path from the current Level to the next
+
+- **If assessed Level is 6+**:
+  - Show full sub-skill details including status for all Levels
+  - Include advanced metrics (parallel efficiency, automation coverage, etc.)
+
+### Step 6: Cross-Validation
+
+Cross-validate the objective scan results from Step 2 against the self-assessment scores from Step 3:
+- If objective signals support the self-assessment → increases assessment confidence
+- If objective signals contradict the self-assessment → gently point this out and ask the user for context (e.g., they may use these practices in other projects, or are in the process of migrating)
+- Reflect cross-validation results in the assessment report
+
+### Step 6.5: Previously Passed Level Skill Spot Check (Anti-Degradation)
+
+If the user has already passed certain Levels (sub-skills marked 🟢 in PROGRESS.md), spot-check that key skills are being maintained:
+
+**Spot Check Rules:**
+- Spot-check 1-2 key skills from previously passed Levels (no need to re-test everything)
+- Focus on skills that are "prone to degradation":
+  - Level 3-4: Is CLAUDE.md being kept up to date? (check file modification date)
+  - Level 5: Are recent prompts still intent-driven?
+  - Level 7: Are Custom Commands still being used? Are Hooks still running?
+- If degradation is found, remind gently: no downgrade, but suggest spending 10 minutes to restore
+
+**Output Format (only shown when degradation is detected):**
 ```
-## 评估结果
-
-**日期**：[今天日期]
-**总分**：X / 18
-**当前 Level**：N
-**建议目标 Level**：N+1
-
-### 客观信号扫描
-[Step 2 的扫描结果表格]
-
-### 各维度得分
-| 维度 | 得分 | 客观信号 | 备注 |
-|------|------|---------|------|
-| 基础能力 | X/6 | — | ... |
-| 提示词能力 | X/8 | CLAUDE.md: ✅/❌ | ... |
-| 自主开发 | X/6 | 测试文件: ✅/❌ | ... |
-| 并行与编排 | X/8 | Commands: X个, Hooks: ✅/❌ | ... |
-| 系统级 | X/6 | CI workflows: X个 | ... |
-
-### 当前 Level 子技能状态
-[根据评估出的 Level，列出该 Level 和下一 Level 的子技能状态和建议]
-[例如：如果评估为 Level 5，列出 Level 5 和 Level 6 的子技能]
-
-### 建议聚焦
-[基于评估结果，建议聚焦哪个子技能，以及具体的下一步行动]
-[优先推荐当前 Level 中尚未验收的子技能]
+### ⚠️ Skill Maintenance Check
+| Passed Skill | Current Status | Suggestion |
+|-------------|----------------|------------|
+| CLAUDE.md Maintenance (L3-4) | ⚠️ Not updated in 30+ days | Spend 10 minutes checking if it needs updating |
 ```
 
-### Step 8：更新 PROGRESS.md
+### Step 7: Output Results
 
-评估完成后：
-1. 更新「当前总体评估」中的 Level、目标 Level 和评估日期
-2. 更新对应 Level 的子技能状态（根据评估结果将 🔴 改为 🟡 或 🟢）
-3. 更新「当前聚焦」字段
-4. 在「里程碑记录」中添加本次评估记录
-5. 以上变更需要**用户确认后**才执行
+Format:
+```
+## Assessment Results
+
+**Date**: [today's date]
+**Total Score**: X / 18
+**Current Level**: N
+**Recommended Target Level**: N+1
+
+### Objective Signal Scan
+[Step 2 scan results table]
+
+### Scores by Dimension
+| Dimension | Score | Objective Signals | Notes |
+|-----------|-------|------------------|-------|
+| Foundation Skills | X/6 | — | ... |
+| Prompt Engineering | X/8 | CLAUDE.md: ✅/❌ | ... |
+| Autonomous Development | X/6 | Test files: ✅/❌ | ... |
+| Parallel & Orchestration | X/8 | Commands: X, Hooks: ✅/❌ | ... |
+| System Level | X/6 | CI workflows: X | ... |
+
+### Current Level Sub-Skill Status
+[Based on the assessed Level, list sub-skill status and recommendations for this Level and the next]
+[For example: if assessed at Level 5, list sub-skills for Level 5 and Level 6]
+
+### Recommended Focus
+[Based on assessment results, recommend which sub-skill to focus on and specific next steps]
+[Prioritize sub-skills at the current Level that have not yet been validated]
+```
+
+### Step 8: Update PROGRESS.md
+
+After assessment:
+1. Update the "Current Overall Assessment" with Level, target Level, and assessment date
+2. Update sub-skill status for the corresponding Level (change 🔴 to 🟡 or 🟢 based on results)
+3. Update the "Current Focus" field
+4. Add this assessment to the "Milestone Log"
+5. All changes require **user confirmation** before being applied

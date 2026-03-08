@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # install.sh — Install AI Coach System to ~/.claude/
-# Usage: ./scripts/install.sh [--lang en|zh]
+# Usage: ./scripts/install.sh
 
 set -euo pipefail
 
@@ -31,59 +31,10 @@ cleanup() {
 trap 'EXIT_CODE=$?; cleanup' EXIT
 trap 'EXIT_CODE=1; cleanup; exit 1' ERR INT TERM
 
-# Language: empty means "not provided, prompt interactively"
-LANG_CHOICE=""
-
 # Parse arguments
-while [[ $# -gt 0 ]]; do
-    case "$1" in
-        --lang)
-            LANG_CHOICE="$2"
-            shift 2
-            ;;
-        --lang=*)
-            LANG_CHOICE="${1#*=}"
-            shift
-            ;;
-        *)
-            echo "Unknown option: $1"
-            echo "Usage: ./scripts/install.sh [--lang en|zh]"
-            exit 1
-            ;;
-    esac
-done
-
-# If --lang was explicitly passed, validate it
-if [[ -n "$LANG_CHOICE" ]]; then
-    if [[ "$LANG_CHOICE" != "en" && "$LANG_CHOICE" != "zh" ]]; then
-        echo "Invalid language: $LANG_CHOICE (valid: en, zh)"
-        exit 1
-    fi
-fi
-
-# Interactive prompt when no --lang flag was provided
-if [[ -z "$LANG_CHOICE" ]]; then
-    while true; do
-        echo ""
-        echo "Please select your language / 请选择语言:"
-        echo "  1) 中文 (Chinese)"
-        echo "  2) English"
-        printf "Your choice / 请输入选项 [1/2]: "
-        read -r choice
-        case "$choice" in
-            1|"")
-                LANG_CHOICE="zh"
-                break
-                ;;
-            2)
-                LANG_CHOICE="en"
-                break
-                ;;
-            *)
-                echo "Invalid choice. Please enter 1 or 2."
-                ;;
-        esac
-    done
+if [[ $# -gt 0 ]]; then
+    echo "Usage: ./scripts/install.sh"
+    exit 1
 fi
 
 # Color output
@@ -124,19 +75,11 @@ preflight_check() {
     info "Pre-flight check passed"
 }
 
-# Set source paths based on language
 set_source_paths() {
-    if [[ "$LANG_CHOICE" == "en" ]]; then
-        CLAUDE_MD_SOURCE="$REPO_ROOT/en/CLAUDE.md"
-        PROGRESS_SOURCE="$REPO_ROOT/en/PROGRESS.md"
-        GUIDE_SOURCE="$REPO_ROOT/en/ai-engineering-leveling-guide.md"
-        COMMANDS_SOURCE="$REPO_ROOT/en/commands"
-    else
-        CLAUDE_MD_SOURCE="$REPO_ROOT/CLAUDE.md"
-        PROGRESS_SOURCE="$REPO_ROOT/PROGRESS.md"
-        GUIDE_SOURCE="$REPO_ROOT/ai-engineering-leveling-guide.md"
-        COMMANDS_SOURCE="$REPO_ROOT/.claude/commands"
-    fi
+    CLAUDE_MD_SOURCE="$REPO_ROOT/CLAUDE.md"
+    PROGRESS_SOURCE="$REPO_ROOT/PROGRESS.md"
+    GUIDE_SOURCE="$REPO_ROOT/ai-engineering-leveling-guide.md"
+    COMMANDS_SOURCE="$REPO_ROOT/.claude/commands"
 }
 
 # Post-install verification
@@ -174,11 +117,7 @@ main() {
 
     set_source_paths
 
-    if [[ "$LANG_CHOICE" == "en" ]]; then
-        info "Installing AI Coach System (English) to $CLAUDE_HOME ..."
-    else
-        info "开始安装 AI 教练系统到 $CLAUDE_HOME ..."
-    fi
+    info "Installing AI Coach System to $CLAUDE_HOME ..."
 
     INSTALL_STARTED=1
 
@@ -209,9 +148,8 @@ main() {
 
     # 2. Sync CLAUDE.md (marker block merge)
     if [ ! -f "$CLAUDE_MD_SOURCE" ]; then
-        warn "CLAUDE.md source not found at $CLAUDE_MD_SOURCE"
-        warn "Falling back to default (Chinese) CLAUDE.md"
-        CLAUDE_MD_SOURCE="$REPO_ROOT/CLAUDE.md"
+        err "CLAUDE.md not found at $CLAUDE_MD_SOURCE"
+        exit 1
     fi
 
     local source_content
@@ -253,19 +191,10 @@ main() {
 
     # 3. Sync PROGRESS.md (only create if not exists — protect local progress)
     if [ -f "$CLAUDE_HOME/PROGRESS.md" ]; then
-        if [[ "$LANG_CHOICE" == "en" ]]; then
-            warn "PROGRESS.md already exists, skipping (protecting local progress)"
-            warn "To reset, manually delete ~/.claude/PROGRESS.md and re-run install"
-        else
-            warn "PROGRESS.md 已存在，跳过（保护本机进度）"
-            warn "如需重置，请手动删除 ~/.claude/PROGRESS.md 后重新安装"
-        fi
+        warn "PROGRESS.md already exists, skipping (protecting local progress)"
+        warn "To reset, manually delete ~/.claude/PROGRESS.md and re-run install"
     else
-        if [ -f "$PROGRESS_SOURCE" ]; then
-            cp -f "$PROGRESS_SOURCE" "$CLAUDE_HOME/PROGRESS.md"
-        else
-            cp -f "$REPO_ROOT/PROGRESS.md" "$CLAUDE_HOME/PROGRESS.md"
-        fi
+        cp -f "$PROGRESS_SOURCE" "$CLAUDE_HOME/PROGRESS.md"
         info "PROGRESS.md created"
     fi
 
@@ -273,22 +202,17 @@ main() {
     if [ -f "$GUIDE_SOURCE" ]; then
         cp -f "$GUIDE_SOURCE" "$CLAUDE_HOME/ai-engineering-leveling-guide.md"
         info "Guide installed"
-    elif [ -f "$REPO_ROOT/ai-engineering-leveling-guide.md" ]; then
-        cp -f "$REPO_ROOT/ai-engineering-leveling-guide.md" "$CLAUDE_HOME/ai-engineering-leveling-guide.md"
-        info "Guide installed (fallback to Chinese)"
+    else
+        err "Guide not found at $GUIDE_SOURCE"
+        exit 1
     fi
 
     # Post-install verification
     verify_install
 
     echo ""
-    if [[ "$LANG_CHOICE" == "en" ]]; then
-        info "✅ Installation complete! AI Coach is now globally active."
-        info "Open Claude Code in any project and run /assess for initial evaluation."
-    else
-        info "✅ 安装完成！教练系统已在本机全局生效。"
-        info "在任何项目中打开 Claude Code，执行 /assess 进行首次评估。"
-    fi
+    info "✅ Installation complete! AI Coach is now globally active."
+    info "Open Claude Code in any project and run /coach:assess for initial evaluation."
 }
 
 main

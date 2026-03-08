@@ -1,95 +1,95 @@
-分析用户提供的 prompt，评估其 AI 工程操作层级，并给出升级建议。
+Analyze a prompt provided by the user, assess its AI engineering operation level, and provide upgrade recommendations.
 
-用户需要提供一个他们日常使用的 prompt：$ARGUMENTS
+The user should provide a prompt they use in their daily workflow: $ARGUMENTS
 
-## 分析流程
+## Analysis Process
 
-### Step 1：识别 Prompt 层级
+### Step 1: Identify Prompt Level
 
-按以下标准分类：
+Classify according to the following criteria:
 
-**Level 1-2 特征（基础问答）**
-- 没有上下文的简单问题（"怎么用这个？"、"这个报错了"）
-- 直接复制粘贴错误信息，不提供相关文件或环境信息
-- 一句话的空泛请求（"帮我写个函数"、"帮我修这个 bug"）
-- 不包含项目背景、文件位置或预期行为
+**Level 1-2 Characteristics (Basic Q&A)**
+- Simple questions without context ("How do I use this?", "This is broken")
+- Copy-pasting error messages without providing related files or environment info
+- Vague one-liner requests ("Write me a function", "Fix this bug")
+- No project background, file locations, or expected behavior
 
-**Level 3-4 特征（提示词工程）**
-- 指定具体技术实现方式（"用 useState"、"加个 useEffect"、"写一个 for 循环"）
-- 告诉 AI 每一步怎么做
-- 提供了上下文和参考文件，但缺少业务背景和约束条件
+**Level 3-4 Characteristics (Prompt Engineering)**
+- Specifies concrete technical implementation (e.g., "use useState", "add a useEffect", "write a for loop")
+- Tells the AI exactly how to do each step
+- Provides context and reference files, but lacks business context and constraints
 - How > Why/What
 
-**Level 5 特征（意图驱动）**
-- 描述业务场景和用户需求
-- 提供约束条件但不指定实现
+**Level 5 Characteristics (Intent-Driven)**
+- Describes the business scenario and user needs
+- Provides constraints without specifying implementation
 - Why/What > How
-- 包含性能要求、数据规模等上下文
+- Includes performance requirements, data scale, and other context
 
-**Level 6 特征（多 Agent 并行）**
-- 任务拆分和接口契约定义
-- 并行度分析
-- 跨 Agent 上下文同步
+**Level 6 Characteristics (Multi-Agent Parallel)**
+- Task decomposition and interface contract definitions
+- Parallelism analysis
+- Cross-agent context synchronization
 
-**Level 7 特征（工作流编排）**
-- 使用 Custom Command 模板
-- 定义工作流步骤和检查点
-- 系统化的质量审查流程
+**Level 7 Characteristics (Workflow Orchestration)**
+- Uses Custom Command templates
+- Defines workflow steps and checkpoints
+- Systematic quality review process
 
-**Level 8 特征（自动化系统）**
-- 事件触发器设计
-- CI/CD 集成配置
-- 监控和成本控制
-- 无人值守运行
+**Level 8 Characteristics (Automated Systems)**
+- Event trigger design
+- CI/CD integration configuration
+- Monitoring and cost controls
+- Unattended operation
 
-### Step 2：量化分析
+### Step 2: Quantitative Analysis
 
-统计 prompt 中：
-- How 语句数量 vs Why/What 语句数量
-- 技术细节 vs 业务上下文的比例
-- 是否包含验收标准
-- 是否包含约束和边界条件
+Analyze the prompt for:
+- Number of How statements vs. Why/What statements
+- Ratio of technical details vs. business context
+- Whether it includes acceptance criteria
+- Whether it includes constraints and boundary conditions
 
-### Step 3：生成升级版本
+### Step 3: Generate Upgraded Version
 
-将用户的 prompt 重写为更高 Level 的版本，展示对比。根据检测到的 Level，展示**逐级升级路径**：
+Rewrite the user's prompt at a higher Level, showing the comparison. Based on the detected Level, show a **step-by-step upgrade path**:
 
 ```
-## Prompt 分析结果
+## Prompt Analysis Results
 
-**原始 Prompt**：
-> [用户的原始 prompt]
+**Original Prompt**:
+> [user's original prompt]
 
-**检测层级**：Level N
-**How/What 比例**：X% How / Y% What
+**Detected Level**: Level N
+**How/What Ratio**: X% How / Y% What
 
-### 问题诊断
-- [指出 prompt 中可以改进的具体部分]
+### Diagnosis
+- [Point out specific parts of the prompt that can be improved]
 
-### 逐级升级路径
+### Step-by-Step Upgrade Path
 
-**当前（Level N）：**
-> [用户的原始 prompt]
+**Current (Level N):**
+> [user's original prompt]
 
-**升级到 Level N+1：**
-> [重写后的下一层级 prompt]
-> 改进要点：[一句话说明改了什么]
+**Upgrade to Level N+1:**
+> [rewritten prompt at the next level]
+> Key improvement: [one sentence explaining what changed]
 
-**再升级到 Level N+2（展望）：**
-> [更高层级的 prompt 示例]
-> 改进要点：[一句话说明进一步改了什么]
+**Further upgrade to Level N+2 (outlook):**
+> [prompt example at an even higher level]
+> Key improvement: [one sentence explaining the further improvement]
 ```
 
-**各 Level 升级示例参考：**
+**Upgrade examples by Level:**
 
-| 原始 Level | 升级方向 | 示例 |
-|-----------|---------|------|
-| Level 1-2 → 3-4 | 添加上下文和参考 | "这个报错了" → "这段代码在调用 X 时报 Y 错误，相关文件在 src/service/ 目录" |
-| Level 3-4 → 5 | 用意图替代实现 | "用 X 库实现缓存" → "这个接口响应慢（>2s），需要优化到 200ms 以内" |
-| Level 5 → 6 | 识别并行机会 | "帮我实现 A、B、C 三个模块" → "A 和 C 无依赖可并行，先定好模块接口再分头实现" |
-| Level 6 → 7 | 流程固化为 Command | "每次做这个都要分三步" → "把这个流程变成 /xxx Command，一键执行" |
-| Level 7 → 8 | 手动触发变事件驱动 | "每次 PR 我手动跑 /review" → "配置 CI，PR 创建时自动触发 AI Review" |
+| Original Level | Upgrade Direction | Example |
+|---------------|------------------|---------|
+| Level 1-2 → 3-4 | Add context and references | "This is broken" → "This code throws error Y when calling X, related files are in src/service/" |
+| Level 3-4 → 5 | Replace implementation with intent | "Use library X for caching" → "This API response is slow (>2s), needs to be under 200ms" |
+| Level 5 → 6 | Identify parallelism opportunities | "Implement modules A, B, and C" → "A and C have no dependencies and can be parallel — define interfaces first, then implement separately" |
+| Level 6 → 7 | Codify workflows into Commands | "I always do this in three steps" → "Turn this workflow into a /xxx Command for one-click execution" |
+| Level 7 → 8 | Manual triggers to event-driven | "I manually run /review on every PR" → "Configure CI to auto-trigger AI Review when a PR is created" |
 
-### Step 4：给出练习建议
+### Step 4: Provide Practice Recommendations
 
-建议用户在接下来的 5 次 AI 交互中尝试使用更高层级的表达方式，并记录结果差异。
+Suggest that the user try using the higher-level expression style in their next 5 AI interactions and track the differences in results.

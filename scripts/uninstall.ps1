@@ -1,10 +1,8 @@
 # AI Coach System Uninstall Tool
-# Usage: .\scripts\uninstall.ps1 [-KeepProgress] [-Lang en|zh]
+# Usage: .\scripts\uninstall.ps1 [-KeepProgress]
 
 param(
-    [switch]$KeepProgress,
-    [ValidateSet("en", "zh")]
-    [string]$Lang = "zh"
+    [switch]$KeepProgress
 )
 
 $ErrorActionPreference = "Stop"
@@ -192,18 +190,10 @@ function Test-PostUninstall {
 }
 
 function Uninstall-CoachSystem {
-    if ($Lang -eq "en") {
-        Write-Info "Uninstalling AI Coach System from $ClaudeHome ..."
-    } else {
-        Write-Info "Uninstalling AI Coach from $ClaudeHome ..."
-    }
+    Write-Info "Uninstalling AI Coach System from $ClaudeHome ..."
 
     # Confirm uninstall
-    if ($Lang -eq "en") {
-        $confirm = Read-Host "Are you sure you want to uninstall? [y/N]"
-    } else {
-        $confirm = Read-Host "Are you sure you want to uninstall? [y/N]"
-    }
+    $confirm = Read-Host "Are you sure you want to uninstall? [y/N]"
     if ($confirm -notmatch '^[Yy]$') {
         Write-Info "Uninstall cancelled."
         return
@@ -228,16 +218,9 @@ function Uninstall-CoachSystem {
     $verified = Test-PostUninstall
 
     Write-Host ""
-    if ($Lang -eq "en") {
-        Write-Info "Uninstall complete! AI Coach has been removed."
-        if ($KeepProgress) {
-            Write-Warn "PROGRESS.md was kept at $ClaudeHome\PROGRESS.md"
-        }
-    } else {
-        Write-Info "Uninstall complete! AI Coach has been removed."
-        if ($KeepProgress) {
-            Write-Warn "PROGRESS.md was kept at $ClaudeHome\PROGRESS.md"
-        }
+    Write-Info "Uninstall complete! AI Coach has been removed."
+    if ($KeepProgress) {
+        Write-Warn "PROGRESS.md was kept at $ClaudeHome\PROGRESS.md"
     }
 }
 

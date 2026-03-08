@@ -130,13 +130,14 @@ git pull
 
 ```
 ClaudeCode-AI-Coach/
-├── CLAUDE.md                        ← 核心：教练系统的行为规则
+├── README.md                        ← English README
+├── README.zh.md                     ← 中文 README
+├── CLAUDE.md                        ← 核心：教练系统的行为规则（英文）
 ├── PROGRESS.md                      ← 进度模板（安装后本机独立维护）
-├── ai-engineering-leveling-guide.md ← Level 1-8 完整定义和验收标准
+├── ai-engineering-leveling-guide.md ← Level 1-8 完整定义和验收标准（英文）
 ├── .claude/commands/
 │   └── coach/                       ← coach 命名空间
 │       ├── assess.md                ← /coach:assess 全面评估
-│       ├── i18n.md                  ← /coach:i18n 翻译管理（维护用）
 │       ├── install.md               ← /coach:install 安装到本机
 │       ├── practice.md              ← /coach:practice 练习任务
 │       ├── progress-report.md       ← /coach:progress-report 进度汇报

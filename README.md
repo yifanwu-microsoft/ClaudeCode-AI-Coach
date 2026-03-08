@@ -20,7 +20,7 @@ You use Claude Code normally to write code, and this system **automatically appe
 - Benefit: AI will decide between client-side filtering or server-side search, potentially giving you a better solution
 ```
 
-It's based on the [AI Engineering Skills Complete Guide](en/ai-engineering-leveling-guide.md) (Level 1→8), with core capabilities:
+It's based on the [AI Engineering Skills Complete Guide](ai-engineering-leveling-guide.md) (Level 1→8), with core capabilities:
 
 - **Auto-detection**: Identifies your operational level from prompt patterns (Level 3-8)
 - **Progressive resistance**: When you give low-level prompts, suggests higher-level alternatives
@@ -51,12 +51,12 @@ Or run manually:
 **macOS / Linux**:
 ```bash
 chmod +x scripts/install.sh
-./scripts/install.sh --lang en
+./scripts/install.sh
 ```
 
 **Windows (PowerShell)**:
 ```powershell
-.\scripts\install.ps1 -Lang en
+.\scripts\install.ps1
 ```
 
 The install script deploys the configuration to `~/.claude/`, taking effect globally for all projects on your machine.
@@ -103,14 +103,14 @@ Claude will ask about your AI tool usage, score each dimension, and determine yo
 | 7 | Designing standardized workflows, AI executes by process | Automation pipeline |
 | 8 | Configuring event triggers, AI runs autonomously | Infrastructure |
 
-> See [Complete Level Definitions & Acceptance Criteria](en/ai-engineering-leveling-guide.md)
+> See [Complete Level Definitions & Acceptance Criteria](ai-engineering-leveling-guide.md)
 
 ## Multi-device Usage
 
 Progress is maintained independently on each machine. When switching devices:
 
 ```bash
-git clone → ./scripts/install.sh --lang en → /coach:assess
+git clone → ./scripts/install.sh → /coach:assess
 ```
 
 Re-assessment will quickly locate your Level based on your current skills — no manual data migration needed.
@@ -121,7 +121,7 @@ When the repo has a new version:
 
 ```bash
 git pull
-./scripts/install.sh --lang en  # or Windows: .\scripts\install.ps1 -Lang en
+./scripts/install.sh  # or Windows: .\scripts\install.ps1
 ```
 
 The install script updates configs and commands but **won't overwrite your local progress**.
@@ -132,42 +132,28 @@ The install script updates configs and commands but **won't overwrite your local
 ClaudeCode-AI-Coach/
 ├── README.md                            ← English README
 ├── README.zh.md                         ← Chinese README
-├── CLAUDE.md                            ← Core: coaching rules (Chinese)
-├── PROGRESS.md                          ← Progress template (Chinese)
-├── ai-engineering-leveling-guide.md     ← Full Level 1-8 guide (Chinese)
-├── en/                                  ← English versions
-│   ├── CLAUDE.md                        ← Coaching rules (English)
-│   ├── PROGRESS.md                      ← Progress template (English)
-│   ├── ai-engineering-leveling-guide.md ← Full guide (English)
-│   └── commands/                        ← English commands
-│       └── coach/
-│           ├── assess.md
-│           ├── i18n.md
-│           ├── install.md
-│           ├── practice.md
-│           ├── progress-report.md
-│           ├── review-prompt.md
-│           └── uninstall.md
+├── CLAUDE.md                            ← Core: coaching rules
+├── PROGRESS.md                          ← Progress template
+├── ai-engineering-leveling-guide.md     ← Full Level 1-8 guide
 ├── .claude/commands/
-│   └── coach/                           ← Chinese commands (coach namespace)
+│   └── coach/                           ← Coach commands
 │       ├── assess.md
-│       ├── i18n.md
 │       ├── install.md
 │       ├── practice.md
 │       ├── progress-report.md
 │       ├── review-prompt.md
 │       └── uninstall.md
 └── scripts/
-    ├── install.sh                       ← macOS/Linux install (--lang en|zh)
-    ├── install.ps1                      ← Windows install (-Lang en|zh)
+    ├── install.sh                       ← macOS/Linux install
+    ├── install.ps1                      ← Windows install
     ├── uninstall.sh                     ← macOS/Linux uninstall
     └── uninstall.ps1                    ← Windows uninstall
 ```
 
 ## Customization & Extension
 
-- **Add commands**: Create `.md` files in `.claude/commands/coach/` (or `en/commands/coach/` for English), then reinstall
-- **Modify rules**: Edit `CLAUDE.md` (or `en/CLAUDE.md`), then reinstall. The marker-block mechanism won't affect your other local rules
+- **Add commands**: Create `.md` files in `.claude/commands/coach/`, then reinstall
+- **Modify rules**: Edit `CLAUDE.md`, then reinstall. The marker-block mechanism won't affect your other local rules
 - **Project-level rules**: This is a global coach — your project can have its own CLAUDE.md, both coexist without conflict
 
 ## License

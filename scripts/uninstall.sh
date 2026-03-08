@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # uninstall.sh — Remove AI Coach System from ~/.claude/
-# Usage: ./scripts/uninstall.sh [--keep-progress] [--lang en|zh]
+# Usage: ./scripts/uninstall.sh [--keep-progress]
 
 set -euo pipefail
 
@@ -22,7 +22,6 @@ COACH_COMMANDS=(
 
 # Default options
 KEEP_PROGRESS=0
-LANG_CHOICE="zh"
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -31,17 +30,9 @@ while [[ $# -gt 0 ]]; do
             KEEP_PROGRESS=1
             shift
             ;;
-        --lang)
-            LANG_CHOICE="$2"
-            shift 2
-            ;;
-        --lang=*)
-            LANG_CHOICE="${1#*=}"
-            shift
-            ;;
         *)
             echo "Unknown option: $1"
-            echo "Usage: ./scripts/uninstall.sh [--keep-progress] [--lang en|zh]"
+            echo "Usage: ./scripts/uninstall.sh [--keep-progress]"
             exit 1
             ;;
     esac
@@ -224,25 +215,13 @@ verify_uninstall() {
 }
 
 main() {
-    if [[ "$LANG_CHOICE" == "en" ]]; then
-        info "Uninstalling AI Coach System from $CLAUDE_HOME ..."
-    else
-        info "正在从 $CLAUDE_HOME 卸载 AI 教练系统 ..."
-    fi
+    info "Uninstalling AI Coach System from $CLAUDE_HOME ..."
 
     # Confirm uninstall
-    if [[ "$LANG_CHOICE" == "en" ]]; then
-        printf "Are you sure you want to uninstall? [y/N]: "
-    else
-        printf "确定要卸载吗？[y/N]: "
-    fi
+    printf "Are you sure you want to uninstall? [y/N]: "
     read -r confirm
     if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
-        if [[ "$LANG_CHOICE" == "en" ]]; then
-            info "Uninstall cancelled."
-        else
-            info "卸载已取消。"
-        fi
+        info "Uninstall cancelled."
         exit 0
     fi
 
@@ -265,16 +244,9 @@ main() {
     verify_uninstall
 
     echo ""
-    if [[ "$LANG_CHOICE" == "en" ]]; then
-        info "✅ Uninstall complete! AI Coach has been removed."
-        if [ "$KEEP_PROGRESS" -eq 1 ]; then
-            warn "PROGRESS.md was kept at $CLAUDE_HOME/PROGRESS.md"
-        fi
-    else
-        info "✅ 卸载完成！AI 教练系统已移除。"
-        if [ "$KEEP_PROGRESS" -eq 1 ]; then
-            warn "PROGRESS.md 已保留在 $CLAUDE_HOME/PROGRESS.md"
-        fi
+    info "✅ Uninstall complete! AI Coach has been removed."
+    if [ "$KEEP_PROGRESS" -eq 1 ]; then
+        warn "PROGRESS.md was kept at $CLAUDE_HOME/PROGRESS.md"
     fi
 }
 

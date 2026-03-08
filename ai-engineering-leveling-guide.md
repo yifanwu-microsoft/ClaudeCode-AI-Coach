@@ -1,776 +1,778 @@
-# AI 工程能力提升完整指南 (Level 1 → Level 8)
+# Complete Guide to AI Engineering Skills (Level 1 → Level 8)
 
-> **适用对象**：所有使用 AI 辅助编程的软件工程师
-> **核心工具**：Claude Code CLI
-> **使用方式**：每个 Level 有明确的验收 Checklist，全部打勾才进入下一阶段
-> **示例说明**：本指南的代码示例以 React/Next.js（TypeScript）为主，但 Level 定义和验收标准适用于任何技术栈。请将示例中的具体技术替换为你的项目技术栈。
-
----
-
-## 目录
-
-1. [概述：Level 定义 + 自我评估](#1-概述level-定义--自我评估)
-2. [Level 1-2：AI 辅助编程入门](#2-level-1-2ai-辅助编程入门)
-3. [Level 3-4：提示词工程 + 项目上下文管理](#3-level-3-4提示词工程--项目上下文管理)
-4. [Level 5：意图驱动开发](#4-level-5意图驱动开发)
-5. [Level 6：多 Agent 并行](#5-level-6多-agent-并行)
-6. [Level 7：工作流编排](#6-level-7工作流编排)
-7. [Level 8：自动化编排系统](#7-level-8自动化编排系统)
-8. [附录：模板与速查表](#8-附录模板与速查表)
+> **Target audience**: All software engineers using AI-assisted programming
+> **Core tool**: Claude Code CLI
+> **How to use**: Each Level has a clear acceptance Checklist — check off every item before moving to the next stage
+> **About examples**: Code examples in this guide primarily use React/Next.js (TypeScript), but Level definitions and acceptance criteria apply to any tech stack. Substitute the specific technologies in examples with your own project's stack.
 
 ---
 
-## 1. 概述：Level 定义 + 自我评估
+## Table of Contents
 
-### Level 全景图
-
-| Level | 名称 | 你在做什么 | AI 在做什么 |
-|-------|------|-----------|------------|
-| 1 | 零接触 | 手写所有代码 | 不存在 |
-| 2 | 补全依赖 | 写代码，偶尔按 Tab 接受补全 | 打字助手 |
-| 3 | 对话协作 | 在 Chat 中问问题，复制粘贴答案 | 搜索引擎替代品 |
-| 4 | 提示词工程 | 写结构化 Prompt，管理项目上下文 | 听指令的初级工程师 |
-| 5 | 意图驱动 | 描述业务意图，审查 AI 的方案 | 能独立交付的中级工程师 |
-| 6 | 多 Agent 并行 | 同时管理多条 AI 任务流 | 一个可并行的开发团队 |
-| 7 | 工作流编排 | 设计标准化流程，AI 按流程执行 | 开发时自动化流水线 |
-| 8 | 自动化系统 | 配置事件触发器，AI 7x24 自主运转 | 无人值守的基础设施 |
-
-### 自我评估（每项 0-2 分）
-
-**基础能力（Level 1-2）**
-- [ ] 日常开发中使用 AI 代码补全
-- [ ] 会在 Claude Code 中进行基本对话
-- [ ] 能判断 AI 输出的代码是否可用
-
-**提示词能力（Level 3-4）**
-- [ ] 能写包含上下文+约束+期望输出的结构化 Prompt
-- [ ] 项目有 CLAUDE.md 且保持更新
-- [ ] 复杂任务会先用 Plan Mode 规划
-- [ ] AI 生成的代码需手动修改的比例 < 20%
-
-**自主开发（Level 5）**
-- [ ] 描述业务意图而非技术实现，AI 自主选择方案
-- [ ] 能独立委托完整 Feature（包含多个模块和测试）
-- [ ] AI 的方案一次通过架构审查的比例 > 80%
-
-**并行与编排（Level 6-7）**
-- [ ] 能同时管理 3+ 个并行 AI 任务流（内置并行或多实例）
-- [ ] 能正确区分可并行 vs 必须串行的任务
-- [ ] 有 5+ 个 Custom Slash Commands
-- [ ] 配置了 Hooks 自动化质量检查
-
-**系统级（Level 8）**
-- [ ] CI/CD 中集成了 AI（Headless 模式）
-- [ ] 有 AI 自动修复失败 Pipeline 的能力
-- [ ] 有完整的 AI 工作流监控和成本控制
-
-**评分**：0-4 → Level 1-2 ｜ 5-8 → Level 3-4 ｜ 9-11 → Level 5 ｜ 12-15 → Level 6-7 ｜ 16-18 → Level 8
+1. [Overview: Level Definitions + Self-Assessment](#1-overview-level-definitions--self-assessment)
+2. [Level 1-2: Getting Started with AI-Assisted Programming](#2-level-1-2-getting-started-with-ai-assisted-programming)
+3. [Level 3-4: Prompt Engineering + Project Context Management](#3-level-3-4-prompt-engineering--project-context-management)
+4. [Level 5: Intent-Driven Development](#4-level-5-intent-driven-development)
+5. [Level 6: Multi-Agent Parallelism](#5-level-6-multi-agent-parallelism)
+6. [Level 7: Workflow Orchestration](#6-level-7-workflow-orchestration)
+7. [Level 8: Automated Orchestration System](#7-level-8-automated-orchestration-system)
+8. [Appendix: Templates & Quick Reference](#8-appendix-templates--quick-reference)
 
 ---
 
-## 2. Level 1-2：AI 辅助编程入门
+## 1. Overview: Level Definitions + Self-Assessment
 
-### Why：为什么从这里开始
+### Level Overview
 
-这个阶段的目标不是让 AI 写出完美代码，而是**建立使用 AI 的肌肉记忆**。
+| Level | Name | What You're Doing | What AI Is Doing |
+|-------|------|-------------------|------------------|
+| 1 | Zero Contact | Writing all code by hand | Non-existent |
+| 2 | Completion Reliance | Writing code, occasionally pressing Tab to accept completions | Typing assistant |
+| 3 | Conversational Collaboration | Asking questions in Chat, copy-pasting answers | Search engine replacement |
+| 4 | Prompt Engineering | Writing structured prompts, managing project context | A junior engineer following instructions |
+| 5 | Intent-Driven | Describing business intent, reviewing AI's proposals | A mid-level engineer who can deliver independently |
+| 6 | Multi-Agent Parallelism | Managing multiple AI task streams simultaneously | A parallelizable development team |
+| 7 | Workflow Orchestration | Designing standardized processes for AI to execute | A dev-time automated pipeline |
+| 8 | Automated System | Configuring event triggers, AI running autonomously 24/7 | Unattended infrastructure |
 
-跳过这个阶段直接学高级技巧会导致：
-- 不信任 AI 输出 → 花更多时间审查 → 觉得 AI 没用 → 放弃
-- 缺少对 AI 输出质量的直觉 → 后续每一步决策都更慢
+### Self-Assessment (0-2 points per item)
 
-核心心态：**让 AI 帮你写那些你会写但懒得写的代码**（boilerplate、类型定义、测试骨架）。
+**Foundational Skills (Level 1-2)**
+- [ ] Using AI code completion in daily development
+- [ ] Able to have basic conversations in Claude Code
+- [ ] Can judge whether AI-generated code is usable
 
-### How：具体执行步骤
+**Prompting Skills (Level 3-4)**
+- [ ] Can write structured prompts with context + constraints + expected output
+- [ ] Project has a CLAUDE.md that is kept up to date
+- [ ] Using Plan Mode for complex tasks
+- [ ] Less than 20% of AI-generated code requires manual modification
 
-#### 第 1 周：安装 + 建立补全习惯
+**Autonomous Development (Level 5)**
+- [ ] Describing business intent rather than technical implementation; AI independently selects approach
+- [ ] Can delegate complete Features (spanning multiple modules and tests)
+- [ ] AI proposals pass architecture review on first attempt > 80% of the time
+
+**Parallelism & Orchestration (Level 6-7)**
+- [ ] Can manage 3+ parallel AI task streams (built-in parallelism or multiple instances)
+- [ ] Can correctly distinguish parallelizable vs. must-be-serial tasks
+- [ ] Have 5+ Custom Slash Commands
+- [ ] Hooks configured for automated quality checks
+
+**System Level (Level 8)**
+- [ ] AI integrated into CI/CD (Headless mode)
+- [ ] AI can automatically fix failed Pipelines
+- [ ] Complete AI workflow monitoring and cost controls in place
+
+**Scoring**: 0-4 → Level 1-2 ｜ 5-8 → Level 3-4 ｜ 9-11 → Level 5 ｜ 12-15 → Level 6-7 ｜ 16-18 → Level 8
+
+---
+
+## 2. Level 1-2: Getting Started with AI-Assisted Programming
+
+### Why: Why Start Here
+
+The goal at this stage isn't to get AI to write perfect code — it's to **build muscle memory for using AI**.
+
+Skipping this stage and jumping straight to advanced techniques leads to:
+- Not trusting AI output → Spending more time reviewing → Feeling AI is useless → Giving up
+- Lacking intuition about AI output quality → Every subsequent decision is slower
+
+Core mindset: **Let AI help you write code that you know how to write but don't feel like writing** (boilerplate, type definitions, test scaffolding).
+
+### How: Step-by-Step Execution
+
+#### Week 1: Installation + Building Completion Habits
 
 ```bash
-# 安装 Claude Code
+# Install Claude Code
 npm install -g @anthropic-ai/claude-code
 
-# 在项目目录启动
+# Launch in your project directory
 cd your-project
 claude
 ```
 
-**每天练习**：写代码时有意识地让 AI 补全以下内容：
-- 组件/类的结构骨架
-- 类型定义/接口定义
-- 重复性模式代码（如循环、条件分支、配置项）
-- 样板代码（boilerplate）
+**Daily practice**: Consciously let AI complete the following while coding:
+- Component/class structural scaffolding
+- Type definitions/interface definitions
+- Repetitive pattern code (loops, conditionals, configuration items)
+- Boilerplate code
 
-> 以下以 React/TypeScript 为例，请替换为你的技术栈：
-> - React 组件的 JSX 结构
-> - TypeScript 类型/接口定义
-> - `useEffect`、`useCallback` 等 Hook 的依赖数组
-> - 重复性代码（map 渲染、表单字段）
+> The following uses React/TypeScript as an example — substitute with your own tech stack:
+> - JSX structure for React components
+> - TypeScript type/interface definitions
+> - Dependency arrays for `useEffect`, `useCallback`, and other Hooks
+> - Repetitive code (map rendering, form fields)
 
-#### 第 2 周：学会在 Claude Code 中提问
+#### Week 2: Learning to Ask Questions in Claude Code
 
-从小而具体的问题开始：
+Start with small, specific questions:
 
 ```
-好的问题（有边界、有上下文）：
-  "这段代码报了 TS2345 错误，错误信息是 [粘贴]，怎么修？"
-  "把这个 class component 改写成 function component + hooks"
-  "给 getUserById 函数加上错误处理和 loading 状态"
+Good questions (bounded, with context):
+  "This code throws TS2345 error, error message is [paste], how to fix?"
+  "Rewrite this class component as a function component + hooks"
+  "Add error handling and loading state to the getUserById function"
 
-不好的问题（太大、太模糊）：
-  "帮我优化代码"
-  "写一个管理后台"
+Bad questions (too broad, too vague):
+  "Help me optimize the code"
+  "Build me an admin dashboard"
 ```
 
-#### 第 3-4 周：建立审查直觉
+#### Weeks 3-4: Building Review Intuition
 
-每次 AI 生成代码后，检查三件事：
-1. **类型安全** — 有没有 `any`？边界情况处理了吗？
-2. **项目一致性** — 命名、文件组织、导入方式是否符合项目惯例？
-3. **可理解性** — 你能向别人解释每一行吗？不能就追问 AI
+After each AI code generation, check three things:
+1. **Type safety** — Are there any `any` types? Are edge cases handled?
+2. **Project consistency** — Do naming, file organization, and import patterns follow project conventions?
+3. **Comprehensibility** — Can you explain every line to someone else? If not, ask the AI to clarify
 
-### Done When：验收标准
+### Done When: Acceptance Criteria
 
-- [ ] 每天自然地使用 AI 补全（不需要刻意提醒自己）
-- [ ] 每天至少 3 次在 Claude Code 中进行有效对话
-- [ ] AI 贡献了 20-30% 的代码（非关键路径）
-- [ ] 对每段 AI 代码都有"接受/修改/拒绝"的判断习惯
+- [ ] Using AI completion naturally every day (no need to consciously remind yourself)
+- [ ] At least 3 effective conversations in Claude Code per day
+- [ ] AI contributes 20-30% of code (non-critical paths)
+- [ ] Have a habit of "accept/modify/reject" judgment for every piece of AI code
 
-> **💡 自测方法**：回顾你今天写的代码，有多少是 AI 补全/生成的？如果超过 5 处，说明已经形成习惯。"接受/修改/拒绝"不需要记录数字，只要你发现自己在看 AI 代码时会自然地思考"这行对不对"，就算达标。
+> **💡 Self-test method**: Review the code you wrote today — how many pieces were AI-completed/generated? If more than 5, you've formed the habit. "Accept/modify/reject" doesn't require tracking numbers — as long as you find yourself naturally thinking "is this line correct?" when looking at AI code, you've met the bar.
 
-**毕业测试**：用 AI 辅助完成一个 3 组件的小 Feature（如表单+列表+详情）。AI 贡献 20%+ 代码，你能解释每一行。
+**Graduation test**: Complete a small Feature with 3 components (e.g., form + list + detail view) using AI assistance. AI contributes 20%+ of code, and you can explain every line.
 
-### Practice：练习任务
+### Practice: Exercises
 
-1. **类型生成**：给 Claude 一个 API 的 JSON 响应样本，让它生成对应的类型定义（TypeScript interface / Python dataclass / Go struct 等）。对比你手写的版本
-2. **组件骨架**：让 Claude 生成一个数据展示组件（如 `<DataTable>`，支持排序+分页），逐行标注需要修改的地方
-3. **代码解释**：找项目中一段你不太理解的代码，让 Claude 解释，然后验证准确性
+1. **Type generation**: Give Claude a JSON response sample from an API, have it generate corresponding type definitions (TypeScript interface / Python dataclass / Go struct, etc.). Compare with your hand-written version
+2. **Component scaffolding**: Have Claude generate a data display component (e.g., `<DataTable>` with sorting + pagination), annotate line by line what needs modification
+3. **Code explanation**: Find a piece of code in your project that you don't fully understand, have Claude explain it, then verify accuracy
 
-### Anti-patterns：常见陷阱
+### Anti-patterns: Common Pitfalls
 
-| 陷阱 | 修正 |
-|------|------|
-| 不看代码直接复制粘贴 | 建立"三件事检查"习惯 |
-| 连变量命名都问 AI | 只在节省 30 秒以上时才用 AI |
-| 反复让 AI 重写追求完美 | 80% 够好就接受，手动调 20% |
-| 只说"帮我修 bug"没有上下文 | 必须附带：错误信息 + 代码片段 + 期望行为 |
+| Pitfall | Fix |
+|---------|-----|
+| Copy-pasting code without reading it | Build the "three things check" habit |
+| Asking AI even for variable names | Only use AI when it saves 30+ seconds |
+| Repeatedly asking AI to rewrite seeking perfection | Accept when 80% good enough, manually adjust the 20% |
+| Just saying "help me fix a bug" with no context | Must include: error message + code snippet + expected behavior |
 
 ---
 
-## 3. Level 3-4：提示词工程 + 项目上下文管理
+## 3. Level 3-4: Prompt Engineering + Project Context Management
 
-### Why：为什么提示词质量是效率拐点
+### Why: Why Prompt Quality Is the Efficiency Inflection Point
 
-Level 2 时你和 AI 的对话可能要 5-10 个来回才得到满意结果。
-Level 4 毕业时应该降到 **1-3 个来回**。
+At Level 2, your conversations with AI might take 5-10 round trips to get satisfactory results.
+By the time you graduate Level 4, this should drop to **1-3 round trips**.
 
-差距在哪？不是 AI 变聪明了，是你学会了**一次给够信息**。
+What's the difference? It's not that AI got smarter — you learned to **provide all the information at once**.
 
-这个阶段要建立两个核心能力：
-1. **结构化提示词** — 让 AI 一次输出高质量结果
-2. **CLAUDE.md 项目上下文** — 让 AI 自动继承项目规范，不用每次重复
+This stage builds two core capabilities:
+1. **Structured prompts** — Getting high-quality output from AI in one shot
+2. **CLAUDE.md project context** — Having AI automatically inherit project conventions without repeating yourself every time
 
-### How：具体执行步骤
+### How: Step-by-Step Execution
 
-#### Step 1：掌握 Claude Code 核心功能（第 1 周）
+#### Step 1: Master Claude Code Core Features (Week 1)
 
 ```bash
-# 初始化项目级配置
+# Initialize project-level configuration
 claude /init
-# → 自动生成 CLAUDE.md，包含项目结构、技术栈、代码规范
+# → Auto-generates CLAUDE.md with project structure, tech stack, coding conventions
 
-# Plan Mode：先规划再执行（复杂任务必用）
-# 在对话中输入：
+# Plan Mode: Plan before executing (essential for complex tasks)
+# In the conversation, type:
 /plan
-# → Claude 会给出分步方案，你审核后再执行
-# → 可以在 Plan Mode 中追问和调整方案
+# → Claude will provide a step-by-step plan for you to review before execution
+# → You can ask questions and adjust the plan in Plan Mode
 
-# 压缩上下文（对话太长影响质量时）
+# Compress context (when long conversations affect quality)
 /compact
 
-# 查看 Token 消耗
+# Check Token consumption
 /cost
 ```
 
-**Plan Mode 使用示例**：
+**Plan Mode usage example**:
 
 ```
-你："我需要给用户列表页添加搜索功能，支持按姓名和邮箱搜索"
+You: "I need to add search functionality to the user list page,
+      supporting search by name and email"
 
 Claude (Plan Mode):
-  1. 创建 useUserSearch hook（debounce + React Query）
-  2. 修改 UserList 组件，添加 SearchInput
-  3. 后端添加 /api/users/search 端点
-  4. 添加搜索结果高亮
+  1. Create useUserSearch hook (debounce + React Query)
+  2. Modify UserList component, add SearchInput
+  3. Backend: add /api/users/search endpoint
+  4. Add search result highlighting
 
-你："方案 OK，但搜索用前端过滤就行，数据量不超过 200 条，不需要后端接口"
+You: "Plan looks good, but search should use frontend filtering —
+      the dataset won't exceed 200 items. No backend endpoint needed."
 
-Claude: 好的，修改方案...（调整后执行）
+Claude: Got it, revising the plan... (adjusts and executes)
 ```
 
-#### Step 2：结构化提示词——CRATE 框架（第 2 周）
+#### Step 2: Structured Prompts — The CRATE Framework (Week 2)
 
 ```markdown
-## Context（上下文）
-Next.js 14 App Router 项目，Tailwind CSS + shadcn/ui。
-当前在 app/dashboard/ 目录下工作。
+## Context
+Next.js 14 App Router project, Tailwind CSS + shadcn/ui.
+Currently working in the app/dashboard/ directory.
 
-## Role（角色——可选，复杂任务时用）
-你是熟悉 Next.js App Router 和 RSC 的高级前端工程师。
+## Role (optional — use for complex tasks)
+You are a senior frontend engineer experienced with Next.js App Router and RSC.
 
-## Action（要做什么）
-创建一个 Dashboard 数据概览卡片组件。
+## Action (what to do)
+Create a Dashboard data overview card component.
 
-## Target（具体产物）
-- 文件：components/dashboard/stats-card.tsx
-- Props：title: string, value: number, trend: number, icon: LucideIcon
-- 使用 shadcn/ui 的 Card 组件
+## Target (specific deliverables)
+- File: components/dashboard/stats-card.tsx
+- Props: title: string, value: number, trend: number, icon: LucideIcon
+- Use shadcn/ui Card component
 
-## Expectation（验收标准）
-- Server Component（不加 'use client'）
-- trend 正数绿色↑、负数红色↓
-- 响应式布局：移动端单列，桌面端可放 grid
+## Expectation (acceptance criteria)
+- Server Component (no 'use client')
+- Positive trend → green ↑, negative trend → red ↓
+- Responsive layout: single column on mobile, grid-compatible on desktop
 ```
 
-不需要每次都写全 5 项。简单任务给 Context + Action 就够。关键是**给足 AI 判断所需的信息**。
+You don't need to fill in all 5 sections every time. For simple tasks, Context + Action is enough. The key is **giving AI enough information to make good judgments**.
 
-#### Step 3：配置 CLAUDE.md（第 3 周）
+#### Step 3: Configure CLAUDE.md (Week 3)
 
-CLAUDE.md 是项目级的"AI 操作手册"。Claude Code 每次启动都会读取它。
+CLAUDE.md is the project-level "AI operating manual." Claude Code reads it every time it starts.
 
 ```markdown
 # CLAUDE.md
 
-## 项目概述
-Next.js 14 App Router 电商后台管理系统
+## Project Overview
+Next.js 14 App Router e-commerce admin dashboard
 
-## 技术栈
+## Tech Stack
 - Next.js 14 (App Router), TypeScript (strict)
 - Tailwind CSS + shadcn/ui
 - Prisma + PostgreSQL
 - TanStack Query v5
 
-## 代码规范
-- 组件：命名导出（不用 default export）
-- 文件名：kebab-case（stats-card.tsx）
-- 类型：同目录 types.ts 文件中定义
-- 数据获取：Server Component 直接 Prisma 查询；客户端用 React Query
-- 样式：使用 cn() 合并 Tailwind 类名
+## Coding Conventions
+- Components: named exports (no default export)
+- File names: kebab-case (stats-card.tsx)
+- Types: defined in types.ts file in the same directory
+- Data fetching: Server Components use direct Prisma queries; client-side uses React Query
+- Styling: use cn() to merge Tailwind class names
 
-## 目录结构
-app/           → 路由和页面
-components/ui/ → shadcn/ui 基础组件（不手动修改）
-components/features/ → 业务组件
-lib/           → 工具函数
-hooks/         → 自定义 Hooks
-types/         → 全局类型
+## Directory Structure
+app/           → Routes and pages
+components/ui/ → shadcn/ui base components (do not modify manually)
+components/features/ → Business components
+lib/           → Utility functions
+hooks/         → Custom Hooks
+types/         → Global types
 
-## 常用命令
-npm run dev    → 开发服务器
-npm test       → Vitest 测试
+## Common Commands
+npm run dev    → Development server
+npm test       → Vitest tests
 npm run lint   → ESLint
 ```
 
-**关键原则**：CLAUDE.md 控制在 200 行以内。太长 AI 反而会忽略重要规则。
+**Key principle**: Keep CLAUDE.md under 200 lines. If it's too long, AI will actually ignore important rules.
 
-#### Step 4：迭代式对话而非一次到位（第 4 周）
+#### Step 4: Iterative Conversation Rather Than One-Shot Perfection (Week 4)
 
 ```
-# 第一轮：大方向
-"给 dashboard 加一个用户活跃度折线图"
+# Round 1: Big picture
+"Add a user activity line chart to the dashboard"
 
-# 第二轮：看到方案后补充
-"用 recharts，x 轴按周显示，最近 12 周"
+# Round 2: Refine after seeing the proposal
+"Use recharts, x-axis by week, last 12 weeks"
 
-# 第三轮：细化
-"加上 loading skeleton 和空状态"
+# Round 3: Polish
+"Add a loading skeleton and empty state"
 ```
 
-这比花 30 分钟写一个"完美 Prompt"更高效。
+This is more efficient than spending 30 minutes crafting one "perfect prompt."
 
-### Done When：验收标准
+### Done When: Acceptance Criteria
 
-- [ ] Prompt 平均 1-3 轮得到满意结果（记录最近 10 个任务）
-- [ ] CLAUDE.md 已配置且包含技术栈+规范+目录结构
-- [ ] 复杂任务（跨 3+ 文件）100% 使用 Plan Mode
-- [ ] AI 代码贡献 50-60%，手动修改 < 20%
+- [ ] Prompts average 1-3 rounds to get satisfactory results (track your last 10 tasks)
+- [ ] CLAUDE.md is configured with tech stack + conventions + directory structure
+- [ ] Complex tasks (spanning 3+ files) use Plan Mode 100% of the time
+- [ ] AI code contribution 50-60%, manual modifications < 20%
 
-> **💡 自测方法**：回顾最近 5 个任务，每个任务和 AI 对话了几轮？如果 ≥4 个任务在 3 轮内搞定，就达标。"手动修改 < 20%" 的简单判断：AI 写完后你只需要改个别地方（变量名、边界处理），而不是大段重写。
+> **💡 Self-test method**: Review your last 5 tasks — how many rounds of conversation with AI did each take? If ≥4 tasks were done in 3 rounds or fewer, you've met the bar. A simple check for "manual modifications < 20%": after AI finishes writing, you only need to change a few things (variable names, edge cases) rather than rewriting large sections.
 
-**毕业测试**：完成一个带筛选+排序+分页的数据表格。使用 Plan Mode 规划，1-3 轮 Prompt 完成。AI 代码需手动修改的比例 < 20%。
+**Graduation test**: Complete a data table with filtering + sorting + pagination. Use Plan Mode for planning, 1-3 prompt rounds to complete. Less than 20% of AI code requires manual modification.
 
-### Practice：练习任务
+### Practice: Exercises
 
-1. **CLAUDE.md 验证**：写完 CLAUDE.md 后，让 Claude 创建一个新组件，检查它是否遵守了命名规范、导出方式、文件位置
-2. **CRATE 对比**：同一个任务分别用"一句话 Prompt"和 CRATE 格式 Prompt，对比输出质量和来回次数
-3. **Plan Mode 深度使用**：选一个跨 3+ 文件的 Feature，全程 Plan Mode。记录计划 vs 实际的偏差
+1. **CLAUDE.md validation**: After writing CLAUDE.md, have Claude create a new component and check whether it follows your naming conventions, export style, and file location
+2. **CRATE comparison**: Use both a "one-liner prompt" and a CRATE-formatted prompt for the same task, compare output quality and number of round trips
+3. **Deep Plan Mode usage**: Pick a Feature spanning 3+ files, use Plan Mode throughout. Record deviations between plan and actual execution
 
-### Anti-patterns：常见陷阱
+### Anti-patterns: Common Pitfalls
 
-| 陷阱 | 修正 |
-|------|------|
-| 把整个代码库丢给 AI 求帮忙 | 只给必要文件和上下文 |
-| CLAUDE.md 写了 500 行 | 精简到 200 行以内，核心规则优先 |
-| 不用 Plan Mode 直接让 AI 改代码 | 跨文件任务必须先 Plan |
-| Prompt 写 200 行指定每个细节 | 给框架让 AI 提方案，你做选择 |
-| CLAUDE.md 写了一次就不管了 | 技术栈/规范变化时及时更新 |
+| Pitfall | Fix |
+|---------|-----|
+| Dumping the entire codebase on AI for help | Only provide necessary files and context |
+| CLAUDE.md is 500 lines long | Keep it under 200 lines, prioritize core rules |
+| Letting AI modify code without Plan Mode | Cross-file tasks must start with Plan Mode |
+| Writing a 200-line prompt specifying every detail | Provide a framework, let AI propose solutions, you make choices |
+| Writing CLAUDE.md once and never updating it | Update whenever tech stack or conventions change |
 
 ---
 
-## 4. Level 5：意图驱动开发
+## 4. Level 5: Intent-Driven Development
 
-### Why：从"告诉 AI 怎么做"到"告诉 AI 为什么做"
+### Why: From "Telling AI How" to "Telling AI Why"
 
-Level 4 的你："用 useInfiniteQuery 实现无限滚动列表，每页 20 条，用 Intersection Observer 触发加载"
-Level 5 的你："用户抱怨订单列表加载慢，数据量有 5000+ 条。请优化用户体验。"
+Level 4 you: "Implement an infinite scroll list with useInfiniteQuery, 20 items per page, trigger loading with Intersection Observer"
+Level 5 you: "Users are complaining the order list loads slowly, there are 5000+ records. Please optimize the user experience."
 
-当你描述 Why/What 而非 How 时：
-- AI 可能给出你没想到的更好方案（比如虚拟列表而非无限滚动）
-- 你从"编码执行者"变成"产品决策者"
-- 你的时间从写代码转移到审查方案和做架构决策
+When you describe Why/What instead of How:
+- AI might suggest a better solution you hadn't considered (e.g., virtual list instead of infinite scroll)
+- You shift from "coding executor" to "product decision-maker"
+- Your time moves from writing code to reviewing proposals and making architecture decisions
 
-**前提**：你必须有能力评判 AI 的方案好坏。这需要工程基础，所以不能跳过前面的阶段。
+**Prerequisite**: You must have the ability to judge whether AI's proposals are good or bad. This requires engineering fundamentals — that's why you can't skip the earlier stages.
 
-### How：具体执行步骤
+### How: Step-by-Step Execution
 
-#### Step 1：学会描述意图（第 1-2 周）
+#### Step 1: Learn to Describe Intent (Weeks 1-2)
 
-**转换练习——把 How 改写成 Why/What**：
+**Conversion exercise — rewrite How as Why/What**:
 
 ```
 Before (How):
-  "在 UserList 组件中添加 useState 管理搜索词，
-   加 input 框，onChange 时 setState，
-   useQuery 参数中传入搜索词"
+  "In the UserList component, add useState to manage the search term,
+   add an input field, setState on onChange,
+   pass the search term in the useQuery parameters"
 
 After (Why/What):
-  "用户列表页需要搜索功能。
-   场景：管理员需要在 5000+ 用户中快速找到特定用户。
-   性能要求：输入不能卡顿，搜索响应 < 500ms。
-   请给出方案并实现。"
+  "The user list page needs search functionality.
+   Scenario: Admins need to quickly find a specific user among 5000+ users.
+   Performance requirement: No input lag, search response < 500ms.
+   Please propose a solution and implement it."
 ```
 
-#### Step 2：Feature 级别委托（第 3-4 周）
+#### Step 2: Feature-Level Delegation (Weeks 3-4)
 
-把完整 Feature 交给 AI，你只负责需求定义和方案审查：
+Hand complete Features to AI — you only handle requirements definition and proposal review:
 
 ```markdown
-## 需求：订单导出功能
+## Requirement: Order Export Feature
 
-### 业务背景
-运营团队每周需要导出订单数据到 Excel，目前只能手动复制。
+### Business Background
+The operations team needs to export order data to Excel every week; currently they can only copy manually.
 
-### 用户故事
-运营人员在订单列表页点击"导出"，按当前筛选条件导出 CSV。
+### User Story
+An operations staff member clicks "Export" on the order list page, exporting a CSV based on current filter criteria.
 
-### 约束
-- 最大导出量：10 万行
-- 字段：订单号、客户名、金额、状态、创建时间
-- 大数据量时显示进度
-- 文件名：orders_YYYYMMDD_HHmmss.csv
+### Constraints
+- Maximum export volume: 100,000 rows
+- Fields: order number, customer name, amount, status, creation date
+- Show progress for large datasets
+- File name: orders_YYYYMMDD_HHmmss.csv
 
-### 不需要
-- 不需要 .xlsx 格式
-- 不需要后台任务队列
+### Not Needed
+- No .xlsx format
+- No background task queue
 
-### 验收标准
-- [ ] 导出 1000 条数据 < 3 秒
-- [ ] 特殊字符（逗号、引号）正确转义
-- [ ] 有 loading 状态和错误提示
+### Acceptance Criteria
+- [ ] Exporting 1,000 records takes < 3 seconds
+- [ ] Special characters (commas, quotes) are properly escaped
+- [ ] Loading state and error messages are present
 ```
 
-#### Step 3：方案评审——你的新核心工作（第 5-6 周）
+#### Step 3: Proposal Review — Your New Core Job (Weeks 5-6)
 
-AI 给出方案后，用这个 checklist 审查：
-
-```
-1. 架构合理性
-   □ 符合项目现有模式？
-   □ 没有过度工程？
-
-2. 边界情况
-   □ 错误处理完善？
-   □ 并发/竞态考虑了？
-   □ 空数据和大数据量都处理了？
-
-3. 性能
-   □ 没有不必要的重渲染？
-   □ 数据获取策略合理？
-
-4. 安全
-   □ 无 XSS/注入风险？
-   □ 权限验证到位？
-```
-
-#### Step 4：测试驱动的信任（第 7-8 周）
+After AI provides a proposal, review it with this checklist:
 
 ```
-"实现订单导出功能，要求：
- - 先写测试再写实现（TDD）
- - 单元测试：CSV 生成逻辑（含特殊字符转义）
- - 集成测试：导出 API 端点
- - 组件测试：导出按钮的交互状态"
+1. Architecture Soundness
+   □ Fits existing project patterns?
+   □ No over-engineering?
+
+2. Edge Cases
+   □ Error handling is thorough?
+   □ Concurrency/race conditions considered?
+   □ Empty data and large datasets both handled?
+
+3. Performance
+   □ No unnecessary re-renders?
+   □ Data fetching strategy is sound?
+
+4. Security
+   □ No XSS/injection risks?
+   □ Authorization checks in place?
 ```
 
-测试通过 = 你可以信任代码。这比逐行审查效率高 10 倍。
-
-#### Step 4：任务拆解与依赖分析（第 7-8 周）
-
-这是 Level 6（多 Agent 并行）的前置技能。先学会拆解，再学并行。
-
-**练习：把一个 Feature 拆成独立的子任务**
+#### Step 4: Trust Through Testing (Weeks 7-8)
 
 ```
-需求：订单管理页面
+"Implement the order export feature with the following requirements:
+ - Write tests before implementation (TDD)
+ - Unit tests: CSV generation logic (including special character escaping)
+ - Integration tests: export API endpoint
+ - Component tests: export button interaction states"
+```
 
-拆解：
-├── 子任务 1：订单数据模型 + API（独立）
-├── 子任务 2：订单列表组件（依赖子任务 1 的类型定义）
-├── 子任务 3：订单详情组件（依赖子任务 1 的类型定义）
-├── 子任务 4：筛选/搜索功能（依赖子任务 2）
-└── 子任务 5：测试（依赖子任务 1-4）
+Tests passing = you can trust the code. This is 10x more efficient than line-by-line review.
 
-依赖图：
+#### Step 4: Task Decomposition & Dependency Analysis (Weeks 7-8)
+
+This is a prerequisite skill for Level 6 (Multi-Agent Parallelism). Learn to decompose first, then learn to parallelize.
+
+**Exercise: Break a Feature into independent subtasks**
+
+```
+Requirement: Order management page
+
+Decomposition:
+├── Subtask 1: Order data model + API (independent)
+├── Subtask 2: Order list component (depends on Subtask 1's type definitions)
+├── Subtask 3: Order detail component (depends on Subtask 1's type definitions)
+├── Subtask 4: Filter/search functionality (depends on Subtask 2)
+└── Subtask 5: Tests (depends on Subtasks 1-4)
+
+Dependency graph:
   1 ──→ 2 ──→ 4
   │     │
-  └──→ 3     5（最后）
+  └──→ 3     5 (last)
 
-可并行的组合：
-  - 约定类型定义后：子任务 2 和子任务 3 可以并行
-  - 子任务 4 必须等子任务 2 完成
+Parallelizable combinations:
+  - After agreeing on type definitions: Subtask 2 and Subtask 3 can run in parallel
+  - Subtask 4 must wait for Subtask 2 to complete
 ```
 
-**关键技能：**
-- 识别任务间的依赖关系（数据依赖、文件依赖、逻辑依赖）
-- 找到"接口点"——可以先约定接口再独立开发的分界线
-- 评估拆分的粒度——太细管理开销大，太粗无法并行
+**Key skills:**
+- Identifying dependencies between tasks (data dependencies, file dependencies, logic dependencies)
+- Finding "interface points" — boundaries where you can agree on interfaces first, then develop independently
+- Evaluating decomposition granularity — too fine means high management overhead, too coarse means no parallelism possible
 
-> 💡 在 Level 5 阶段，你仍然用单 Agent 串行执行这些子任务。但学会拆解后，到 Level 6 时只需要把"串行执行"改成"并行执行"，门槛会低很多。
+> 💡 At Level 5, you still use a single Agent to execute these subtasks serially. But once you've learned to decompose, transitioning to Level 6 only requires changing "serial execution" to "parallel execution" — the barrier will be much lower.
 
-### Done When：验收标准
+### Done When: Acceptance Criteria
 
-- [ ] Prompt 中 What/Why 占比 > 70%（审查最近 10 个 Prompt）
-- [ ] 完成过 3+ 个 Feature 级委托（前端+API+测试）
-- [ ] AI 方案一次通过架构审查的比例 > 80%
-- [ ] 能将复杂 Feature 拆解为 3+ 个子任务，并画出依赖关系
-- [ ] Feature 完成速度对比纯手写快 2x+（记录 3 个 Feature 对比）
-- [ ] AI 代码贡献 60-75%
+- [ ] What/Why makes up > 70% of prompts (review your last 10 prompts)
+- [ ] Completed 3+ Feature-level delegations (frontend + API + tests)
+- [ ] AI proposals pass architecture review on first attempt > 80% of the time
+- [ ] Can decompose complex Features into 3+ subtasks and map out their dependencies
+- [ ] Feature completion speed is 2x+ faster compared to writing entirely by hand (track 3 Features for comparison)
+- [ ] AI code contribution 60-75%
 
-> **💡 自测方法**：翻看最近 10 条 prompt，数一下有几条在描述"要什么/为什么"而不是"怎么做"，≥7 条就是 70%。"一次通过架构审查"的判断：最近 5 次让 AI 出方案，有几次你看完觉得"可以直接用"而不是"需要大改"？≥4 次就是 80%。
+> **💡 Self-test method**: Look through your last 10 prompts — count how many describe "what/why" rather than "how to do it". ≥7 out of 10 means 70%. For "passes architecture review on first attempt": out of the last 5 times you had AI propose a solution, how many times did you think "I can use this directly" rather than "this needs major changes"? ≥4 times means 80%.
 
-**毕业测试**：完成一个完整 Feature（前端+API+数据库），全程意图描述不指定实现方式。AI 方案一次通过架构审查，总耗时比纯手写快 2x+。
+**Graduation test**: Complete a full Feature (frontend + API + database) using intent descriptions throughout — never specifying implementation approach. AI proposal passes architecture review on first attempt, total time is 2x+ faster than writing by hand.
 
-### Practice：练习任务
+### Practice: Exercises
 
-1. **意图重写**：找最近 5 个 Prompt，用意图驱动方式重写，对比两个版本的 AI 输出质量
-2. **方案 PK**：同一需求分别用 How 和 What 方式提问，对比哪个方案更完善
-3. **Feature 委托**：选一个 4-8 小时的 Feature 交给 AI。记录总耗时、Prompt 轮数、手动修改比例
-4. **任务拆解**：选一个中等复杂度的 Feature，画出子任务依赖图，标注哪些可以并行
+1. **Intent rewrite**: Take your last 5 prompts, rewrite them using intent-driven approach, compare AI output quality between the two versions
+2. **Proposal showdown**: Use both How and What approaches for the same requirement, compare which produces a more comprehensive solution
+3. **Feature delegation**: Pick a 4-8 hour Feature and hand it to AI. Track total time, prompt rounds, and manual modification percentage
+4. **Task decomposition**: Pick a medium-complexity Feature, draw a subtask dependency graph, and mark which tasks can be parallelized
 
-### Anti-patterns：常见陷阱
+### Anti-patterns: Common Pitfalls
 
-| 陷阱 | 修正 |
-|------|------|
-| "我想用 useState 管理搜索"（还是 How） | 描述用户场景和问题，不提技术方案 |
-| AI 写完了就不审查 | 审查重点从代码细节转移到架构方案 |
-| 只说"加个搜索"没背景 | 始终提供：业务场景 + 数据规模 + 性能要求 |
-| AI 第一个方案直接接受 | 至少追问一次"有没有更好的方案？为什么选这个？" |
+| Pitfall | Fix |
+|---------|-----|
+| "I want to use useState for search" (still How) | Describe the user scenario and problem, don't mention technical solutions |
+| Not reviewing after AI finishes | Shift review focus from code details to architecture proposals |
+| Just saying "add search" with no background | Always provide: business scenario + data scale + performance requirements |
+| Accepting AI's first proposal without question | Always ask at least once: "Is there a better approach? Why did you choose this one?" |
 
 ---
 
-## 5. Level 6：多 Agent 并行
+## 5. Level 6: Multi-Agent Parallelism
 
-### Why：从串行到并行的效率飞跃
+### Why: The Efficiency Leap from Serial to Parallel
 
-Level 5 的工作流：写组件 → 写 API → 写测试 → 调样式（串行）
-Level 6 的工作流：Agent A 写组件 + Agent B 写 API + Agent C 写测试（并行）
+Level 5 workflow: Write component → Write API → Write tests → Adjust styling (serial)
+Level 6 workflow: Agent A writes component + Agent B writes API + Agent C writes tests (parallel)
 
-**效率公式**：并行度 x 单 Agent 效率 = 总产出。3 个 Agent 并行理论上 3x 提速。
+**Efficiency formula**: Parallelism × Single Agent Efficiency = Total Output. 3 parallel Agents theoretically means 3x speedup.
 
-**前提条件**：
-- 能准确判断哪些任务可以并行（有依赖的不行）
-- CLAUDE.md 足够好，每个 Agent 独立工作也能产出一致的代码
-- 熟悉 Git 分支管理
+**Prerequisites**:
+- Ability to accurately judge which tasks can be parallelized (those with dependencies cannot)
+- CLAUDE.md is good enough that each Agent working independently still produces consistent code
+- Familiarity with Git branch management
 
-### How：具体执行步骤
+### How: Step-by-Step Execution
 
-#### Step 1：识别并行度（第 1-2 周）
-
-```
-可以并行 ✅                    不能并行 ❌
-─────────────────              ─────────────────
-不同页面/路由                   修改同一个文件
-前端组件 vs 后端 API            有数据依赖的上下游模块
-功能代码 vs 测试代码            共享状态管理的多个组件
-独立的 bug 修复                 DB Schema + 依赖该 Schema 的 API
-文档 vs 代码
-```
-
-**关键原则**：并行前必须先约定接口契约。
-
-#### Step 2：并行方式选择
-
-并行开发有两种主要方式，根据场景选择：
-
-**方式 A：Claude Code 内置并行（推荐，适合同项目内的并行任务）**
-
-Claude Code 的 Task tool 支持启动子 Agent 并行执行任务，无需切换终端：
+#### Step 1: Identify Parallelism Opportunities (Weeks 1-2)
 
 ```
-"我需要同时完成以下三个独立任务：
- 1. 为 UserList 组件添加搜索功能
- 2. 修复分页组件在第一页点击上一页的 bug
- 3. 给 OrderDetail 组件补充测试
-
- 这三个任务互不依赖，请并行执行。"
+Can parallelize ✅                    Cannot parallelize ❌
+─────────────────                     ─────────────────
+Different pages/routes                Modifying the same file
+Frontend components vs backend API    Upstream/downstream modules with data dependencies
+Feature code vs test code             Multiple components sharing state management
+Independent bug fixes                 DB Schema + APIs that depend on that Schema
+Documentation vs code
 ```
 
-优点：无需管理 worktree、无需切换终端、自动在同一上下文中工作。
-适用场景：修改不同文件的独立任务、bug fix 批量处理、补充测试等。
+**Key principle**: Always agree on interface contracts before parallelizing.
 
-**方式 B：Git Worktree + 多实例（适合大型 Feature 的隔离开发）**
+#### Step 2: Choosing a Parallelization Approach
 
-当并行任务涉及大量文件修改、可能产生冲突时，用 Worktree 物理隔离：
+There are two main approaches to parallel development — choose based on the scenario:
+
+**Approach A: Claude Code Built-in Parallelism (recommended for parallel tasks within the same project)**
+
+Claude Code's Task tool supports launching sub-Agents to execute tasks in parallel without switching terminals:
+
+```
+"I need to complete these three independent tasks simultaneously:
+ 1. Add search functionality to the UserList component
+ 2. Fix the pagination component bug when clicking 'previous' on the first page
+ 3. Add tests for the OrderDetail component
+
+ These three tasks have no dependencies — please execute them in parallel."
+```
+
+Pros: No worktree management needed, no terminal switching, works automatically within the same context.
+Best for: Independent tasks modifying different files, batch bug fixes, adding tests, etc.
+
+**Approach B: Git Worktree + Multiple Instances (for isolated development of large Features)**
+
+When parallel tasks involve extensive file changes and potential conflicts, use Worktree for physical isolation:
 
 ```bash
-# 主项目在 ./my-project
+# Main project is at ./my-project
 
-# 为并行任务创建 worktree
+# Create worktrees for parallel tasks
 git worktree add ../my-project-feat-a feature/user-search
 git worktree add ../my-project-feat-b feature/order-export
 git worktree add ../my-project-fix fix/pagination-bug
 
-# 每个 worktree 启动独立的 Claude Code（不同终端窗口/tmux pane）
+# Launch independent Claude Code in each worktree (different terminal windows/tmux panes)
 cd ../my-project-feat-a && claude   # Terminal 1
 cd ../my-project-feat-b && claude   # Terminal 2
 cd ../my-project-fix && claude      # Terminal 3
 
-# 完成后合并
+# Merge when complete
 cd ../my-project
 git merge feature/user-search
 git merge feature/order-export
 git merge fix/pagination-bug
 
-# 清理 worktree
+# Clean up worktrees
 git worktree remove ../my-project-feat-a
 ```
 
-优点：完全隔离，互不干扰，适合大改动。
-适用场景：多个大 Feature 并行、前后端分离开发、需要独立构建/测试的场景。
+Pros: Complete isolation, no interference, ideal for large changes.
+Best for: Multiple large Features in parallel, frontend/backend separated development, scenarios requiring independent builds/tests.
 
-**如何选择：**
+**How to choose:**
 
-| 场景 | 推荐方式 | 原因 |
-|------|---------|------|
-| 3 个独立 bug fix | 内置并行 | 改动小，不需要隔离 |
-| 补充多个组件的测试 | 内置并行 | 测试文件独立，不冲突 |
-| 前端+后端+测试并行 | Worktree | 改动大，需要隔离环境 |
-| 多个大 Feature 同时推进 | Worktree | 各自有独立分支和测试 |
+| Scenario | Recommended Approach | Reason |
+|----------|---------------------|--------|
+| 3 independent bug fixes | Built-in parallelism | Small changes, no isolation needed |
+| Adding tests for multiple components | Built-in parallelism | Test files are independent, no conflicts |
+| Frontend + backend + tests in parallel | Worktree | Large changes, need isolated environments |
+| Multiple large Features progressing simultaneously | Worktree | Each has its own branch and tests |
 
-#### Step 3：并行管理流程（第 3-4 周）
+#### Step 3: Parallel Management Workflow (Weeks 3-4)
 
 ```
-Phase 1: 规划（5-10 分钟）
-├── 列出今天要做的 3-5 个任务
-├── 判断并行度
-├── 约定接口契约（如 API Request/Response 类型）
-└── 创建分支和 worktree
+Phase 1: Planning (5-10 minutes)
+├── List 3-5 tasks for today
+├── Assess parallelism opportunities
+├── Agree on interface contracts (e.g., API Request/Response types)
+└── Create branches and worktrees
 
-Phase 2: 分发（每个 Agent 2-3 分钟）
-├── Agent 1: 给清晰的任务描述 + 接口契约
-├── Agent 2: 同上
-└── Agent 3: 同上
+Phase 2: Distribution (2-3 minutes per Agent)
+├── Agent 1: Give clear task description + interface contract
+├── Agent 2: Same as above
+└── Agent 3: Same as above
 
-Phase 3: 监控（持续）
-├── 轮流检查各 Agent 进度（每 5-10 分钟）
-├── 先审查完成最快的 Agent
-├── Agent 卡住时及时干预
-└── 完成一个就合并一个（早发现冲突）
+Phase 3: Monitoring (ongoing)
+├── Rotate checking each Agent's progress (every 5-10 minutes)
+├── Review the fastest-completing Agent first
+├── Intervene promptly when an Agent gets stuck
+└── Merge each one as it completes (catch conflicts early)
 
-Phase 4: 整合（15-30 分钟）
-├── 处理合并冲突
-├── 运行完整测试
-└── 清理 worktree
+Phase 4: Integration (15-30 minutes)
+├── Resolve merge conflicts
+├── Run the full test suite
+└── Clean up worktrees
 ```
 
-#### Step 4：跨 Agent 上下文同步（第 5-6 周）
+#### Step 4: Cross-Agent Context Synchronization (Weeks 5-6)
 
-**推荐方式：接口优先**
+**Recommended approach: Interface-first**
 
 ```bash
-# 1. 先用一个 Agent 生成接口定义
-"定义用户搜索功能的接口：
- - API 路由和参数类型
- - React Hook 的参数和返回值类型
- - 组件 Props 类型
- 只生成类型定义文件 types/user-search.ts，不写实现"
+# 1. Use one Agent to generate interface definitions
+"Define the interfaces for the user search feature:
+ - API routes and parameter types
+ - React Hook parameter and return value types
+ - Component Props types
+ Only generate the type definition file types/user-search.ts, no implementation"
 
-# 2. 接口文件 commit 后，其他 Agent 基于接口并行开发
-# Agent A (前端)："基于 types/user-search.ts 中的类型定义实现 UserSearch 组件"
-# Agent B (后端)："基于 types/user-search.ts 中的类型定义实现 /api/users/search 端点"
-# Agent C (测试)："基于 types/user-search.ts 中的类型定义编写测试用例"
+# 2. After committing the interface file, other Agents develop in parallel based on it
+# Agent A (Frontend): "Implement the UserSearch component based on types in types/user-search.ts"
+# Agent B (Backend): "Implement the /api/users/search endpoint based on types in types/user-search.ts"
+# Agent C (Tests): "Write test cases based on types in types/user-search.ts"
 ```
 
-### Done When：验收标准
+### Done When: Acceptance Criteria
 
-- [ ] 稳定管理 3 个并行 Agent（日常开发中）
-- [ ] 任务吞吐量对比单 Agent 提升 2x+
-- [ ] 并行任务产生合并冲突的比例 < 10%
-- [ ] 3 分钟内完成 Agent 间切换和审查
-- [ ] AI 代码贡献 75-85%
+- [ ] Stably managing 3 parallel Agents (in daily development)
+- [ ] Task throughput improved 2x+ compared to single Agent
+- [ ] Merge conflicts from parallel tasks occur < 10% of the time
+- [ ] Switching between Agents and reviewing takes < 3 minutes
+- [ ] AI code contribution 75-85%
 
-> **💡 自测方法**："2x 提速"的简单判断：一个你估计串行要 2 小时的任务，并行后 1 小时内完成（含管理开销），就算 2x。"冲突 < 10%"：最近 10 次并行合并，如果 ≤1 次有冲突，就达标。
+> **💡 Self-test method**: A simple check for "2x speedup": a task you estimate would take 2 hours serially, completed in under 1 hour with parallelism (including management overhead), counts as 2x. "Conflicts < 10%": out of the last 10 parallel merges, if ≤1 had conflicts, you've met the bar.
 
-**毕业测试**：同时启动 3 个 Agent 完成一个 Feature 的不同部分（API + 组件 + 测试），总耗时比串行快 2x+，合并后测试全部通过。
+**Graduation test**: Launch 3 Agents simultaneously to complete different parts of a Feature (API + component + tests), total time is 2x+ faster than serial, all tests pass after merging.
 
-### Practice：练习任务
+### Practice: Exercises
 
-1. **首次并行**：2 个独立 bug fix 同时用 2 个 Claude 实例修复，记录总耗时 vs 串行预估
-2. **前后端并行**：先用 5 分钟写接口契约，Agent A 开发 API，Agent B 用 mock 数据开发前端，完成后整合
-3. **三路并行**：一个 Feature 拆成 3 部分（数据模型+API / UI 组件 / 测试），记录管理开销
+1. **First parallel run**: Fix 2 independent bugs simultaneously with 2 Claude instances, record total time vs estimated serial time
+2. **Frontend-backend parallel**: Spend 5 minutes writing an interface contract, Agent A develops the API, Agent B develops the frontend with mock data, then integrate
+3. **Three-way parallel**: Split a Feature into 3 parts (data model + API / UI components / tests), record management overhead
 
-### Anti-patterns：常见陷阱
+### Anti-patterns: Common Pitfalls
 
-| 陷阱 | 修正 |
-|------|------|
-| 一口气开 5+ 个 Agent 管不过来 | 从 2 个开始，稳定后加到 3 个 |
-| 并行修改有依赖的模块 | 先画依赖图，只并行无依赖的任务 |
-| 各 Agent 自己定义接口格式 | 并行前统一接口契约 |
-| 所有 Agent 做完才合并 | 完成一个合并一个，早发现冲突 |
-| 简单任务也硬拆并行 | 任务 < 30 分钟就单 Agent 做，并行有管理开销 |
+| Pitfall | Fix |
+|---------|-----|
+| Opening 5+ Agents at once and losing control | Start with 2, scale up to 3 once stable |
+| Parallelizing modules with dependencies | Draw a dependency graph first, only parallelize independent tasks |
+| Each Agent defines its own interface format | Unify interface contracts before parallelizing |
+| Waiting for all Agents to finish before merging | Merge each one as it completes, catch conflicts early |
+| Forcing parallel on simple tasks | If a task takes < 30 minutes, use a single Agent — parallelism has management overhead |
 
 ---
 
-## 6. Level 7：工作流编排
+## 6. Level 7: Workflow Orchestration
 
-### Why：从"手动管理 Agent"到"开发时自动编排"
+### Why: From "Manually Managing Agents" to "Dev-Time Automated Orchestration"
 
-Level 6 时你是项目经理——手动分配、监控、整合。
-Level 7 时你是系统架构师——设计工作流，**开发时** AI 按流程自动执行。
+At Level 6, you're a project manager — manually assigning, monitoring, and integrating.
+At Level 7, you're a system architect — designing workflows that AI executes automatically **during development**.
 
-> **Level 7 vs Level 8 的核心区别**：Level 7 的自动化发生在**你在场时**（开发过程中），你触发命令、AI 按流程执行、你审查结果。Level 8 的自动化发生在**你不在场时**（CI/CD 事件触发，AI 自主运转）。
+> **Key distinction between Level 7 and Level 8**: Level 7 automation happens **while you're present** (during development) — you trigger commands, AI follows the workflow, you review results. Level 8 automation happens **while you're away** (CI/CD event-triggered, AI running autonomously).
 
-**编排的三大支柱**：
-1. **CLAUDE.md**（进阶版）— 项目级的 AI 操作手册
-2. **Custom Slash Commands** — 标准化的任务模板
-3. **Hooks** — 自动化的质量检查点
+**The three pillars of orchestration**:
+1. **CLAUDE.md** (advanced version) — Project-level AI operating manual
+2. **Custom Slash Commands** — Standardized task templates
+3. **Hooks** — Automated quality checkpoints
 
-重复的流程应该自动化。你每天做的"创建组件→写类型→写测试→lint 检查"这个循环，应该变成一个命令。
+Repetitive processes should be automated. The daily cycle of "create component → write types → write tests → lint check" should become a single command.
 
-### How：具体执行步骤
+### How: Step-by-Step Execution
 
-#### Step 1：CLAUDE.md 进阶——工作流规则（第 1-2 周）
+#### Step 1: Advanced CLAUDE.md — Workflow Rules (Weeks 1-2)
 
-在基础版 CLAUDE.md 上增加工作流规则：
+Add workflow rules on top of the basic CLAUDE.md:
 
 ```markdown
-# CLAUDE.md（在已有内容后追加）
+# CLAUDE.md (append to existing content)
 
-## 工作流规则
+## Workflow Rules
 
-### 文件创建规则
-- 新组件必须同时创建：组件文件 + types.ts + xxx.test.tsx
-- API 路由必须包含：handler + zod 验证 schema + 错误处理
-- 数据库变更必须包含：migration + seed data
+### File Creation Rules
+- New components must always include: component file + types.ts + xxx.test.tsx
+- API routes must include: handler + zod validation schema + error handling
+- Database changes must include: migration + seed data
 
-### Git 规范
-- 分支命名：feat/xxx, fix/xxx, refactor/xxx
-- Commit 格式：conventional commits（feat:, fix:, refactor:）
-- 每个 commit 只做一件事
+### Git Conventions
+- Branch naming: feat/xxx, fix/xxx, refactor/xxx
+- Commit format: conventional commits (feat:, fix:, refactor:)
+- Each commit does only one thing
 
-### 测试规则
-- 所有新功能必须有测试
-- 修 bug 必须先写失败测试再修复
+### Testing Rules
+- All new features must have tests
+- Bug fixes must have a failing test written first, then the fix
 
-### 安全底线
-- 不使用 dangerouslySetInnerHTML
-- API 路由必须验证用户权限
-- 敏感信息不硬编码
+### Security Baseline
+- No use of dangerouslySetInnerHTML
+- API routes must verify user permissions
+- No hardcoded sensitive information
 ```
 
-#### Step 2：Custom Slash Commands（第 3-4 周）
+#### Step 2: Custom Slash Commands (Weeks 3-4)
 
-在项目根目录创建 `.claude/commands/` 目录，每个 `.md` 文件就是一个可复用的命令：
+Create a `.claude/commands/` directory in the project root — each `.md` file becomes a reusable command:
 
 ```bash
 mkdir -p .claude/commands
 ```
 
-**命令 1：`.claude/commands/new-feature.md`**
+**Command 1: `.claude/commands/new-feature.md`**
 
 ```markdown
-根据以下需求实现新功能：$ARGUMENTS
+Implement a new feature based on the following requirements: $ARGUMENTS
 
-执行步骤：
-1. 分析需求，列出需要创建/修改的文件，等我确认
-2. 按确认的方案实现，遵守 CLAUDE.md 中的所有规范
-3. 为所有新代码编写测试
-4. 完成后自查：TypeScript 无错误、测试通过、符合代码规范
+Steps:
+1. Analyze the requirements, list files to create/modify, wait for my confirmation
+2. Implement according to the confirmed plan, following all conventions in CLAUDE.md
+3. Write tests for all new code
+4. Self-check when done: no TypeScript errors, tests pass, code follows conventions
 ```
 
-**命令 2：`.claude/commands/fix-bug.md`**
+**Command 2: `.claude/commands/fix-bug.md`**
 
 ```markdown
-修复以下 Bug：$ARGUMENTS
+Fix the following bug: $ARGUMENTS
 
-执行步骤：
-1. 定位 bug 根因，解释为什么会出现
-2. 编写一个失败测试来复现这个 bug
-3. 修复 bug，确认测试通过
-4. 检查是否有类似 bug 存在于其他地方
+Steps:
+1. Locate the root cause of the bug, explain why it occurs
+2. Write a failing test that reproduces the bug
+3. Fix the bug, confirm the test passes
+4. Check if similar bugs exist elsewhere
 ```
 
-**命令 3：`.claude/commands/review.md`**
+**Command 3: `.claude/commands/review.md`**
 
 ```markdown
-审查当前的代码变更，从以下维度给出反馈：
+Review the current code changes from the following perspectives:
 
-1. 正确性：逻辑是否正确，边界情况是否处理
-2. 安全性：XSS、注入、权限等安全问题
-3. 性能：不必要的渲染、内存泄漏、N+1 查询
-4. 可维护性：命名是否清晰、结构是否合理
+1. Correctness: Is the logic correct? Are edge cases handled?
+2. Security: XSS, injection, authorization, and other security issues
+3. Performance: Unnecessary renders, memory leaks, N+1 queries
+4. Maintainability: Are names clear? Is the structure sound?
 
-输出格式：
-- CRITICAL：必须修复
-- WARNING：建议修复
-- NIT：可选优化
+Output format:
+- CRITICAL: Must fix
+- WARNING: Should fix
+- NIT: Optional improvement
 
-审查范围：$ARGUMENTS
+Review scope: $ARGUMENTS
 ```
 
-**命令 4：`.claude/commands/add-test.md`**
+**Command 4: `.claude/commands/add-test.md`**
 
 ```markdown
-为以下代码补充测试：$ARGUMENTS
+Add tests for the following code: $ARGUMENTS
 
-要求：
-- 覆盖正常路径和至少 3 个边界情况
-- 使用 Vitest + Testing Library
-- Mock 外部依赖（API 调用、数据库）
-- 测试文件放在同目录下，命名为 xxx.test.tsx
+Requirements:
+- Cover the happy path and at least 3 edge cases
+- Use Vitest + Testing Library
+- Mock external dependencies (API calls, database)
+- Place test files in the same directory, named xxx.test.tsx
 ```
 
-**命令 5：`.claude/commands/refactor.md`**
+**Command 5: `.claude/commands/refactor.md`**
 
 ```markdown
-重构以下代码：$ARGUMENTS
+Refactor the following code: $ARGUMENTS
 
-约束：
-- 不改变任何对外接口和行为
-- 确保所有现有测试继续通过
-- 每一步重构都可以独立 commit
-- 解释每个重构决策的理由
+Constraints:
+- Do not change any external interfaces or behavior
+- Ensure all existing tests continue to pass
+- Each refactoring step should be independently committable
+- Explain the reasoning behind each refactoring decision
 ```
 
-使用方式：
+Usage:
 
 ```
-/new-feature "用户搜索功能：支持姓名和邮箱搜索，数据量 < 200 条"
-/fix-bug "分页组件在第一页时点击上一页报错"
-/review "本次 PR 所有变更"
+/new-feature "User search feature: support search by name and email, dataset < 200 items"
+/fix-bug "Pagination component throws error when clicking previous on the first page"
+/review "All changes in this PR"
 ```
 
-#### Step 3：Hooks 自动化质检（第 5-6 周）
+#### Step 3: Hooks for Automated Quality Checks (Weeks 5-6)
 
-在项目 `.claude/settings.json` 中配置 Hooks，让 Claude Code 在特定操作后自动执行检查：
+Configure Hooks in the project's `.claude/settings.json` to have Claude Code automatically run checks after specific operations:
 
 ```json
 {
@@ -791,116 +793,116 @@ mkdir -p .claude/commands
 }
 ```
 
-**实用 Hook 场景**：
-- 写 `.ts/.tsx` 文件后 → 自动运行 TypeScript 类型检查
-- 写测试文件后 → 自动运行该测试
-- 任务完成时 → 发送桌面通知（方便并行管理多个 Agent 时感知进度）
+**Practical Hook scenarios**:
+- After writing `.ts/.tsx` files → Automatically run TypeScript type checking
+- After writing test files → Automatically run the test
+- On task completion → Send a desktop notification (useful for tracking progress when managing multiple parallel Agents)
 
-#### Step 4：组合成完整工作流（第 7-8 周）
+#### Step 4: Combining into a Complete Workflow (Weeks 7-8)
 
 ```
-标准 Feature 开发流程：
+Standard Feature Development Workflow:
 
-1. /new-feature "需求描述"
-   ↓ Claude 分析需求、给出方案、等确认
+1. /new-feature "requirement description"
+   ↓ Claude analyzes requirements, proposes a plan, waits for confirmation
 
-2. 你审核方案 → 确认/调整
-   ↓ Claude 开始实现
+2. You review the plan → Confirm/Adjust
+   ↓ Claude starts implementation
 
-3. Hooks 自动检查：
-   ├── 每个文件写入后 → TypeScript 编译检查
-   └── 测试文件写入后 → 自动运行测试
+3. Hooks run automated checks:
+   ├── After each file write → TypeScript compilation check
+   └── After test file write → Automatically run tests
 
-4. 实现完成后：
+4. Once implementation is complete:
    /review
-   ↓ Claude 自查代码
+   ↓ Claude self-reviews the code
 
-5. 通过审查 → 提交
+5. Passes review → Commit
 ```
 
-### Done When：验收标准
+### Done When: Acceptance Criteria
 
-- [ ] 有 5+ 个 Custom Commands 覆盖日常开发场景
-- [ ] Hooks 配置了写文件后的自动类型检查
-- [ ] CLAUDE.md 包含完整的工作流规则
-- [ ] 80% 的开发任务有对应的 Command 可用
-- [ ] 新人（或新 Claude 实例）仅靠 CLAUDE.md + Commands 能在 2 小时内完成一个小 Feature
+- [ ] Have 5+ Custom Commands covering daily development scenarios
+- [ ] Hooks configured for automatic type checking after file writes
+- [ ] CLAUDE.md includes complete workflow rules
+- [ ] 80% of development tasks have a corresponding Command available
+- [ ] A newcomer (or new Claude instance) can complete a small Feature within 2 hours using only CLAUDE.md + Commands
 
-**毕业测试**：让一个全新的 Claude Code 实例（无历史对话），仅依靠项目中的 CLAUDE.md + Custom Commands，完成一个 CRUD 页面。代码质量符合项目规范，无需大量修改。
+**Graduation test**: Have a brand new Claude Code instance (no conversation history), relying solely on the project's CLAUDE.md + Custom Commands, complete a CRUD page. Code quality meets project standards with no major modifications needed.
 
-### Practice：练习任务
+### Practice: Exercises
 
-1. **Command 库搭建**：创建上述 5 个 Commands，每个使用 1 周后迭代优化
-2. **Hook 实战**：配置 TypeScript 检查 Hook，使用 1 周记录它拦截了多少次错误
-3. **端到端测试**：用完整编排流程（Command → Hooks → Review）完成一个 Feature，记录手动干预次数
+1. **Command library setup**: Create the 5 Commands listed above, iterate and improve each after using for 1 week
+2. **Hook practice**: Configure the TypeScript checking Hook, record how many errors it catches over 1 week
+3. **End-to-end test**: Complete a Feature using the full orchestration workflow (Command → Hooks → Review), record the number of manual interventions
 
-### Anti-patterns：常见陷阱
+### Anti-patterns: Common Pitfalls
 
-| 陷阱 | 修正 |
-|------|------|
-| 每个操作都加 Hook，AI 被反复打断 | 只在关键检查点加 Hook |
-| Command 写得太死板，变成死板脚本 | 定义流程框架，细节让 AI 自适应 |
-| CLAUDE.md 膨胀到 500 行 | 控制 200 行以内，细节放 Commands |
-| 只自己用不分享给团队 | Commands 和 CLAUDE.md 提交到仓库 |
-| 写了 Command 就不改了 | 用两周后回顾，删掉没用的、优化常用的 |
+| Pitfall | Fix |
+|---------|-----|
+| Adding a Hook for every operation, repeatedly interrupting AI | Only add Hooks at critical checkpoints |
+| Writing Commands too rigidly, turning them into inflexible scripts | Define process frameworks, let AI adapt on the details |
+| CLAUDE.md ballooning to 500 lines | Keep it under 200 lines, put details in Commands |
+| Only using it yourself, not sharing with the team | Commit Commands and CLAUDE.md to the repository |
+| Writing a Command and never updating it | Review after two weeks — delete unused ones, optimize frequently used ones |
 
 ---
 
-## 7. Level 8：自动化编排系统
+## 7. Level 8: Automated Orchestration System
 
-### Why：从"开发时编排"到"无人值守编排"
+### Why: From "Dev-Time Orchestration" to "Unattended Orchestration"
 
-Level 7 的自动化需要你在场——你输入 `/new-feature`，AI 按流程执行。
-Level 8 的自动化是**事件驱动、无人值守**的——系统自动响应事件，AI 7x24 自主运转：
+Level 7 automation requires your presence — you type `/new-feature`, AI follows the workflow.
+Level 8 automation is **event-driven and unattended** — the system responds to events automatically, AI running autonomously 24/7:
 
-- PR 提交 → AI 自动 Code Review
-- CI 失败 → AI 自动尝试修复
-- Issue 创建 → AI 自动分类 + 生成初始方案
+- PR submitted → AI auto Code Review
+- CI fails → AI automatically attempts to fix
+- Issue created → AI auto-classifies + generates initial proposal
 
-你的 AI 能力从个人技能变成**团队基础设施**。
+Your AI capability transforms from a personal skill into **team infrastructure**.
 
-**重要提醒**：Level 8 不是所有人都需要的。如果你的团队/项目不需要这个级别的自动化，停在 Level 7 完全可以。过度自动化本身就是一种反模式。
+**Important reminder**: Not everyone needs Level 8. If your team/project doesn't require this level of automation, stopping at Level 7 is perfectly fine. Over-automation is itself an anti-pattern.
 
-### How：具体执行步骤
+### How: Step-by-Step Execution
 
-#### Step 1：Headless 模式基础（第 1-2 周）
+#### Step 1: Headless Mode Basics (Weeks 1-2)
 
-Claude Code 的 Headless 模式（`-p` 参数）允许非交互式调用，适合脚本和 CI/CD 集成：
+Claude Code's Headless mode (`-p` flag) allows non-interactive invocation, suitable for scripts and CI/CD integration:
 
 ```bash
-# 基本用法
-claude -p "分析这段代码的性能问题" < code.ts
+# Basic usage
+claude -p "Analyze this code for performance issues" < code.ts
 
-# JSON 输出（方便脚本解析）
-claude -p "列出这个文件的所有导出函数" --output-format json
+# JSON output (easy for script parsing)
+claude -p "List all exported functions in this file" --output-format json
 
-# 指定允许的工具
-claude -p "修复这个 TypeScript 错误：$(cat error.log)" \
+# Specify allowed tools
+claude -p "Fix this TypeScript error: $(cat error.log)" \
   --allowedTools "Read,Write,Edit,Bash"
 ```
 
-**实用 Headless 脚本示例（Shell）**：
+**Practical Headless script example (Shell)**:
 
 ```bash
 #!/bin/bash
 # scripts/ai-gen-tests.sh
-# 为所有没有测试的组件自动生成测试
+# Automatically generate tests for all components without tests
 
 find components/features -name "*.tsx" | while read component; do
   test_file="${component%.tsx}.test.tsx"
   if [ ! -f "$test_file" ]; then
     echo "Generating test for: $component"
-    claude -p "为以下组件生成 Vitest + Testing Library 测试。
-    组件路径：$component
-    测试文件路径：$test_file
-    覆盖正常路径和 3 个边界情况。" \
+    claude -p "Generate Vitest + Testing Library tests for this component.
+    Component path: $component
+    Test file path: $test_file
+    Cover the happy path and 3 edge cases." \
       --allowedTools "Read,Write" \
       --output-format json
   fi
 done
 ```
 
-#### Step 2：CI/CD 集成——PR 自动 Review（第 3-4 周）
+#### Step 2: CI/CD Integration — Automated PR Review (Weeks 3-4)
 
 ```yaml
 # .github/workflows/ai-review.yml
@@ -951,7 +953,7 @@ jobs:
             });
 ```
 
-#### Step 3：CI 失败自动修复（第 5-6 周）
+#### Step 3: Automated CI Failure Fixes (Weeks 5-6)
 
 ```yaml
 # .github/workflows/ai-autofix.yml
@@ -986,7 +988,7 @@ jobs:
              Analyze the failure and fix it.
              Only fix the actual error. Do not refactor or change unrelated code." \
             --allowedTools "Read,Write,Edit"
-          # ⚠️ 安全提醒：不要在 CI 中给 AI Bash 权限，避免执行任意命令
+          # ⚠️ Security note: Do not grant AI Bash access in CI to avoid arbitrary command execution
 
       - name: Verify fix
         run: npm test
@@ -996,7 +998,7 @@ jobs:
         run: |
           BRANCH="fix/auto-ci-$(date +%s)"
           git checkout -b "$BRANCH"
-          # ⚠️ 安全提醒：只 add 特定类型文件，避免提交非预期文件（如 .env、secrets）
+          # ⚠️ Security note: Only add specific file types to avoid committing unexpected files (e.g., .env, secrets)
           git add '*.ts' '*.tsx' '*.js' '*.jsx' '*.json' '*.css'
           git diff --cached --quiet && echo "No changes to commit" && exit 0
           git commit -m "fix: auto-fix CI failure"
@@ -1009,7 +1011,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-#### Step 4：Issue 自动分类（第 7-8 周）
+#### Step 4: Automated Issue Triage (Weeks 7-8)
 
 ```yaml
 # .github/workflows/ai-triage.yml
@@ -1045,7 +1047,7 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            // ⚠️ 安全提醒：AI 输出可能不是合法 JSON，必须加容错处理
+            // ⚠️ Security note: AI output may not be valid JSON — always add error handling
             let result = {};
             try {
               const raw = fs.readFileSync('./triage.json', 'utf8');
@@ -1053,7 +1055,7 @@ jobs:
               result = JSON.parse(triage.result || '{}');
             } catch (e) {
               console.log('Failed to parse AI triage output:', e.message);
-              return; // 解析失败时优雅退出，不阻塞 Issue 流程
+              return; // Exit gracefully on parse failure — don't block the Issue workflow
             }
             const labels = [result.type, result.size ? `size-${result.size}` : null].filter(Boolean);
             if (labels.length > 0) {
@@ -1074,11 +1076,11 @@ jobs:
             }
 ```
 
-#### Step 5：成本控制和监控（持续）
+#### Step 5: Cost Control and Monitoring (Ongoing)
 
 ```bash
 #!/bin/bash
-# scripts/ai-metrics.sh — 每周运行一次
+# scripts/ai-metrics.sh — Run weekly
 
 echo "=== AI Engineering Metrics ($(date +%Y-%m-%d)) ==="
 
@@ -1101,153 +1103,153 @@ echo ""
 echo "Cost check: run '/cost' in Claude Code sessions"
 ```
 
-### Done When：验收标准
+### Done When: Acceptance Criteria
 
-- [ ] PR 自动 Review 已上线并运行 2+ 周
-- [ ] CI 失败自动修复已配置（修复成功率 > 30%）
-- [ ] Issue 自动分类已配置
-- [ ] 有成本监控机制（API Key 花费可追踪）
-- [ ] 自动修复的 PR 必须经人工审查（安全护栏到位）
+- [ ] Automated PR Review has been live and running for 2+ weeks
+- [ ] Automated CI failure fix is configured (fix success rate > 30%)
+- [ ] Automated Issue triage is configured
+- [ ] Cost monitoring mechanism is in place (API key spending is trackable)
+- [ ] Auto-fix PRs must go through human review (safety guardrails in place)
 
-**毕业测试**：上述三个自动化流程运行 2 周。PR Review 覆盖率 100%，自动修复成功率 > 30%，团队反馈正面。
+**Graduation test**: All three automation workflows have been running for 2 weeks. PR Review coverage is 100%, auto-fix success rate > 30%, and team feedback is positive.
 
-### Practice：练习任务
+### Practice: Exercises
 
-1. **Headless 脚本**：写一个脚本用 `claude -p` 批量为无测试的组件生成测试文件
-2. **PR Review 机器人**：部署 AI Review GitHub Action，运行 1 周后评估 Review 质量
-3. **自愈 Pipeline**：配置 CI 自动修复，记录 2 周内的修复尝试和成功率
+1. **Headless script**: Write a script using `claude -p` to batch-generate test files for components without tests
+2. **PR Review bot**: Deploy the AI Review GitHub Action, evaluate Review quality after 1 week
+3. **Self-healing Pipeline**: Configure CI auto-fix, record fix attempts and success rate over 2 weeks
 
-### Anti-patterns：常见陷阱
+### Anti-patterns: Common Pitfalls
 
-| 陷阱 | 修正 |
-|------|------|
-| 所有事都想自动化 | 只自动化重复、耗时、有模式可循的任务 |
-| AI 自动提交没人审查 | 自动修复必须走 PR + 人工审查 |
-| API 成本失控 | 设置费用告警、限制每小时调用次数 |
-| API Key 硬编码 | 用 GitHub Secrets，遵循最小权限 |
-| AI Review 噪音太多 | 调整 Prompt 只报告 CRITICAL 和 WARNING |
-| 搭了自动化但不看效果 | 每周看 metrics，至少追踪成功率和成本 |
+| Pitfall | Fix |
+|---------|-----|
+| Wanting to automate everything | Only automate tasks that are repetitive, time-consuming, and follow a pattern |
+| AI auto-commits with no human review | Auto-fixes must go through PR + human review |
+| API costs spiral out of control | Set spending alerts, limit calls per hour |
+| API keys hardcoded | Use GitHub Secrets, follow least privilege principle |
+| AI Review generates too much noise | Adjust prompts to only report CRITICAL and WARNING issues |
+| Setting up automation but never checking results | Review metrics weekly — at minimum track success rate and costs |
 
 ---
 
-## 8. 附录：模板与速查表
+## 8. Appendix: Templates & Quick Reference
 
-### A. CLAUDE.md 完整模板
+### A. Complete CLAUDE.md Template
 
 ```markdown
 # CLAUDE.md
 
-## 项目概述
-[一句话描述]
+## Project Overview
+[One-sentence description]
 
-## 技术栈
+## Tech Stack
 - Next.js 14 (App Router), TypeScript (strict)
 - Tailwind CSS + shadcn/ui
 - Prisma + PostgreSQL
 - TanStack Query v5, Zustand
 - Vitest + Testing Library + Playwright
 
-## 目录结构
-app/                 → Next.js App Router 路由
-  (auth)/            → 需要登录的页面
-  api/               → API 路由
+## Directory Structure
+app/                 → Next.js App Router routes
+  (auth)/            → Pages requiring authentication
+  api/               → API routes
 components/
-  ui/                → shadcn/ui（不手动修改）
-  features/          → 业务组件
-  layout/            → 布局组件
-lib/                 → 工具函数（db.ts, auth.ts, utils.ts）
-hooks/               → 自定义 Hooks
-types/               → 全局类型
+  ui/                → shadcn/ui (do not modify manually)
+  features/          → Business components
+  layout/            → Layout components
+lib/                 → Utility functions (db.ts, auth.ts, utils.ts)
+hooks/               → Custom Hooks
+types/               → Global types
 prisma/
-  schema.prisma      → 数据库 Schema
-  migrations/        → 迁移文件
+  schema.prisma      → Database Schema
+  migrations/        → Migration files
 
-## 代码规范
-- 文件名：kebab-case（user-profile.tsx）
-- 组件：PascalCase 命名导出（export function UserProfile）
-- 函数/变量：camelCase
-- 客户端组件加 'use client'，服务端组件不加
-- 数据获取：服务端用 Prisma 直查，客户端用 React Query
-- 表单验证用 zod
-- 样式用 cn() 合并 Tailwind 类名
+## Coding Conventions
+- File names: kebab-case (user-profile.tsx)
+- Components: PascalCase named exports (export function UserProfile)
+- Functions/variables: camelCase
+- Client components use 'use client'; server components do not
+- Data fetching: server-side uses direct Prisma queries, client-side uses React Query
+- Form validation uses zod
+- Styling uses cn() to merge Tailwind class names
 
-## 工作流规则
-- 新组件必须同时创建测试文件
-- API 路由必须有 zod 输入验证
-- 修 bug 先写失败测试再修
-- Git commit 用 conventional commits
+## Workflow Rules
+- New components must have a test file created alongside
+- API routes must have zod input validation
+- Bug fixes require a failing test first, then the fix
+- Git commits follow conventional commits
 
-## 常用命令
-npm run dev          → 开发服务器 (localhost:3000)
+## Common Commands
+npm run dev          → Development server (localhost:3000)
 npm test             → Vitest
 npm run lint         → ESLint
-npx prisma studio    → 数据库 GUI
-npx prisma migrate dev → 运行迁移
+npx prisma studio    → Database GUI
+npx prisma migrate dev → Run migrations
 ```
 
-### B. Custom Commands 速查
+### B. Custom Commands Quick Reference
 
-| 命令 | 用途 | 文件路径 |
-|------|------|---------|
-| `/new-feature` | 新功能开发 | `.claude/commands/new-feature.md` |
-| `/fix-bug` | Bug 修复（含 TDD） | `.claude/commands/fix-bug.md` |
-| `/review` | 代码审查 | `.claude/commands/review.md` |
-| `/add-test` | 补充测试 | `.claude/commands/add-test.md` |
-| `/refactor` | 安全重构 | `.claude/commands/refactor.md` |
+| Command | Purpose | File Path |
+|---------|---------|-----------|
+| `/new-feature` | New feature development | `.claude/commands/new-feature.md` |
+| `/fix-bug` | Bug fix (with TDD) | `.claude/commands/fix-bug.md` |
+| `/review` | Code review | `.claude/commands/review.md` |
+| `/add-test` | Add tests | `.claude/commands/add-test.md` |
+| `/refactor` | Safe refactoring | `.claude/commands/refactor.md` |
 
-### C. Claude Code CLI 速查
+### C. Claude Code CLI Quick Reference
 
 ```bash
-# 启动与基本操作
-claude                     # 启动交互式会话
-claude -p "prompt"         # Headless 模式（非交互式）
-claude -p "..." --output-format json  # JSON 输出
+# Launch & basic operations
+claude                     # Start interactive session
+claude -p "prompt"         # Headless mode (non-interactive)
+claude -p "..." --output-format json  # JSON output
 
-# 会话中命令
-/init                      # 初始化 CLAUDE.md
-/plan                      # 进入 Plan Mode
-/compact                   # 压缩对话上下文
-/cost                      # 查看 Token 使用量
-/clear                     # 清除对话历史
-/new-feature "描述"        # 执行自定义 Command
+# In-session commands
+/init                      # Initialize CLAUDE.md
+/plan                      # Enter Plan Mode
+/compact                   # Compress conversation context
+/cost                      # View Token usage
+/clear                     # Clear conversation history
+/new-feature "description" # Execute Custom Command
 
-# Git Worktree（并行开发）
+# Git Worktree (parallel development)
 git worktree add ../proj-feat feature/xxx
 git worktree list
 git worktree remove ../proj-feat
 
-# 推荐 Shell 别名
+# Recommended Shell aliases
 alias cc='claude'
 alias ccp='claude -p'
 ```
 
-### D. 参考节奏
+### D. Reference Pace
 
-以下是一个参考节奏，**实际进度因人、项目和使用频率而异**。有人可能 3 个月到 Level 5，也有人半年才到 Level 4——两种都完全正常。
+The following is a reference pace — **actual progress varies by person, project, and usage frequency**. Some people may reach Level 5 in 3 months, while others may take 6 months to reach Level 4 — both are perfectly normal.
 
 ```
-Level 1-2  ← 建立 AI 使用习惯（通常 2-4 周）
-Level 3-4  ← 提示词工程 + CLAUDE.md（通常 3-6 周）
-Level 5    ← 意图驱动开发（通常 4-8 周）
-Level 6    ← 多 Agent 并行（通常 4-8 周）
-Level 7    ← 工作流编排（通常 4-8 周）
-Level 8    ← 自动化系统（按需，不是所有人都需要）
+Level 1-2  ← Build AI usage habits (typically 2-4 weeks)
+Level 3-4  ← Prompt engineering + CLAUDE.md (typically 3-6 weeks)
+Level 5    ← Intent-driven development (typically 4-8 weeks)
+Level 6    ← Multi-Agent parallelism (typically 4-8 weeks)
+Level 7    ← Workflow orchestration (typically 4-8 weeks)
+Level 8    ← Automated systems (as needed — not everyone needs this)
 ```
 
-**关键原则**：扎实比快速更重要。每个 Level 的毕业测试通过再往下走。跳级带来的能力空洞会在后面的 Level 暴露出来。
+**Key principle**: Solid foundations matter more than speed. Pass each Level's graduation test before moving on. Gaps from skipping levels will surface in later Levels.
 
-### E. 何时降级
+### E. When to Downshift
 
-高 Level 不是目标，高效才是。以下情况应降级：
+A higher Level isn't the goal — higher efficiency is. Downshift in these scenarios:
 
-| 场景 | 降级到 | 原因 |
-|------|--------|------|
-| 简单 bug fix（< 10 分钟） | Level 4 | 单 Agent 即可，并行有管理开销 |
-| 探索性原型 | Level 3 | 方向不确定时迭代对话更高效 |
-| 安全敏感代码（支付、认证） | Level 4 | 需要逐行人工审查 |
-| AI 方案反复不对 | Level 4 | 退回 How 描述，给更具体指令 |
-| 自动修复连续失败 | Level 7 | 关闭自动化，手动 debug |
+| Scenario | Downshift to | Reason |
+|----------|-------------|--------|
+| Simple bug fix (< 10 minutes) | Level 4 | Single Agent is sufficient; parallelism has management overhead |
+| Exploratory prototype | Level 3 | When direction is uncertain, iterative conversation is more efficient |
+| Security-sensitive code (payments, auth) | Level 4 | Requires line-by-line human review |
+| AI proposals are repeatedly wrong | Level 4 | Fall back to How descriptions, give more specific instructions |
+| Auto-fixes failing repeatedly | Level 7 | Disable automation, debug manually |
 
 ---
 
-> 这份指南是框架不是教条。根据你的项目和团队调整节奏。每天比昨天多用一点 AI，每周比上周多自动化一个流程，持续迭代就够了。
+> This guide is a framework, not a doctrine. Adjust the pace to fit your project and team. Use AI a little more each day than yesterday, automate one more process each week than last week, and keep iterating — that's all it takes.
