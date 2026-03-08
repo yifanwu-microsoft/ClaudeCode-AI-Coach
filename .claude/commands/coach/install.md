@@ -17,7 +17,7 @@ Check that key files exist: `~/.claude/CLAUDE.md`, `~/.claude/commands/coach/ass
 
 ### Step 3: Post-Install Routing
 - **Update** (install output contains "already exists, skipping"): ✅ Configuration updated! Progress preserved. → **Stop here**.
-- **First install** (install output contains "PROGRESS.md created"): ✅ Installation successful! → **Continue to Step 4**.
+- **First install** (install output contains "PROGRESS.md created"): ✅ Installation successful! → **Continue to Step 4 immediately. Do NOT tell the user to run `/coach:assess` manually — the assessment happens automatically in Step 4.**
 
 ### Step 4: Automatic Initial Assessment (first install only)
 
