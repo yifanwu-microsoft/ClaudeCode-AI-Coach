@@ -83,6 +83,30 @@ Status Legend: 🔴 Not Started / 🟡 Practicing / 🟢 Verified
 - **Reason**: —
 - **Next Step**: —
 
+## Achievements 🏅
+
+Small wins on your journey. These unlock automatically as the coach detects matching behavior.
+
+| Achievement | Description | Status |
+|-------------|-------------|--------|
+| 🎯 First Contact | Completed initial assessment | ⬜ |
+| 💬 Conversation Starter | Had 3+ effective AI conversations in one day | ⬜ |
+| 🔍 Code Reviewer | Rejected or modified AI code with clear reasoning | ⬜ |
+| 📋 Context Provider | Included file paths, error messages, and env info in a prompt | ⬜ |
+| 📐 Plan Mode Adopter | Used Plan Mode for a multi-file task | ⬜ |
+| ✨ One-Shot Wonder | Got satisfactory AI output in a single prompt round | ⬜ |
+| 🎤 Intent Speaker | Described What/Why without specifying How | ⬜ |
+| 🏗️ Feature Delegator | Delegated a complete feature (frontend + API + tests) to AI | ⬜ |
+| 👀 Architecture Critic | Reviewed and improved an AI-proposed architecture | ⬜ |
+| ⚡ Parallel Pioneer | Successfully ran 2+ AI tasks in parallel | ⬜ |
+| 🔀 Worktree Warrior | Used git worktree for isolated parallel development | ⬜ |
+| 🤖 Command Creator | Created a custom slash command | ⬜ |
+| 🪝 Hook Master | Configured an automated Hook | ⬜ |
+| 🔄 CI Integrator | Integrated AI into a CI/CD pipeline | ⬜ |
+| 📊 Cost Watcher | Checked and discussed API costs | ⬜ |
+
+Status: ⬜ Locked / ✅ Unlocked
+
 ## Milestone Log
 
 | Date | Milestone | Notes |
