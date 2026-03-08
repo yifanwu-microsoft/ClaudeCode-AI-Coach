@@ -151,30 +151,8 @@ ClaudeCode-AI-Coach/
     ├── install.sh                       ← macOS/Linux install
     ├── install.ps1                      ← Windows install
     ├── uninstall.sh                     ← macOS/Linux uninstall
-    ├── uninstall.ps1                    ← Windows uninstall
-    └── dev-worktree.sh                  ← Git worktree manager for dev
+    └── uninstall.ps1                    ← Windows uninstall
 ```
-
-## Development with Git Worktrees
-
-When developing this project while having the coach installed at user scope (`~/.claude/`), use git worktrees for isolated workspaces:
-
-```bash
-# Create a worktree for a feature
-./scripts/dev-worktree.sh --create fix-assess
-
-# Work in the isolated worktree (no coach duplication)
-cd ../coach-wt-fix-assess/
-
-# Test your changes
-./scripts/install.sh    # re-deploy to ~/.claude/
-# Open another project in Claude Code → verify coach behavior
-
-# Clean up
-./scripts/dev-worktree.sh --remove fix-assess
-```
-
-Multiple worktrees can run in parallel for different features — each is a separate branch and directory.
 
 ## Customization & Extension
 

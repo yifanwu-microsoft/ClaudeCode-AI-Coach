@@ -22,27 +22,6 @@ CLAUDE.md               # This file — dev configuration
 
 ## Development Workflow
 
-### Using Git Worktrees (Recommended for parallel work)
-
-```bash
-# Create a worktree for a feature branch
-./scripts/dev-worktree.sh --create fix-assess
-
-# Work in the worktree
-cd ../coach-wt-fix-assess/
-# ... make changes, test, commit ...
-
-# List all worktrees
-./scripts/dev-worktree.sh --list
-
-# Clean up when done
-./scripts/dev-worktree.sh --remove fix-assess
-```
-
-Each worktree is isolated — no coach duplication with user scope because coach files are in `coach/` (not auto-loaded by Claude Code).
-
-### Basic workflow
-
 1. **Edit** coach files in `coach/` directory
 2. **Install** by running `./scripts/install.sh` to deploy to `~/.claude/`
 3. **Test** by opening a different project and verifying the coaching experience

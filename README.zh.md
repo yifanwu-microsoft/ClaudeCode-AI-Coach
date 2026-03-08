@@ -151,30 +151,8 @@ ClaudeCode-AI-Coach/
     ├── install.sh                       ← macOS/Linux 安装脚本
     ├── install.ps1                      ← Windows 安装脚本
     ├── uninstall.sh                     ← macOS/Linux 卸载脚本
-    ├── uninstall.ps1                    ← Windows 卸载脚本
-    └── dev-worktree.sh                  ← Git worktree 开发管理工具
+    └── uninstall.ps1                    ← Windows 卸载脚本
 ```
-
-## 使用 Git Worktree 开发
-
-如果你已安装教练系统到 user scope（`~/.claude/`），开发本项目时可以使用 git worktree 创建隔离工作区，避免 project scope 和 user scope 重复：
-
-```bash
-# 创建 worktree 开发某个功能
-./scripts/dev-worktree.sh --create fix-assess
-
-# 在隔离的 worktree 中工作（无教练指令重复）
-cd ../coach-wt-fix-assess/
-
-# 测试改动
-./scripts/install.sh    # 重新部署到 ~/.claude/
-# 在其他项目中打开 Claude Code → 验证教练效果
-
-# 清理
-./scripts/dev-worktree.sh --remove fix-assess
-```
-
-支持同时创建多个 worktree 并行开发不同功能，每个 worktree 对应独立的分支和目录。
 
 ## 自定义与扩展
 
