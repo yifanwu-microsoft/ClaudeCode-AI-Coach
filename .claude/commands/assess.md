@@ -5,9 +5,38 @@
 ### Step 1：读取当前状态
 先读取项目根目录的 `PROGRESS.md`，了解用户的历史进度和当前聚焦。
 
-### Step 2：逐项评估（基于 ai-engineering-leveling-guide.md 的自我评估 Checklist）
+### Step 2：客观信号扫描（自动执行，不需要用户回答）
 
-对以下每项打分（0 = 完全不符合，1 = 部分符合，2 = 完全符合）：
+在问答评估之前，先自动扫描当前项目和环境，收集客观证据：
+
+**扫描项目：**
+1. **CLAUDE.md 存在性与质量**：检查项目根目录是否有 CLAUDE.md，如有则评估内容（是否包含技术栈、规范、目录结构、工作流规则等）
+2. **Custom Commands**：检查是否存在 `.claude/commands/` 目录及其中的命令文件数量和内容
+3. **Hooks 配置**：检查 `.claude/settings.json` 或 `.claude/settings.local.json` 中是否配置了 Hooks
+4. **CI/CD AI 集成**：检查 `.github/workflows/` 中是否存在 AI 相关的 workflow（如 ai-review.yml、ai-autofix.yml、ai-triage.yml）
+5. **Git 规范**：查看最近 10 条 git log，检查 commit message 是否遵循 conventional commits 格式
+6. **测试覆盖**：检查项目中是否存在测试文件（*.test.ts、*.test.tsx、*.spec.ts 等）及其与源文件的比例
+7. **项目结构**：扫描项目目录结构，了解技术栈和项目规模
+
+**输出扫描报告：**
+```
+## 客观信号扫描结果
+
+| 检测项 | 结果 | 对应 Level |
+|--------|------|-----------|
+| CLAUDE.md | ✅ 存在，包含技术栈+规范 / ❌ 不存在 | Level 3-4 |
+| Custom Commands | ✅ X 个命令 / ❌ 未配置 | Level 7 |
+| Hooks 配置 | ✅ 已配置 / ❌ 未配置 | Level 7 |
+| CI/CD AI 集成 | ✅ X 个 workflow / ❌ 未配置 | Level 8 |
+| Git 规范 | ✅ conventional commits / ⚠️ 不规范 | Level 7 |
+| 测试文件 | ✅ X 个测试文件 / ❌ 无测试 | Level 5 |
+```
+
+将扫描结果作为后续评估的参考依据。如果扫描结果与用户自评矛盾（如用户声称 Level 7 但项目无 Commands），温和指出差异。
+
+### Step 3：逐项评估（基于 ai-engineering-leveling-guide.md 的自我评估 Checklist）
+
+结合 Step 2 的客观信号，对以下每项打分（0 = 完全不符合，1 = 部分符合，2 = 完全符合）：
 
 **基础能力（Level 1-2）**
 - 日常开发中使用 AI 代码补全
@@ -36,18 +65,25 @@
 - 有 AI 自动修复失败 Pipeline 的能力
 - 有完整的 AI 工作流监控和成本控制
 
-### Step 3：计算得分与 Level
+### Step 4：计算得分与 Level
 
 评分标准：0-4 → Level 1-2 ｜ 5-8 → Level 3-4 ｜ 9-11 → Level 5 ｜ 12-15 → Level 6-7 ｜ 16-18 → Level 8
 
-### Step 4：对比历史
+### Step 5：对比历史
 
 将本次评估结果与 PROGRESS.md 中的上次评估对比，指出：
 - 哪些项目有进步（分数提升）
 - 哪些项目停滞（与上次相同）
 - 哪些项目需要重点突破
 
-### Step 5：输出结果
+### Step 6：交叉验证
+
+将 Step 2 的客观扫描结果与 Step 3 的自评打分进行交叉验证：
+- 如果客观信号支持自评 → 增强评估置信度
+- 如果客观信号与自评矛盾 → 温和指出，询问用户原因（可能是在其他项目中使用，或正在迁移中）
+- 将交叉验证结果体现在评估报告中
+
+### Step 7：输出结果
 
 格式：
 ```
@@ -58,14 +94,17 @@
 **当前 Level**：N
 **建议目标 Level**：N+1
 
+### 客观信号扫描
+[Step 2 的扫描结果表格]
+
 ### 各维度得分
-| 维度 | 得分 | 备注 |
-|------|------|------|
-| 基础能力 | X/6 | ... |
-| 提示词能力 | X/8 | ... |
-| 自主开发 | X/6 | ... |
-| 并行与编排 | X/8 | ... |
-| 系统级 | X/6 | ... |
+| 维度 | 得分 | 客观信号 | 备注 |
+|------|------|---------|------|
+| 基础能力 | X/6 | — | ... |
+| 提示词能力 | X/8 | CLAUDE.md: ✅/❌ | ... |
+| 自主开发 | X/6 | 测试文件: ✅/❌ | ... |
+| 并行与编排 | X/8 | Commands: X个, Hooks: ✅/❌ | ... |
+| 系统级 | X/6 | CI workflows: X个 | ... |
 
 ### 当前 Level 子技能状态
 [根据评估出的 Level，列出该 Level 和下一 Level 的子技能状态和建议]
@@ -76,7 +115,7 @@
 [优先推荐当前 Level 中尚未验收的子技能]
 ```
 
-### Step 6：更新 PROGRESS.md
+### Step 8：更新 PROGRESS.md
 
 评估完成后：
 1. 更新「当前总体评估」中的 Level、目标 Level 和评估日期

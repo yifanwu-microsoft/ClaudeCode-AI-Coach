@@ -1,5 +1,10 @@
 # AI Coach System Install Tool
-# Usage: .\scripts\install.ps1
+# Usage: .\scripts\install.ps1 [-Lang en|zh]
+
+param(
+    [ValidateSet("en", "zh")]
+    [string]$Lang = "zh"
+)
 
 $ErrorActionPreference = "Stop"
 
@@ -12,8 +17,32 @@ $MarkerEnd = "<!-- AI-COACH-END -->"
 function Write-Info { param($Msg) Write-Host "[INFO] $Msg" -ForegroundColor Green }
 function Write-Warn { param($Msg) Write-Host "[WARN] $Msg" -ForegroundColor Yellow }
 
+function Get-SourcePaths {
+    if ($Lang -eq "en") {
+        return @{
+            ClaudeMd = Join-Path $RepoRoot "en\CLAUDE.md"
+            Progress = Join-Path $RepoRoot "en\PROGRESS.md"
+            Guide    = Join-Path $RepoRoot "en\ai-engineering-leveling-guide.md"
+            Commands = Join-Path $RepoRoot "en\commands"
+        }
+    } else {
+        return @{
+            ClaudeMd = Join-Path $RepoRoot "CLAUDE.md"
+            Progress = Join-Path $RepoRoot "PROGRESS.md"
+            Guide    = Join-Path $RepoRoot "ai-engineering-leveling-guide.md"
+            Commands = Join-Path $RepoRoot ".claude\commands"
+        }
+    }
+}
+
 function Install-CoachSystem {
-    Write-Info "Installing AI Coach to $ClaudeHome ..."
+    $paths = Get-SourcePaths
+
+    if ($Lang -eq "en") {
+        Write-Info "Installing AI Coach System (English) to $ClaudeHome ..."
+    } else {
+        Write-Info "Installing AI Coach to $ClaudeHome ..."
+    }
 
     # Create directory
     $commandsDir = Join-Path $ClaudeHome "commands"
@@ -22,7 +51,7 @@ function Install-CoachSystem {
     }
 
     # 1. Install commands/
-    $sourceCommands = Join-Path $RepoRoot ".claude\commands"
+    $sourceCommands = $paths.Commands
     if (Test-Path $sourceCommands) {
         $commandFiles = Get-ChildItem "$sourceCommands\*.md" -ErrorAction SilentlyContinue
         foreach ($file in $commandFiles) {
@@ -32,8 +61,14 @@ function Install-CoachSystem {
     }
 
     # 2. Sync CLAUDE.md (marker block merge)
-    $sourceFile = Join-Path $RepoRoot "CLAUDE.md"
+    $sourceFile = $paths.ClaudeMd
     $targetFile = Join-Path $ClaudeHome "CLAUDE.md"
+
+    # Fallback to Chinese if English not found
+    if (-not (Test-Path $sourceFile)) {
+        Write-Warn "CLAUDE.md source not found at $sourceFile, falling back to Chinese"
+        $sourceFile = Join-Path $RepoRoot "CLAUDE.md"
+    }
 
     $sourceContent = Get-Content $sourceFile -Raw -Encoding UTF8
     $coachBlock = $MarkerStart + "`r`n" + $sourceContent + "`r`n" + $MarkerEnd
@@ -71,20 +106,32 @@ function Install-CoachSystem {
         Write-Warn "To reset, manually delete ~/.claude/PROGRESS.md and re-run install"
     }
     else {
-        Copy-Item (Join-Path $RepoRoot "PROGRESS.md") $ClaudeHome -Force
+        $progressSource = $paths.Progress
+        if (-not (Test-Path $progressSource)) {
+            $progressSource = Join-Path $RepoRoot "PROGRESS.md"
+        }
+        Copy-Item $progressSource $ClaudeHome -Force
         Write-Info "PROGRESS.md created (initial state)"
     }
 
     # 4. Sync guide
-    $guideFile = Join-Path $RepoRoot "ai-engineering-leveling-guide.md"
-    if (Test-Path $guideFile) {
-        Copy-Item $guideFile $ClaudeHome -Force
+    $guideSource = $paths.Guide
+    if (Test-Path $guideSource) {
+        Copy-Item $guideSource $ClaudeHome -Force
         Write-Info "Guide installed"
+    } elseif (Test-Path (Join-Path $RepoRoot "ai-engineering-leveling-guide.md")) {
+        Copy-Item (Join-Path $RepoRoot "ai-engineering-leveling-guide.md") $ClaudeHome -Force
+        Write-Info "Guide installed (fallback to Chinese)"
     }
 
     Write-Host ""
-    Write-Info "Install complete! AI Coach is now globally active."
-    Write-Info "Open Claude Code in any project and run /assess for initial evaluation."
+    if ($Lang -eq "en") {
+        Write-Info "Install complete! AI Coach is now globally active."
+        Write-Info "Open Claude Code in any project and run /assess for initial evaluation."
+    } else {
+        Write-Info "Install complete! AI Coach is now globally active."
+        Write-Info "Open Claude Code in any project and run /assess for initial evaluation."
+    }
 }
 
 Install-CoachSystem

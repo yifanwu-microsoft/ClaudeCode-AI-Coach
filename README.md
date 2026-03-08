@@ -1,152 +1,166 @@
-# AI 工程能力教练系统
+[中文版](README.zh.md) | **English**
 
-> 一套基于 Claude Code 的 AI 工程能力成长系统。安装后在你日常使用 Claude Code 的过程中，自动评估你的操作层级并给出成长建议。
+# AI Engineering Coach System
 
-## 这是什么？
+> A Claude Code-based AI engineering skills growth system. Once installed, it automatically assesses your operational level and provides growth suggestions during your daily Claude Code usage.
 
-你正常使用 Claude Code 写代码，这套系统会在**每次交互结束后**自动附加一段简短的教练反馈：
+## What Is This?
+
+You use Claude Code normally to write code, and this system **automatically appends** a brief coaching feedback after each interaction:
 
 ```
 ---
-📊 AI 教练评估
-- 本次操作层级：Level 4
-- 当前聚焦：意图驱动开发
+📊 AI Coach Assessment
+- Current operation level: Level 4
+- Current focus: Intent-driven development
 
-💡 升级建议：
-- 你说："用 useState 加个搜索框"（Level 4）
-- 试试："用户需要在 200 条数据中快速找到目标"（Level 5）
-- 好处：AI 会自己判断用前端过滤还是后端搜索，可能给你更好的方案
+💡 Upgrade suggestion:
+- You said: "Add a search box with useState" (Level 4)
+- Try: "Users need to quickly find items in a list of ~200 entries" (Level 5)
+- Benefit: AI will decide between client-side filtering or server-side search, potentially giving you a better solution
 ```
 
-它基于 [AI 工程能力提升完整指南](ai-engineering-leveling-guide.md)（Level 1→8），核心能力：
+It's based on the [AI Engineering Skills Complete Guide](en/ai-engineering-leveling-guide.md) (Level 1→8), with core capabilities:
 
-- **自动检测**：从你的 prompt 模式判断操作层级（Level 3-8）
-- **渐进式阻力**：当你给出低层级 prompt 时，给出更高层级的表达示例
-- **反模式拦截**：实时检测并警告常见陷阱
-- **进度追踪**：记录各子技能状态和里程碑
+- **Auto-detection**: Identifies your operational level from prompt patterns (Level 3-8)
+- **Progressive resistance**: When you give low-level prompts, suggests higher-level alternatives
+- **Anti-pattern interception**: Real-time detection and warning of common pitfalls
+- **Progress tracking**: Records sub-skill status and milestones
 
-## 快速开始（3 步）
+## Quick Start (3 Steps)
 
-### Step 1：克隆仓库
+### Step 1: Clone the Repository
 
 ```bash
 git clone https://github.com/anthropics/ClaudeCode-AI-Coach.git
 cd ClaudeCode-AI-Coach
 ```
 
-### Step 2：安装到本机
+### Step 2: Install Locally
 
-在 repo 目录中打开 Claude Code，输入：
+Open Claude Code in the repo directory, and type:
 
 ```
 /install
 ```
 
-Claude 会自动检测系统并执行安装脚本。
+Claude will auto-detect your system and run the install script.
 
-或者手动运行：
+Or run manually:
 
-**macOS / Linux**：
+**macOS / Linux**:
 ```bash
 chmod +x scripts/install.sh
-./scripts/install.sh
+./scripts/install.sh --lang en
 ```
 
-**Windows（PowerShell）**：
+**Windows (PowerShell)**:
 ```powershell
-.\scripts\install.ps1
+.\scripts\install.ps1 -Lang en
 ```
 
-安装脚本会将配置部署到 `~/.claude/`，对本机所有项目全局生效。
+The install script deploys the configuration to `~/.claude/`, taking effect globally for all projects on your machine.
 
-### Step 3：首次评估
+### Step 3: Initial Assessment
 
-打开 Claude Code（任意项目都行），输入：
+Open Claude Code (in any project), and type:
 
 ```
 /assess
 ```
 
-Claude 会询问你的 AI 工具使用情况，逐项打分，确定你的起始 Level。
+Claude will ask about your AI tool usage, score each dimension, and determine your starting Level.
 
-**完成！** 之后正常使用 Claude Code 即可，教练系统会自动工作。
+**Done!** Just use Claude Code normally from now on — the coaching system works automatically.
 
-## 日常使用
+## Daily Usage
 
-### 它什么时候会出现？
+### When Does It Appear?
 
-**每次你和 Claude Code 交互时**，教练系统在后台运行。你不需要做任何额外操作：
+**Every time you interact with Claude Code**, the coaching system runs in the background. No extra effort needed:
 
-- 正常写代码、问问题、做需求 — Claude 照常完成你的请求
-- 交互结束后，Claude 会在回答末尾附加 2-3 行教练评估
-- 当你的 prompt 有明显提升空间时，会给出具体的升级建议
+- Write code, ask questions, work on features — Claude handles your requests as usual
+- After each interaction, Claude appends 2-3 lines of coaching assessment
+- When your prompt has clear room for improvement, it provides specific upgrade suggestions
 
-### 什么时候需要主动使用命令？
+### When Should You Use Commands?
 
-| 场景 | 做什么 |
-|------|--------|
-| 想看看自己进步了没 | `/assess` — 重新全面评估 |
-| 想练习但不知道做什么 | `/practice` — 获取当前聚焦子技能的练习任务 |
-| 想提升 prompt 质量 | `/review-prompt <你的prompt>` — 分析并给出升级建议 |
-| 需要给 leader 汇报 | `/progress-report` — 生成结构化进度报告 |
+| Scenario | What to Do |
+|----------|-----------|
+| Want to check your progress | `/assess` — Full re-assessment |
+| Want practice but unsure what to do | `/practice` — Get practice tasks for your current focus |
+| Want to improve prompt quality | `/review-prompt <your prompt>` — Analysis with upgrade suggestions |
+| Need to report to your leader | `/progress-report` — Generate a structured progress report |
 
-### Level 是什么意思？
+### What Do the Levels Mean?
 
-| Level | 你的状态 | AI 的角色 |
-|-------|---------|----------|
-| 1-2 | 偶尔用补全/问答 | 打字助手 |
-| 3-4 | 写结构化 Prompt，管理上下文 | 听指令的初级工程师 |
-| 5 | 描述业务意图，审查 AI 方案 | 能独立交付的中级工程师 |
-| 6 | 同时管理多条 AI 任务流 | 一个可并行的开发团队 |
-| 7 | 设计标准化流程，AI 按流程执行 | 自动化流水线 |
-| 8 | 配置事件触发器，AI 自主运转 | 基础设施 |
+| Level | Your Status | AI's Role |
+|-------|------------|-----------|
+| 1-2 | Occasional autocomplete/Q&A | Typing assistant |
+| 3-4 | Writing structured prompts, managing context | Junior engineer following instructions |
+| 5 | Describing business intent, reviewing AI solutions | Mid-level engineer delivering independently |
+| 6 | Managing multiple AI task streams simultaneously | A parallelizable dev team |
+| 7 | Designing standardized workflows, AI executes by process | Automation pipeline |
+| 8 | Configuring event triggers, AI runs autonomously | Infrastructure |
 
-> 详见 [完整 Level 定义与验收标准](ai-engineering-leveling-guide.md)
+> See [Complete Level Definitions & Acceptance Criteria](en/ai-engineering-leveling-guide.md)
 
-## 多设备使用
+## Multi-device Usage
 
-每台电脑的进度独立维护。换电脑时：
+Progress is maintained independently on each machine. When switching devices:
 
 ```bash
-git clone → ./scripts/install.sh → /assess
+git clone → ./scripts/install.sh --lang en → /assess
 ```
 
-重新评估会根据你当前的实际能力快速定位 Level，无需手动迁移数据。
+Re-assessment will quickly locate your Level based on your current skills — no manual data migration needed.
 
-## 更新教练系统
+## Updating the Coach System
 
-当 repo 有新版本时：
+When the repo has a new version:
 
 ```bash
 git pull
-./scripts/install.sh  # 或 Windows: .\scripts\install.ps1
+./scripts/install.sh --lang en  # or Windows: .\scripts\install.ps1 -Lang en
 ```
 
-安装脚本会更新配置和命令，但**不会覆盖你的本机进度**。
+The install script updates configs and commands but **won't overwrite your local progress**.
 
-## 文件结构
+## File Structure
 
 ```
 ClaudeCode-AI-Coach/
-├── CLAUDE.md                        ← 核心：教练系统的行为规则
-├── PROGRESS.md                      ← 进度模板（安装后本机独立维护）
-├── ai-engineering-leveling-guide.md ← Level 1-8 完整定义和验收标准
-├── .claude/commands/
-│   ├── assess.md                    ← /assess 全面评估
-│   ├── install.md                   ← /install 安装到本机
-│   ├── practice.md                  ← /practice 练习任务
-│   ├── progress-report.md           ← /progress-report 进度汇报
-│   └── review-prompt.md             ← /review-prompt 审查 prompt
+├── README.md                            ← English README
+├── README.zh.md                         ← Chinese README
+├── CLAUDE.md                            ← Core: coaching rules (Chinese)
+├── PROGRESS.md                          ← Progress template (Chinese)
+├── ai-engineering-leveling-guide.md     ← Full Level 1-8 guide (Chinese)
+├── en/                                  ← English versions
+│   ├── CLAUDE.md                        ← Coaching rules (English)
+│   ├── PROGRESS.md                      ← Progress template (English)
+│   ├── ai-engineering-leveling-guide.md ← Full guide (English)
+│   └── commands/                        ← English commands
+│       ├── assess.md
+│       ├── install.md
+│       ├── practice.md
+│       ├── progress-report.md
+│       └── review-prompt.md
+├── .claude/commands/                    ← Chinese commands
+│   ├── assess.md
+│   ├── install.md
+│   ├── practice.md
+│   ├── progress-report.md
+│   └── review-prompt.md
 └── scripts/
-    ├── install.sh                   ← macOS/Linux 安装脚本
-    └── install.ps1                  ← Windows 安装脚本
+    ├── install.sh                       ← macOS/Linux install (--lang en|zh)
+    └── install.ps1                      ← Windows install (-Lang en|zh)
 ```
 
-## 自定义与扩展
+## Customization & Extension
 
-- **添加命令**：在 `.claude/commands/` 下创建 `.md` 文件，重新安装即可
-- **修改规则**：编辑 `CLAUDE.md`，重新安装。标记块机制不影响你本机的其他规则
-- **项目级规则**：这套系统是全局教练，你的项目可以有自己的 CLAUDE.md，两者共存不冲突
+- **Add commands**: Create `.md` files in `.claude/commands/` (or `en/commands/` for English), then reinstall
+- **Modify rules**: Edit `CLAUDE.md` (or `en/CLAUDE.md`), then reinstall. The marker-block mechanism won't affect your other local rules
+- **Project-level rules**: This is a global coach — your project can have its own CLAUDE.md, both coexist without conflict
 
 ## License
 

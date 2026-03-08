@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# install.sh — 将 AI 教练系统安装到本机 ~/.claude/
-# 用法：./scripts/install.sh
+# install.sh — Install AI Coach System to ~/.claude/
+# Usage: ./scripts/install.sh [--lang en|zh]
 
 set -euo pipefail
 
@@ -11,7 +11,35 @@ CLAUDE_HOME="$HOME/.claude"
 MARKER_START="<!-- AI-COACH-START -->"
 MARKER_END="<!-- AI-COACH-END -->"
 
-# 颜色输出
+# Default language: zh (Chinese)
+LANG_CHOICE="zh"
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --lang)
+            LANG_CHOICE="$2"
+            shift 2
+            ;;
+        --lang=*)
+            LANG_CHOICE="${1#*=}"
+            shift
+            ;;
+        *)
+            echo "Unknown option: $1"
+            echo "Usage: ./scripts/install.sh [--lang en|zh]"
+            exit 1
+            ;;
+    esac
+done
+
+# Validate language
+if [[ "$LANG_CHOICE" != "en" && "$LANG_CHOICE" != "zh" ]]; then
+    echo "Invalid language: $LANG_CHOICE (valid: en, zh)"
+    exit 1
+fi
+
+# Color output
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m'
@@ -19,21 +47,48 @@ NC='\033[0m'
 info()  { echo -e "${GREEN}[INFO]${NC} $1"; }
 warn()  { echo -e "${YELLOW}[WARN]${NC} $1"; }
 
+# Set source paths based on language
+set_source_paths() {
+    if [[ "$LANG_CHOICE" == "en" ]]; then
+        CLAUDE_MD_SOURCE="$REPO_ROOT/en/CLAUDE.md"
+        PROGRESS_SOURCE="$REPO_ROOT/en/PROGRESS.md"
+        GUIDE_SOURCE="$REPO_ROOT/en/ai-engineering-leveling-guide.md"
+        COMMANDS_SOURCE="$REPO_ROOT/en/commands"
+    else
+        CLAUDE_MD_SOURCE="$REPO_ROOT/CLAUDE.md"
+        PROGRESS_SOURCE="$REPO_ROOT/PROGRESS.md"
+        GUIDE_SOURCE="$REPO_ROOT/ai-engineering-leveling-guide.md"
+        COMMANDS_SOURCE="$REPO_ROOT/.claude/commands"
+    fi
+}
+
 main() {
-    info "开始安装 AI 教练系统到 $CLAUDE_HOME ..."
+    set_source_paths
 
-    # 创建目录
-    mkdir -p "$CLAUDE_HOME/commands"
-
-    # 1. 同步 commands/（直接覆盖教练系统的文件）
-    if [ -d "$REPO_ROOT/.claude/commands" ]; then
-        cp -f "$REPO_ROOT/.claude/commands/"*.md "$CLAUDE_HOME/commands/" 2>/dev/null || true
-        info "Commands 已安装"
+    if [[ "$LANG_CHOICE" == "en" ]]; then
+        info "Installing AI Coach System (English) to $CLAUDE_HOME ..."
+    else
+        info "开始安装 AI 教练系统到 $CLAUDE_HOME ..."
     fi
 
-    # 2. 同步 CLAUDE.md（标记块合并，不覆盖用户自己的规则）
+    # Create directories
+    mkdir -p "$CLAUDE_HOME/commands"
+
+    # 1. Sync commands/
+    if [ -d "$COMMANDS_SOURCE" ]; then
+        cp -f "$COMMANDS_SOURCE/"*.md "$CLAUDE_HOME/commands/" 2>/dev/null || true
+        info "Commands installed"
+    fi
+
+    # 2. Sync CLAUDE.md (marker block merge)
+    if [ ! -f "$CLAUDE_MD_SOURCE" ]; then
+        warn "CLAUDE.md source not found at $CLAUDE_MD_SOURCE"
+        warn "Falling back to default (Chinese) CLAUDE.md"
+        CLAUDE_MD_SOURCE="$REPO_ROOT/CLAUDE.md"
+    fi
+
     local source_content
-    source_content=$(cat "$REPO_ROOT/CLAUDE.md")
+    source_content=$(cat "$CLAUDE_MD_SOURCE")
     local coach_block
     coach_block=$(printf '%s\n%s\n%s' "$MARKER_START" "$source_content" "$MARKER_END")
 
@@ -48,34 +103,51 @@ main() {
                 !skip { print }
             ' "$target_file" > "$target_file.tmp"
             mv "$target_file.tmp" "$target_file"
-            info "CLAUDE.md 教练块已更新（保留原有规则）"
+            info "CLAUDE.md coach block updated (preserving existing rules)"
         else
             printf '\n\n%s\n' "$coach_block" >> "$target_file"
-            info "CLAUDE.md 教练块已追加（原有规则不受影响）"
+            info "CLAUDE.md coach block appended (existing rules unaffected)"
         fi
     else
         echo "$coach_block" > "$target_file"
-        info "CLAUDE.md 已创建"
+        info "CLAUDE.md created"
     fi
 
-    # 3. 同步 PROGRESS.md（仅在不存在时创建，保护本机已有进度）
+    # 3. Sync PROGRESS.md (only create if not exists — protect local progress)
     if [ -f "$CLAUDE_HOME/PROGRESS.md" ]; then
-        warn "PROGRESS.md 已存在，跳过（保护本机进度）"
-        warn "如需重置，请手动删除 ~/.claude/PROGRESS.md 后重新安装"
+        if [[ "$LANG_CHOICE" == "en" ]]; then
+            warn "PROGRESS.md already exists, skipping (protecting local progress)"
+            warn "To reset, manually delete ~/.claude/PROGRESS.md and re-run install"
+        else
+            warn "PROGRESS.md 已存在，跳过（保护本机进度）"
+            warn "如需重置，请手动删除 ~/.claude/PROGRESS.md 后重新安装"
+        fi
     else
-        cp -f "$REPO_ROOT/PROGRESS.md" "$CLAUDE_HOME/PROGRESS.md"
-        info "PROGRESS.md 已创建（初始状态）"
+        if [ -f "$PROGRESS_SOURCE" ]; then
+            cp -f "$PROGRESS_SOURCE" "$CLAUDE_HOME/PROGRESS.md"
+        else
+            cp -f "$REPO_ROOT/PROGRESS.md" "$CLAUDE_HOME/PROGRESS.md"
+        fi
+        info "PROGRESS.md created"
     fi
 
-    # 4. 同步参考文档
-    if [ -f "$REPO_ROOT/ai-engineering-leveling-guide.md" ]; then
+    # 4. Sync guide
+    if [ -f "$GUIDE_SOURCE" ]; then
+        cp -f "$GUIDE_SOURCE" "$CLAUDE_HOME/ai-engineering-leveling-guide.md"
+        info "Guide installed"
+    elif [ -f "$REPO_ROOT/ai-engineering-leveling-guide.md" ]; then
         cp -f "$REPO_ROOT/ai-engineering-leveling-guide.md" "$CLAUDE_HOME/ai-engineering-leveling-guide.md"
-        info "参考文档已同步"
+        info "Guide installed (fallback to Chinese)"
     fi
 
     echo ""
-    info "✅ 安装完成！教练系统已在本机全局生效。"
-    info "在任何项目中打开 Claude Code，执行 /assess 进行首次评估。"
+    if [[ "$LANG_CHOICE" == "en" ]]; then
+        info "✅ Installation complete! AI Coach is now globally active."
+        info "Open Claude Code in any project and run /assess for initial evaluation."
+    else
+        info "✅ 安装完成！教练系统已在本机全局生效。"
+        info "在任何项目中打开 Claude Code，执行 /assess 进行首次评估。"
+    fi
 }
 
 main
