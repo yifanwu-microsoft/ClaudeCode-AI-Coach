@@ -15,7 +15,7 @@
 3. **Hooks 配置**：检查 `.claude/settings.json` 或 `.claude/settings.local.json` 中是否配置了 Hooks
 4. **CI/CD AI 集成**：检查 `.github/workflows/` 中是否存在 AI 相关的 workflow（如 ai-review.yml、ai-autofix.yml、ai-triage.yml）
 5. **Git 规范**：查看最近 10 条 git log，检查 commit message 是否遵循 conventional commits 格式
-6. **测试覆盖**：检查项目中是否存在测试文件（*.test.ts、*.test.tsx、*.spec.ts 等）及其与源文件的比例
+6. **测试覆盖**：检查项目中是否存在测试文件（如 *_test.go、*.test.ts、*.spec.ts、test_*.py、*Test.java 等）及其与源文件的比例
 7. **项目结构**：扫描项目目录结构，了解技术栈和项目规模
 
 **输出扫描报告：**
@@ -75,6 +75,25 @@
 - 哪些项目有进步（分数提升）
 - 哪些项目停滞（与上次相同）
 - 哪些项目需要重点突破
+
+### Step 5.5：按评估 Level 调整输出详细度
+
+根据评估出的 Level，调整后续输出的详细程度，避免信息过载：
+
+- **如果评估 Level 为 1-2**：
+  - 用简明语言解释每个 Level 的含义（一句话概括），帮助用户建立整体认知
+  - 仅详细展示 Level 1-2 和 Level 3-4 的子技能列表
+  - Level 5-8 各用一行总结（如"Level 7：工作流编排 — 用 Commands 和 Hooks 让重复流程自动化"）
+  - 重点突出"下一步该做什么"，而非展示完整技能树
+
+- **如果评估 Level 为 3-5**：
+  - 详细展示当前 Level 和下一 Level 的子技能状态
+  - Level 6+ 的子技能用简短总结呈现（每个 Level 一行）
+  - 侧重展示从当前 Level 到下一 Level 的具体升级路径
+
+- **如果评估 Level 为 6+**：
+  - 展示完整的子技能详情，包含所有 Level 的状态
+  - 包含高级指标（并行效率、自动化覆盖率等）
 
 ### Step 6：交叉验证
 
