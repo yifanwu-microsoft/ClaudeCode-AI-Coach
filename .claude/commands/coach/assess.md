@@ -69,57 +69,30 @@ Combining the objective signals from Step 2, score each item (0 = does not meet 
 
 Scoring criteria: 0-4 → Level 1-2 ｜ 5-8 → Level 3-4 ｜ 9-11 → Level 5 ｜ 12-15 → Level 6-7 ｜ 16-18 → Level 8
 
-### Step 5: Compare with History
+### Step 5: Compare with History & Adjust Detail Level
 
-Compare the current assessment with the previous one in PROGRESS.md, noting:
-- Which items improved (higher scores)
-- Which items remained the same (stagnant)
-- Which items need a focused breakthrough
+**History comparison**: Compare with the previous assessment in PROGRESS.md — note which items improved, which stagnated, and which need a focused breakthrough.
 
-### Step 5.5: Adjust Output Detail Based on Assessed Level
+**Detail adjustment** based on assessed Level:
+- **Level 1-2**: Only show detailed sub-skills for L1-4. Summarize L5-8 in one line each. Emphasize "what to do next."
+- **Level 3-5**: Show detailed sub-skills for current Level and next Level. Summarize higher Levels briefly.
+- **Level 6+**: Show full sub-skill details for all Levels including advanced metrics.
 
-Adjust the level of detail in subsequent output based on the assessed Level to avoid information overload:
+### Step 6: Cross-Validation & Skill Spot Check
 
-- **If assessed Level is 1-2**:
-  - Use concise language to explain each Level (one sentence summary) to help the user build an overall understanding
-  - Only show detailed sub-skill lists for Level 1-2 and Level 3-4
-  - Summarize Level 5-8 in one line each (e.g., "Level 7: Workflow Orchestration — Automate repetitive processes with Commands and Hooks")
-  - Emphasize "what to do next" rather than displaying the full skill tree
+**Cross-validation**: Compare objective scan (Step 2) against self-assessment (Step 3). If they contradict (e.g., claims L7 but no Commands), gently point it out and ask for context.
 
-- **If assessed Level is 3-5**:
-  - Show detailed sub-skill status for the current Level and the next Level
-  - Present Level 6+ sub-skills as brief summaries (one line per Level)
-  - Focus on the specific upgrade path from the current Level to the next
+**Skill spot check** (anti-degradation): For previously passed Levels (🟢 in PROGRESS.md), spot-check 1-2 degradation-prone skills:
+- L3-4: Is CLAUDE.md kept up to date? (check modification date)
+- L5: Are recent prompts still intent-driven?
+- L7: Are Commands and Hooks still in use?
 
-- **If assessed Level is 6+**:
-  - Show full sub-skill details including status for all Levels
-  - Include advanced metrics (parallel efficiency, automation coverage, etc.)
-
-### Step 6: Cross-Validation
-
-Cross-validate the objective scan results from Step 2 against the self-assessment scores from Step 3:
-- If objective signals support the self-assessment → increases assessment confidence
-- If objective signals contradict the self-assessment → gently point this out and ask the user for context (e.g., they may use these practices in other projects, or are in the process of migrating)
-- Reflect cross-validation results in the assessment report
-
-### Step 6.5: Previously Passed Level Skill Spot Check (Anti-Degradation)
-
-If the user has already passed certain Levels (sub-skills marked 🟢 in PROGRESS.md), spot-check that key skills are being maintained:
-
-**Spot Check Rules:**
-- Spot-check 1-2 key skills from previously passed Levels (no need to re-test everything)
-- Focus on skills that are "prone to degradation":
-  - Level 3-4: Is CLAUDE.md being kept up to date? (check file modification date)
-  - Level 5: Are recent prompts still intent-driven?
-  - Level 7: Are Custom Commands still being used? Are Hooks still running?
-- If degradation is found, remind gently: no downgrade, but suggest spending 10 minutes to restore
-
-**Output Format (only shown when degradation is detected):**
+If degradation detected, show:
 ```
 ### ⚠️ Skill Maintenance Check
 | Passed Skill | Current Status | Suggestion |
 |-------------|----------------|------------|
-| CLAUDE.md Maintenance (L3-4) | ⚠️ Not updated in 30+ days | Spend 10 minutes checking if it needs updating |
+| CLAUDE.md Maintenance (L3-4) | ⚠️ Not updated in 30+ days | Spend 10 min to review |
 ```
 
 ### Step 7: Output Results

@@ -9,49 +9,15 @@ Generate a structured progress report based on the user's AI engineering capabil
 
 ### Step 2: Generate a Report Matching the User's Level
 
-Choose the appropriate report template based on the user's current Level:
-
----
-
-**Level 1-4 Users: Simplified Report (Focused on Learning Growth)**
-
-```markdown
-# AI Engineering Learning Progress
-
-**Author**: [username]
-**Report Date**: [today's date]
-**Current Level**: [read from PROGRESS.md]
-**Target Level**: [read from PROGRESS.md]
-
-## What I Learned This Period
-
-- [List acquired skills and completed milestones in plain language]
-
-## What I'm Currently Learning
-
-- **Focused Sub-Skill**: [read from PROGRESS.md]
-- **Learning Progress**: [summarize based on git activity and file changes]
-
-## Difficulties Encountered
-
-- [If any, list confusions and obstacles during learning]
-
-## Next Steps
-
-- [List the next 1-3 things to learn/practice]
-```
-
----
-
-**Level 5-6 Users: Standard Report (With Efficiency Metrics)**
+Use the base template below. Add level-specific sections based on the user's current Level.
 
 ```markdown
 # AI Engineering Capability Progress Report
 
 **Author**: [username]
 **Report Date**: [today's date]
-**Current Level**: [read from PROGRESS.md]
-**Target Level**: [read from PROGRESS.md]
+**Current Level**: [from PROGRESS.md]
+**Target Level**: [from PROGRESS.md]
 
 ## Completed This Period
 
@@ -59,17 +25,8 @@ Choose the appropriate report template based on the user's current Level:
 
 ## Currently In Progress
 
-- **Focused Sub-Skill**: [read from PROGRESS.md]
-- **Progress Summary**: [summarize based on git activity and file changes]
-- **Estimated Completion**: [estimate based on progress]
-
-## Efficiency Metrics
-
-| Metric | Value | Description |
-|--------|-------|-------------|
-| AI Delegation Success Rate | [estimated from actual usage] | Percentage of features delegated that passed on first attempt |
-| Average Prompt Rounds | [estimated from interaction history] | Average conversation rounds to complete a task |
-| Parallel Task Count | [from git branches/worktrees] | Number of independent tasks in progress simultaneously |
+- **Focused Sub-Skill**: [from PROGRESS.md]
+- **Progress Summary**: [from git activity and file changes]
 
 ## Blockers
 
@@ -77,66 +34,14 @@ Choose the appropriate report template based on the user's current Level:
 
 ## Next Steps
 
-- [List the next 1-3 action items]
+- [1-3 action items]
 ```
 
----
+**Level-specific additions:**
 
-**Level 7-8 Users: Full Report (With Automation Metrics)**
-
-```markdown
-# AI Engineering Capability Progress Report
-
-**Author**: [username]
-**Report Date**: [today's date]
-**Current Level**: [read from PROGRESS.md]
-**Target Level**: 8 (Automated Orchestration Systems)
-
-## Completed This Period
-
-- [List completed milestones and sub-skills]
-
-## Currently In Progress
-
-- **Focused Sub-Skill**: [read from PROGRESS.md]
-- **Progress Summary**: [summarize based on git activity and file changes]
-- **Estimated Completion**: [estimate based on progress]
-
-## Automation Infrastructure Status
-
-| Component | Status | Notes |
-|-----------|--------|-------|
-| CLAUDE.md Workflow Rules | [status] | [rule count and coverage] |
-| Custom Commands | [status] | [command count and usage frequency] |
-| Hooks Auto-QA | [status] | [hook count and interception rate] |
-
-## Level 8 Sub-Skill Progress Overview
-
-| Sub-Skill | Status | Completion |
-|-----------|--------|------------|
-| Headless Mode Scripting | [status] | [progress bar] |
-| PR Auto-Review | [status] | [progress bar] |
-| CI Auto-Fix | [status] | [progress bar] |
-| Issue Auto-Triage | [status] | [progress bar] |
-| Cost Monitoring | [status] | [progress bar] |
-
-## Automation Runtime Metrics (Level 8)
-
-| Metric | This Period | Trend |
-|--------|-------------|-------|
-| PR Review Coverage | [percentage] | [↑/↓/→] |
-| Auto-Fix Success Rate | [percentage] | [↑/↓/→] |
-| AI API Weekly Cost | [amount] | [↑/↓/→] |
-| Issue Triage Accuracy | [percentage] | [↑/↓/→] |
-
-## Blockers
-
-- [If any, list current blockers and support needed]
-
-## Next Steps
-
-- [List the next 1-3 action items]
-```
+- **Level 1-4**: Use simpler headings ("What I Learned" / "What I'm Learning" / "Difficulties"). Omit metrics.
+- **Level 5-6**: Add an "Efficiency Metrics" section with: AI delegation success rate, average prompt rounds, parallel task count.
+- **Level 7-8**: Add "Automation Infrastructure Status" table (CLAUDE.md rules, Commands, Hooks) and "Automation Runtime Metrics" table (PR review coverage, auto-fix success rate, AI API weekly cost, issue triage accuracy — each with trend arrows ↑/↓/→).
 
 ### Step 3: Review and Output
 
