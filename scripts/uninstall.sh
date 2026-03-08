@@ -11,13 +11,13 @@ MARKER_END="<!-- AI-COACH-END -->"
 
 # Coach command files installed by install.sh
 COACH_COMMANDS=(
-    "assess.md"
-    "install.md"
-    "uninstall.md"
-    "practice.md"
-    "progress-report.md"
-    "review-prompt.md"
-    "i18n.md"
+    "coach/assess.md"
+    "coach/install.md"
+    "coach/uninstall.md"
+    "coach/practice.md"
+    "coach/progress-report.md"
+    "coach/review-prompt.md"
+    "coach/i18n.md"
 )
 
 # Default options
@@ -76,6 +76,9 @@ remove_commands() {
     done
 
     info "Removed $removed command file(s)"
+
+    # Remove coach directory if empty
+    rmdir "$commands_dir/coach" 2>/dev/null || true
 
     # Remove commands/ dir if empty
     if [ -d "$commands_dir" ] && [ -z "$(ls -A "$commands_dir" 2>/dev/null)" ]; then

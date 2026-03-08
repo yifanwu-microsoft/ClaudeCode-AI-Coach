@@ -155,8 +155,8 @@ verify_install() {
         has_error=1
     fi
 
-    if [ ! -f "$CLAUDE_HOME/commands/assess.md" ]; then
-        err "Verification failed: commands/assess.md not found in $CLAUDE_HOME"
+    if [ ! -f "$CLAUDE_HOME/commands/coach/assess.md" ]; then
+        err "Verification failed: commands/coach/assess.md not found in $CLAUDE_HOME"
         has_error=1
     fi
 
@@ -187,10 +187,13 @@ main() {
 
     # 1. Sync commands/
     if [ -d "$COMMANDS_SOURCE" ]; then
-        cp -f "$COMMANDS_SOURCE/"*.md "$CLAUDE_HOME/commands/" 2>/dev/null || true
+        # Create coach subdirectory
+        mkdir -p "$CLAUDE_HOME/commands/coach"
+        # Copy coach namespace commands
+        cp -f "$COMMANDS_SOURCE/coach/"*.md "$CLAUDE_HOME/commands/coach/" 2>/dev/null || true
         # Verify critical command files were copied
         local verify_failed=0
-        for cmd in assess.md install.md practice.md progress-report.md review-prompt.md; do
+        for cmd in coach/assess.md coach/install.md coach/practice.md coach/progress-report.md coach/review-prompt.md; do
             if [ ! -f "$CLAUDE_HOME/commands/$cmd" ]; then
                 err "Critical command file missing after copy: $cmd"
                 verify_failed=1
