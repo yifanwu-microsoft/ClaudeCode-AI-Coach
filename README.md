@@ -1,4 +1,4 @@
-[中文版](README.zh.md) | **English**
+[Chinese](README.zh.md) | **English**
 
 # AI Engineering Coach System
 
@@ -12,7 +12,6 @@ You use Claude Code normally to write code, and this system **automatically appe
 ---
 📊 AI Coach Assessment
 - Current operation level: Level 4
-- Current focus: Intent-driven development
 
 💡 Upgrade suggestion:
 - You said: "Add a search box with useState" (Level 4)
@@ -81,14 +80,14 @@ Claude will ask about your AI tool usage, score each dimension, and determine yo
 
 - Write code, ask questions, work on features — Claude handles your requests as usual
 - After each interaction, Claude appends 2-3 lines of coaching assessment
-- When your prompt has clear room for improvement, it provides specific upgrade suggestions
+- Provides upgrade suggestions, positive reinforcement, or technique reminders every time
 
 ### When Should You Use Commands?
 
 | Scenario | What to Do |
 |----------|-----------|
 | Want to check your progress | `/coach:assess` — Full re-assessment |
-| Want practice but unsure what to do | `/coach:practice` — Get practice tasks for your current focus |
+| Want practice but unsure what to do | `/coach:practice` — Get practice tasks for your current Level |
 | Want to improve prompt quality | `/coach:review-prompt <your prompt>` — Analysis with upgrade suggestions |
 | Need to report to your leader | `/coach:progress-report` — Generate a structured progress report |
 
