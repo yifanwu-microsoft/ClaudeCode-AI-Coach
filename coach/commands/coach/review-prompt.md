@@ -32,7 +32,7 @@ Rewrite the prompt at a higher Level, showing a step-by-step upgrade path:
 **→ Level N+2 (outlook):** > [higher-level example] — Key improvement: [one sentence]
 ```
 
-Refer to the Prompt Upgrade Examples table in CLAUDE.md for the upgrade direction at each level transition.
+Refer to the "Transformation Rules by Level Transition" table in CLAUDE.md for the upgrade direction at each level transition.
 
 ### Step 4: Practice Recommendation
 

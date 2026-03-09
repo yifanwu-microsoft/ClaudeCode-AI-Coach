@@ -37,6 +37,8 @@
 
 ### Self-Assessment (0-2 points per item)
 
+> **Reference**: For Level definitions and scoring ranges, see **CLAUDE.md** — Level Detection Rules + Scoring Reference.
+
 **Foundational Skills (Level 1-2)**
 - [ ] Using AI code completion in daily development
 - [ ] Able to have basic conversations in Claude Code
@@ -64,7 +66,7 @@
 - [ ] AI can automatically fix failed Pipelines
 - [ ] Complete AI workflow monitoring and cost controls in place
 
-**Scoring**: 0-4 → Level 1-2 ｜ 5-8 → Level 3-4 ｜ 9-11 → Level 5 ｜ 12-15 → Level 6-7 ｜ 16-18 → Level 8
+**Scoring ranges** → see `CLAUDE.md` Scoring Reference
 
 ---
 

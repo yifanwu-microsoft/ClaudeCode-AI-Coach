@@ -85,7 +85,7 @@ function Get-SourcePaths {
         ClaudeMd = Join-Path $RepoRoot "coach" "CLAUDE.md"
         Progress = Join-Path $RepoRoot "coach" "PROGRESS.md"
         Guide    = Join-Path $RepoRoot "coach" "ai-engineering-leveling-guide.md"
-        Commands = Join-Path $RepoRoot "coach\commands"
+        Commands = Join-Path $RepoRoot "coach" "commands"
     }
 }
 
@@ -118,7 +118,7 @@ function Install-CoachSystem {
                 Copy-Item $file.FullName $coachDir -Force
             }
             # Verify critical command files were copied
-            $criticalCommands = @("coach\assess.md", "coach\practice.md", "coach\progress-report.md", "coach\review-prompt.md")
+            $criticalCommands = @("coach/assess.md", "coach/practice.md", "coach/progress-report.md", "coach/review-prompt.md")
             $verifyFailed = $false
             foreach ($cmd in $criticalCommands) {
                 if (-not (Test-Path (Join-Path $commandsDir $cmd))) {
