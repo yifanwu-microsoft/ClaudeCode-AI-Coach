@@ -7,7 +7,7 @@ This is the development repository for the **AI Engineering Coach System**, a Cl
 ```
 coach/                  # Distributable source files (installed to ~/.claude/)
 ├── CLAUDE.md           #   Coach system prompt (custom instructions)
-├── PROGRESS.md         #   User progress template
+├── PROGRESS.template.md #  User progress template (installed as ~/.claude/PROGRESS.md)
 ├── ai-engineering-leveling-guide.md  # Level 1-8 definitions
 └── commands/coach/     #   Slash commands (/coach:assess, /coach:practice, etc.)
 scripts/                # Install/uninstall scripts

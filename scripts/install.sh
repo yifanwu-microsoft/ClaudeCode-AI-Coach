@@ -57,8 +57,8 @@ preflight_check() {
         has_error=1
     fi
 
-    if [ ! -f "$REPO_ROOT/coach/PROGRESS.md" ]; then
-        err "PROGRESS.md not found in repo root ($REPO_ROOT)"
+    if [ ! -f "$REPO_ROOT/coach/PROGRESS.template.md" ]; then
+        err "PROGRESS.template.md not found in repo root ($REPO_ROOT)"
         has_error=1
     fi
 
@@ -77,7 +77,7 @@ preflight_check() {
 
 set_source_paths() {
     CLAUDE_MD_SOURCE="$REPO_ROOT/coach/CLAUDE.md"
-    PROGRESS_SOURCE="$REPO_ROOT/coach/PROGRESS.md"
+    PROGRESS_SOURCE="$REPO_ROOT/coach/PROGRESS.template.md"
     GUIDE_SOURCE="$REPO_ROOT/coach/ai-engineering-leveling-guide.md"
     COMMANDS_SOURCE="$REPO_ROOT/coach/commands"
 }

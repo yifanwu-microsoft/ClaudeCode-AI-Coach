@@ -33,8 +33,8 @@ function Test-Preflight {
         $hasError = $true
     }
 
-    if (-not (Test-Path (Join-Path $RepoRoot "coach" "PROGRESS.md"))) {
-        Write-Err "PROGRESS.md not found in repo root ($RepoRoot)"
+    if (-not (Test-Path (Join-Path $RepoRoot "coach" "PROGRESS.template.md"))) {
+        Write-Err "PROGRESS.template.md not found in repo root ($RepoRoot)"
         $hasError = $true
     }
 
@@ -83,7 +83,7 @@ function Test-PostInstall {
 function Get-SourcePaths {
     return @{
         ClaudeMd = Join-Path $RepoRoot "coach" "CLAUDE.md"
-        Progress = Join-Path $RepoRoot "coach" "PROGRESS.md"
+        Progress = Join-Path $RepoRoot "coach" "PROGRESS.template.md"
         Guide    = Join-Path $RepoRoot "coach" "ai-engineering-leveling-guide.md"
         Commands = Join-Path $RepoRoot "coach" "commands"
     }
@@ -193,7 +193,7 @@ function Install-CoachSystem {
         else {
             $progressSource = $paths.Progress
             if (-not (Test-Path $progressSource)) {
-                $progressSource = Join-Path $RepoRoot "coach" "PROGRESS.md"
+                $progressSource = Join-Path $RepoRoot "coach" "PROGRESS.template.md"
             }
             Copy-Item $progressSource $ClaudeHome -Force
             Write-Info "PROGRESS.md created (initial state)"

@@ -283,7 +283,7 @@ Then run `/coach:assess` — it will quickly determine your level based on your 
 |------|-----|
 | **Add commands** | Create `.md` files in `coach/commands/coach/`, then reinstall |
 | **Modify coaching rules** | Edit `coach/CLAUDE.md`, then reinstall. Marker-block merging keeps your other `~/.claude/CLAUDE.md` rules intact |
-| **Adjust progress template** | Edit `coach/PROGRESS.md` (only affects new installs — existing progress is preserved) |
+| **Adjust progress template** | Edit `coach/PROGRESS.template.md` (only affects new installs — existing progress is preserved) |
 
 ## 📁 Project Structure
 
@@ -291,7 +291,7 @@ Then run `/coach:assess` — it will quickly determine your level based on your 
 ClaudeCode-AI-Coach/
 ├── coach/                               ← Distributable source (installed to ~/.claude/)
 │   ├── CLAUDE.md                        ← Coaching system rules & behavior
-│   ├── PROGRESS.md                      ← Progress tracker template
+│   ├── PROGRESS.template.md              ← Progress tracker template
 │   ├── ai-engineering-leveling-guide.md ← Complete Level 1-8 guide (1200+ lines)
 │   ├── achievement-triggers.md          ← Achievement definitions & unlock conditions
 │   └── commands/coach/                  ← Slash commands

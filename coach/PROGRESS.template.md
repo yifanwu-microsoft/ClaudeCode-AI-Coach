@@ -1,4 +1,4 @@
-# PROGRESS.md — AI Engineering Skills Progress Tracker
+# PROGRESS.template.md — AI Engineering Skills Progress Tracker (Template)
 
 ## Overall Assessment
 
