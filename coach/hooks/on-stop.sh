@@ -44,12 +44,6 @@ tier2_llm_coaching() {
   local activity
   activity=$(detect_recent_activity "." 2>/dev/null || echo "general")
 
-  # Build signals summary
-  local signals_summary=""
-  if [ -x "$ENGINE_DIR/assess.sh" ]; then
-    signals_summary=$(bash "$ENGINE_DIR/assess.sh" "." "--json" 2>/dev/null || echo "{}")
-  fi
-
   # Read and fill the prompt template
   local prompt_template="$ENGINE_DIR/tier2-prompt.md"
   if [ ! -f "$prompt_template" ]; then
@@ -62,7 +56,6 @@ tier2_llm_coaching() {
   prompt="${prompt//\{\{TARGET_LEVEL\}\}/$target_level}"
   prompt="${prompt//\{\{TECH_STACK\}\}/$tech_stack}"
   prompt="${prompt//\{\{ACTIVITY_TYPE\}\}/$activity}"
-  prompt="${prompt//\{\{SIGNALS_SUMMARY\}\}/$signals_summary}"
 
   # Make the dedicated coaching call with timeout
   local result

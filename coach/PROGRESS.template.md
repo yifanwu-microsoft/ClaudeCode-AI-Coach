@@ -5,6 +5,7 @@
 - **Current Level**: Pending Assessment
 - **Target Level**: —
 - **Assessment Date**: —
+- **Assessment Method**: Question-Based
 
 ## Level 1-2 Sub-skills Status (AI-Assisted Programming Basics)
 

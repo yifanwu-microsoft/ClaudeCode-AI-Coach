@@ -346,8 +346,7 @@ ClaudeCode-AI-Coach/
 │   │   ├── review-prompt.md             ← /coach:review-prompt
 │   │   └── uninstall.md                 ← /coach:uninstall
 │   ├── engine/                          ← Deterministic coaching engine (no LLM needed)
-│   │   ├── coach-cli.sh                 ← Standalone CLI: assess / tip / progress / practice
-│   │   ├── assess.sh                    ← Weighted multi-signal project scanner
+│   │   ├── coach-cli.sh                 ← Standalone CLI: tip / progress / practice
 │   │   ├── tips.sh                      ← Context-aware tip selector
 │   │   ├── progress.sh                  ← PROGRESS.md auto-updater
 │   │   ├── tier2-prompt.md              ← Dedicated LLM coaching prompt template

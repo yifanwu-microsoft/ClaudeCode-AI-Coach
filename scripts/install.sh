@@ -77,6 +77,54 @@ preflight_check() {
         exit 1
     fi
 
+    # CHECK: PROGRESS.template.md must have "Pending Assessment" as default
+    if grep -q "Current Level.*Pending Assessment" "$REPO_ROOT/coach/PROGRESS.template.md"; then
+        info "PROGRESS.template.md has correct default (Pending Assessment)"
+    else
+        err "PROGRESS.template.md MUST have 'Current Level: Pending Assessment' as default"
+        err "This is required to trigger initial assessment on first install."
+        err "Fix: Update coach/PROGRESS.template.md with 'Current Level: Pending Assessment'"
+        has_error=1
+    fi
+
+    # CHECK: Verify command files have valid content (description on first line)
+    if [ -d "$REPO_ROOT/coach/commands/coach" ]; then
+        for cmd_file in "$REPO_ROOT/coach/commands/coach"/*.md; do
+            if [ -f "$cmd_file" ]; then
+                # Check that file has content (first line should be description)
+                if [ ! -s "$cmd_file" ]; then
+                    err "Command file is empty: $cmd_file"
+                    has_error=1
+                fi
+            fi
+        done
+        info "Command files content validated"
+    fi
+
+    # CHECK: Verify shell scripts have valid syntax
+    if [ -d "$REPO_ROOT/coach/engine" ]; then
+        for script in "$REPO_ROOT/coach/engine"/*.sh; do
+            if [ -f "$script" ] && [ -s "$script" ]; then
+                if ! bash -n "$script" 2>/dev/null; then
+                    err "Shell script syntax error: $script"
+                    has_error=1
+                fi
+            fi
+        done
+    fi
+    if [ -f "$REPO_ROOT/coach/hooks/on-stop.sh" ]; then
+        if ! bash -n "$REPO_ROOT/coach/hooks/on-stop.sh" 2>/dev/null; then
+            err "Shell script syntax error: coach/hooks/on-stop.sh"
+            has_error=1
+        fi
+    fi
+    info "Shell scripts syntax validated"
+
+    if [ "$has_error" -eq 1 ]; then
+        err "Pre-flight check failed. Please fix the errors above."
+        exit 1
+    fi
+
     info "Pre-flight check passed"
 }
 
@@ -99,11 +147,29 @@ verify_install() {
     if [ ! -f "$CLAUDE_HOME/CLAUDE.md" ]; then
         err "Verification failed: CLAUDE.md not found in $CLAUDE_HOME"
         has_error=1
+    else
+        # CHECK: Verify CLAUDE.md has valid marker block structure
+        if grep -q "AI-COACH-START" "$CLAUDE_HOME/CLAUDE.md" && \
+           grep -q "AI-COACH-END" "$CLAUDE_HOME/CLAUDE.md"; then
+            info "CLAUDE.md marker block integrity verified"
+        else
+            err "Verification failed: CLAUDE.md missing AI-COACH markers"
+            has_error=1
+        fi
     fi
 
     if [ ! -f "$CLAUDE_HOME/PROGRESS.md" ]; then
         err "Verification failed: PROGRESS.md not found in $CLAUDE_HOME"
         has_error=1
+    else
+        # CHECK: Verify PROGRESS.md has expected structure
+        if grep -q "Current Level" "$CLAUDE_HOME/PROGRESS.md" && \
+           grep -q "Sub-skill" "$CLAUDE_HOME/PROGRESS.md"; then
+            info "PROGRESS.md structure verified"
+        else
+            err "Verification failed: PROGRESS.md missing expected sections"
+            has_error=1
+        fi
     fi
 
     if [ ! -f "$CLAUDE_HOME/commands/coach/assess.md" ]; then
@@ -121,8 +187,21 @@ verify_install() {
         has_error=1
     fi
 
+    # CHECK: Verify settings.json is valid JSON (if exists)
+    if [ -f "$CLAUDE_HOME/settings.json" ]; then
+        if command -v jq &>/dev/null; then
+            if jq empty "$CLAUDE_HOME/settings.json" 2>/dev/null; then
+                info "settings.json is valid JSON"
+            else
+                err "Verification failed: settings.json is not valid JSON"
+                has_error=1
+            fi
+        fi
+    fi
+
     if [ "$has_error" -eq 1 ]; then
         err "Post-install verification failed. Installation may be incomplete."
+        err "Run ./scripts/uninstall.sh to clean up and try again."
         return 1
     fi
 
@@ -237,7 +316,7 @@ main() {
         mkdir -p "$engine_dest/lib" "$engine_dest/tips" "$engine_dest/state"
 
         # Copy engine scripts
-        for script in coach-cli.sh assess.sh tips.sh progress.sh tier2-prompt.md config.default.json; do
+        for script in coach-cli.sh tips.sh progress.sh tier2-prompt.md config.default.json; do
             if [ -f "$ENGINE_SOURCE/$script" ]; then
                 cp -f "$ENGINE_SOURCE/$script" "$engine_dest/$script"
             fi
@@ -250,7 +329,7 @@ main() {
         cp -f "$ENGINE_SOURCE/tips/"*.json "$engine_dest/tips/" 2>/dev/null || true
 
         # Set executable permissions
-        chmod +x "$engine_dest/coach-cli.sh" "$engine_dest/assess.sh" "$engine_dest/tips.sh" "$engine_dest/progress.sh" 2>/dev/null || true
+        chmod +x "$engine_dest/coach-cli.sh" "$engine_dest/tips.sh" "$engine_dest/progress.sh" 2>/dev/null || true
 
         # Create default config if not exists
         if [ ! -f "$engine_dest/config.json" ]; then
@@ -268,20 +347,20 @@ main() {
         cp -f "$HOOKS_SOURCE/on-stop.sh" "$hooks_dest/on-stop.sh"
         chmod +x "$hooks_dest/on-stop.sh"
 
-        # Merge hooks config into settings.json
+        # Merge hooks config into settings.json (new matcher format)
         local settings_file="$CLAUDE_HOME/settings.json"
         local hook_cmd="bash $CLAUDE_HOME/coach-engine/hooks/on-stop.sh"
 
         if [ -f "$settings_file" ] && command -v jq &>/dev/null; then
-            # Check if our hook is already configured
-            if ! jq -e '.hooks.Stop[]? | select(.command | contains("on-stop.sh"))' "$settings_file" &>/dev/null; then
+            # Check if our hook is already configured (search in nested hooks array)
+            if ! jq -e '.hooks.Stop[]?.hooks[]? | select(.command | contains("on-stop.sh"))' "$settings_file" &>/dev/null; then
                 # Add our hook to existing config
                 local tmp_settings
                 tmp_settings=$(mktemp)
                 TEMP_FILES+=("$tmp_settings")
                 jq --arg cmd "$hook_cmd" '
                     .hooks = (.hooks // {}) |
-                    .hooks.Stop = ((.hooks.Stop // []) + [{"matcher": "", "command": $cmd}])
+                    .hooks.Stop = ((.hooks.Stop // []) + [{"matcher": "", "hooks": [{"type": "command", "command": $cmd}]}])
                 ' "$settings_file" > "$tmp_settings"
                 mv "$tmp_settings" "$settings_file"
                 info "Coach hook added to existing settings.json"
@@ -291,7 +370,7 @@ main() {
         elif [ -f "$settings_file" ]; then
             warn "jq not found — cannot auto-merge hooks config into settings.json"
             warn "Manually add to $settings_file:"
-            warn "  \"hooks\": { \"Stop\": [{ \"command\": \"$hook_cmd\" }] }"
+            warn "  \"hooks\": { \"Stop\": [{ \"hooks\": [{ \"type\": \"command\", \"command\": \"$hook_cmd\" }] }] }"
         else
             # Create new settings.json with hook
             cat > "$settings_file" << EOF
@@ -300,7 +379,12 @@ main() {
     "Stop": [
       {
         "matcher": "",
-        "command": "$hook_cmd"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$hook_cmd"
+          }
+        ]
       }
     ]
   }

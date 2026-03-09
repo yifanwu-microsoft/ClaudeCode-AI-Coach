@@ -315,8 +315,7 @@ ClaudeCode-AI-Coach/
 │   │   ├── review-prompt.md             ← /coach:review-prompt
 │   │   └── uninstall.md                 ← /coach:uninstall
 │   ├── engine/                          ← 确定性 coaching 引擎（无需 LLM）
-│   │   ├── coach-cli.sh                 ← 独立 CLI：assess / tip / progress / practice
-│   │   ├── assess.sh                    ← 加权多信号项目扫描器
+│   │   ├── coach-cli.sh                 ← 独立 CLI：tip / progress / practice
 │   │   ├── tips.sh                      ← 上下文感知建议选择器
 │   │   ├── progress.sh                  ← PROGRESS.md 自动更新器
 │   │   ├── tier2-prompt.md              ← 独立 LLM coaching prompt 模板

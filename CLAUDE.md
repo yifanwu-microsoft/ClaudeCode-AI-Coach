@@ -13,7 +13,6 @@ coach/                  # Distributable source files (installed to ~/.claude/)
 ├── commands/coach/     #   Slash commands (/coach:assess, /coach:practice, etc.)
 ├── engine/             #   Deterministic coaching engine (no LLM needed)
 │   ├── coach-cli.sh    #     Standalone CLI entry point
-│   ├── assess.sh       #     Weighted multi-signal project scanner
 │   ├── tips.sh         #     Context-aware tip selector
 │   ├── progress.sh     #     PROGRESS.md auto-updater
 │   ├── lib/            #     Shared utilities

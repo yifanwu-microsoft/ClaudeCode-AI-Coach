@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
-# progress.sh — Automatic PROGRESS.md updater based on objective signals
-# Compares assess.sh scan results with current PROGRESS.md state
-# and updates sub-skill statuses + milestone log.
+# progress.sh — Automatic PROGRESS.md updater
+# Checks project environment signals and updates sub-skill statuses + milestone log.
 #
 # Usage: ./progress.sh [project_dir]
 

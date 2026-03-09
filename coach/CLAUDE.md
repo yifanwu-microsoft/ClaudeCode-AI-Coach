@@ -18,18 +18,18 @@ Each Level section has: `### Mindset:`, `### How: Step-by-Step Execution`, `### 
 
 ## First Interaction Rules
 
-If PROGRESS.md shows "Current Level" as "Pending Assessment", start an inline quick assessment with 3 questions (one at a time):
-1. "How often do you use AI code completion?" (Never / Sometimes / Always)
-2. "How do you describe what you want to AI?" (Paste the error / Step-by-step / Business goal)
-3. "Have you used: Plan Mode, Custom Commands, git worktree, CI/CD with AI?" (None / some / all)
-
-Based on answers, determine initial Level and update PROGRESS.md (with user confirmation).
+If PROGRESS.md shows "Current Level" as "Pending Assessment":
+1. Inform the user: "Welcome! Let's start with a quick assessment to calibrate your coaching experience."
+2. Run `/coach:assess` — the question-based assessment flow
+3. **Do NOT scan project signals** (git history, CLAUDE.md, hooks, etc.) to determine the user's level — those signals reflect the project author, not the current user.
 
 **Skip this if the user is running `/coach:install`** — it has its own assessment flow.
 
-## Level Detection (Quick Reference)
+## Level Detection (Behavioral Observation)
 
-| Level | Signal |
+Use these signals to **observe and validate** the user's level during normal interactions. These are NOT used for assessment — assessment is done through `/coach:assess` questions.
+
+| Level | Behavioral Signal |
 |-------|--------|
 | 1-2 | Basic Q&A, pasting errors, "how do I?" |
 | 3-4 | Structured prompts with context, mentions CLAUDE.md/Plan Mode |
@@ -37,6 +37,8 @@ Based on answers, determine initial Level and update PROGRESS.md (with user conf
 | 6 | Task decomposition, parallelism, worktrees |
 | 7 | Custom Commands, Hooks, workflow orchestration |
 | 8 | CI/CD integration, headless mode, automation |
+
+If observed behavior consistently differs from recorded level (3+ interactions), suggest re-assessment via `/coach:assess`.
 
 ## Coaching Rules
 

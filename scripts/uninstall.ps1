@@ -1,9 +1,5 @@
 # AI Coach System Uninstall Tool
-# Usage: .\scripts\uninstall.ps1 [-KeepProgress]
-
-param(
-    [switch]$KeepProgress
-)
+# Usage: .\scripts\uninstall.ps1
 
 $ErrorActionPreference = "Stop"
 
@@ -115,11 +111,6 @@ function Remove-Progress {
         return
     }
 
-    if ($KeepProgress) {
-        Write-Warn "Keeping PROGRESS.md (-KeepProgress flag set)"
-        return
-    }
-
     Remove-Item $progressFile -Force
     Write-Info "PROGRESS.md removed"
 }
@@ -173,8 +164,8 @@ function Test-PostUninstall {
         $hasError = $true
     }
 
-    # Check PROGRESS.md (only if not keeping)
-    if (-not $KeepProgress -and (Test-Path (Join-Path $ClaudeHome "PROGRESS.md"))) {
+    # Check PROGRESS.md
+    if (Test-Path (Join-Path $ClaudeHome "PROGRESS.md")) {
         Write-Err "Verification failed: PROGRESS.md still exists"
         $hasError = $true
     }
@@ -189,13 +180,19 @@ function Test-PostUninstall {
 }
 
 function Uninstall-CoachSystem {
+    param(
+        [switch]$Yes
+    )
+
     Write-Info "Uninstalling AI Coach System from $ClaudeHome ..."
 
-    # Confirm uninstall
-    $confirm = Read-Host "Are you sure you want to uninstall? [y/N]"
-    if ($confirm -notmatch '^[Yy]$') {
-        Write-Info "Uninstall cancelled."
-        return
+    # Confirm uninstall (skip with -Yes)
+    if (-not $Yes) {
+        $confirm = Read-Host "Are you sure you want to uninstall? [y/N]"
+        if ($confirm -notmatch '^[Yy]$') {
+            Write-Info "Uninstall cancelled."
+            return
+        }
     }
 
     # Step 1: Remove commands
@@ -204,7 +201,7 @@ function Uninstall-CoachSystem {
     # Step 2: Remove coach block from CLAUDE.md
     Remove-ClaudeBlock
 
-    # Step 3: Remove PROGRESS.md (unless -KeepProgress)
+    # Step 3: Remove PROGRESS.md
     Remove-Progress
 
     # Step 4: Remove guide
@@ -218,9 +215,12 @@ function Uninstall-CoachSystem {
 
     Write-Host ""
     Write-Info "Uninstall complete! AI Coach has been removed."
-    if ($KeepProgress) {
-        Write-Warn "PROGRESS.md was kept at $ClaudeHome\PROGRESS.md"
-    }
 }
 
-Uninstall-CoachSystem
+# Parse -y/--yes flag
+$autoYes = $args -contains '-y' -or $args -contains '--yes'
+if ($autoYes) {
+    Uninstall-CoachSystem -Yes
+} else {
+    Uninstall-CoachSystem
+}

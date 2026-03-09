@@ -1,8 +1,16 @@
 #!/usr/bin/env bash
 # uninstall.sh — Remove AI Coach System from ~/.claude/
-# Usage: ./scripts/uninstall.sh [--keep-progress]
+# Usage: ./scripts/uninstall.sh
 
 set -euo pipefail
+
+# Parse flags
+AUTO_YES=false
+for arg in "$@"; do
+    case "$arg" in
+        -y|--yes) AUTO_YES=true ;;
+    esac
+done
 
 CLAUDE_HOME="$HOME/.claude"
 
@@ -18,24 +26,6 @@ COACH_COMMANDS=(
     "coach/review-prompt.md"
     "coach/i18n.md"
 )
-
-# Default options
-KEEP_PROGRESS=0
-
-# Parse arguments
-while [[ $# -gt 0 ]]; do
-    case "$1" in
-        --keep-progress)
-            KEEP_PROGRESS=1
-            shift
-            ;;
-        *)
-            echo "Unknown option: $1"
-            echo "Usage: ./scripts/uninstall.sh [--keep-progress]"
-            exit 1
-            ;;
-    esac
-done
 
 # Color output
 GREEN='\033[0;32m'
@@ -141,11 +131,6 @@ remove_progress() {
         return
     fi
 
-    if [ "$KEEP_PROGRESS" -eq 1 ]; then
-        warn "Keeping PROGRESS.md (--keep-progress flag set)"
-        return
-    fi
-
     rm -f "$progress_file"
     info "PROGRESS.md removed"
 }
@@ -195,11 +180,15 @@ remove_hooks() {
         return
     fi
 
-    # Remove our hook entries
-    if jq -e '.hooks.Stop[]? | select(.command | contains("on-stop.sh"))' "$settings_file" &>/dev/null; then
+    # Remove our hook entries (supports both old and new format)
+    if jq -e '(.hooks.Stop[]?.hooks[]? | select(.command | contains("on-stop.sh"))) // (.hooks.Stop[]? | select(.command? | contains("on-stop.sh")))' "$settings_file" &>/dev/null; then
         local tmp_settings
         tmp_settings=$(mktemp)
-        jq '.hooks.Stop = [.hooks.Stop[]? | select(.command | contains("on-stop.sh") | not)]
+        jq '.hooks.Stop = [.hooks.Stop[]? | select(
+                ((.hooks // [])[] | .command | contains("on-stop.sh")) | not
+            ) | select(
+                (.command? // "" | contains("on-stop.sh")) | not
+            )]
             | if (.hooks.Stop | length) == 0 then del(.hooks.Stop) else . end
             | if (.hooks | length) == 0 then del(.hooks) else . end' \
             "$settings_file" > "$tmp_settings"
@@ -247,6 +236,14 @@ verify_uninstall() {
         if grep -q "AI-COACH-START" "$CLAUDE_HOME/CLAUDE.md"; then
             err "Verification failed: AI Coach block still present in CLAUDE.md"
             has_error=1
+        else
+            # CHECK: Verify CLAUDE.md still has content after removal
+            if [ -s "$CLAUDE_HOME/CLAUDE.md" ]; then
+                info "CLAUDE.md cleaned successfully (user content preserved)"
+            else
+                err "Verification failed: CLAUDE.md is empty after cleanup"
+                has_error=1
+            fi
         fi
     fi
 
@@ -262,10 +259,22 @@ verify_uninstall() {
         has_error=1
     fi
 
-    # Check PROGRESS.md (only if not keeping)
-    if [ "$KEEP_PROGRESS" -eq 0 ] && [ -f "$CLAUDE_HOME/PROGRESS.md" ]; then
+    # Check PROGRESS.md
+    if [ -f "$CLAUDE_HOME/PROGRESS.md" ]; then
         err "Verification failed: PROGRESS.md still exists"
         has_error=1
+    fi
+
+    # CHECK: Verify settings.json is valid JSON after hook removal (if it exists)
+    if [ -f "$CLAUDE_HOME/settings.json" ]; then
+        if command -v jq &>/dev/null; then
+            if jq empty "$CLAUDE_HOME/settings.json" 2>/dev/null; then
+                info "settings.json is valid JSON after hook removal"
+            else
+                err "Verification failed: settings.json is not valid JSON after cleanup"
+                has_error=1
+            fi
+        fi
     fi
 
     if [ "$has_error" -eq 1 ]; then
@@ -279,12 +288,14 @@ verify_uninstall() {
 main() {
     info "Uninstalling AI Coach System from $CLAUDE_HOME ..."
 
-    # Confirm uninstall
-    printf "Are you sure you want to uninstall? [y/N]: "
-    read -r confirm
-    if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
-        info "Uninstall cancelled."
-        exit 0
+    # Confirm uninstall (skip with --yes/-y)
+    if [ "$AUTO_YES" = false ]; then
+        printf "Are you sure you want to uninstall? [y/N]: "
+        read -r confirm
+        if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
+            info "Uninstall cancelled."
+            exit 0
+        fi
     fi
 
     # Step 1: Remove commands
@@ -293,7 +304,7 @@ main() {
     # Step 2: Remove coach block from CLAUDE.md
     remove_claude_block
 
-    # Step 3: Remove PROGRESS.md (unless --keep-progress)
+    # Step 3: Remove PROGRESS.md
     remove_progress
 
     # Step 4: Remove guide
@@ -313,9 +324,6 @@ main() {
 
     echo ""
     info "✅ Uninstall complete! AI Coach has been removed."
-    if [ "$KEEP_PROGRESS" -eq 1 ]; then
-        warn "PROGRESS.md was kept at $CLAUDE_HOME/PROGRESS.md"
-    fi
 }
 
 main

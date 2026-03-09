@@ -3,7 +3,7 @@
 # Standalone coaching tool with no LLM dependency.
 #
 # Usage:
-#   coach-cli assess    — Scan project and detect level
+#   coach-cli assess    — Run interactive assessment (via /coach:assess)
 #   coach-cli tip       — Get a coaching tip for your level
 #   coach-cli progress  — Show/update progress
 #   coach-cli practice  — Get practice suggestions
@@ -19,7 +19,12 @@ VERSION="1.0.0"
 # ─── Commands ────────────────────────────────────────────
 
 cmd_assess() {
-  bash "$SCRIPT_DIR/assess.sh" "${1:-.}" "${2:-}"
+  echo ""
+  echo -e "  ${BOLD}Assessment${NC}"
+  echo ""
+  echo "  The assessment is now question-based and runs interactively."
+  echo "  Use /coach:assess in Claude Code for a full assessment."
+  echo ""
 }
 
 cmd_tip() {
@@ -117,7 +122,7 @@ cmd_help() {
   echo "  Usage: coach-cli <command> [options]"
   echo ""
   echo "  Commands:"
-  echo "    assess    Scan project and detect AI engineering level"
+  echo "    assess    Run interactive assessment (use /coach:assess in Claude Code)"
   echo "    tip       Get a coaching tip for your level"
   echo "    progress  Show progress and suggest updates"
   echo "    practice  Get practice suggestions for your target level"
@@ -125,8 +130,7 @@ cmd_help() {
   echo "    help      Show this help message"
   echo ""
   echo "  Examples:"
-  echo "    coach-cli assess              # Scan current directory"
-  echo "    coach-cli assess /path/to/project"
+  echo "    coach-cli assess              # Start interactive assessment"
   echo "    coach-cli tip                 # Get a context-aware tip"
   echo "    coach-cli progress            # Check mode (dry run)"
   echo "    coach-cli progress . apply    # Apply assessment date update"
