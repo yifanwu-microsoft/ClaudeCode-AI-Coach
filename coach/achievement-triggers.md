@@ -5,7 +5,7 @@ Achievements in PROGRESS.md unlock automatically when the coach detects matching
 ## Unlocking Rules
 1. Change status from ⬜ to ✅ (no user confirmation needed)
 2. Celebrate inline: `🏅 Achievement unlocked: [name]! [one sentence]`
-3. Append after coaching assessment — do NOT interrupt the main response
+3. Append in a clearly separated section after the main response (use `---` separator)
 
 ## Trigger Definitions
 
