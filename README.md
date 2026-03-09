@@ -54,6 +54,10 @@ Install once, then just use Claude Code normally. The coach watches how you inte
 ⚠️ You have 5 agents running simultaneously — that's hard to manage. Start with 2-3 and scale up as you build confidence.
 ```
 
+**Here's what it looks like in practice:**
+
+![AI Coach Examples](images/AI%20Coach%20examples.png)
+
 ### Core Capabilities
 
 | Capability | Description |
