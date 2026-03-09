@@ -24,7 +24,7 @@ Output a scan results table with: Check Item | Result (✅/❌) | Corresponding 
 
 Score each item 0–2 (0 = not met, 1 = partially, 2 = fully met), combining objective signals from Step 2:
 
-**For each dimension, reference the corresponding `### Done When: Acceptance Criteria` section in `ai-engineering-leveling-guide.md` for precise scoring benchmarks.**
+**For each dimension, reference the corresponding `### Done When: Acceptance Criteria` section in `ai-engineering-leveling-guide.md` for precise scoring benchmarks. Also check `🎯 Behavioral signals` to supplement quantitative criteria with qualitative behavioral indicators.**
 
 For Level definitions and skill dimensions, see **CLAUDE.md** — Level Detection Rules + Scoring Reference. Key points:
 - **Scoring range**: 0-4 → L1-2, 5-8 → L3-4, 9-11 → L5, 12-15 → L6-7, 16-18 → L8
@@ -35,6 +35,7 @@ For Level definitions and skill dimensions, see **CLAUDE.md** — Level Detectio
 1. **Compare with history**: Note improvements, stagnation, and areas needing breakthrough vs. PROGRESS.md
 2. **Cross-validate**: If scan results contradict self-assessment, gently point out and ask for context
 3. **Spot-check passed skills** (anti-degradation): For 🟢 skills, check 1-2 degradation-prone items (e.g., is CLAUDE.md still current? Are recent prompts still intent-driven?)
+4. **Stuck detection**: If a sub-skill has been 🟡 for 3+ assessments, reference the `### Stuck? Diagnosis Checklist` for that Level and include the most relevant diagnosis in recommendations
 4. **Adjust detail level**: L1-2 users see L1-4 details only; L3-5 see current + next Level; L6+ see full details
 
 ### Step 5: Output Results

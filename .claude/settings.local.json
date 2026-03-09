@@ -7,7 +7,16 @@
       "Bash(powershell -ExecutionPolicy Bypass -File \".\\\\scripts\\\\sync.ps1\" -Direction pull)",
       "Bash(./scripts/sync.sh push:*)",
       "Bash(chmod +x:*)",
-      "Bash(./scripts/uninstall.sh:*)"
+      "Bash(./scripts/uninstall.sh:*)",
+      "Bash(git worktree:*)",
+      "Bash(git:*)",
+      "Bash(yes:*)",
+      "WebSearch",
+      "WebFetch(domain:platform.minimaxi.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(brew install:*)",
+      "Bash(pandoc:*)",
+      "Bash(gh:*)"
     ]
   }
 }

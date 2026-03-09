@@ -53,7 +53,7 @@ Execute the selected mode interactively. Key principles:
 - **Wait for user input** before proceeding to the next step
 - **Give specific feedback** — not "good job" but "your prompt included constraints (good!) but missed the performance target"
 - **Use the user's actual project** whenever possible
-- **Reference `ai-engineering-leveling-guide.md`** — look up `### Practice: Exercises` for inspiration, `### Anti-patterns: Common Pitfalls` to counter common mistakes, and `### Done When: Acceptance Criteria` to align with graduation requirements
+- **Reference `ai-engineering-leveling-guide.md`** — look up `### Practice: Exercises` for inspiration, `### Anti-patterns: Common Pitfalls` to counter common mistakes, `### Done When: Acceptance Criteria` to align with graduation requirements, `### Stuck? Diagnosis Checklist` to identify and address blockers, and `### Mindset:` to help with the mental shift required at each Level
 
 ### Step 4: Debrief
 
