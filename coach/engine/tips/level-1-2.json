@@ -1,0 +1,103 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "description": "Coaching tips for Level 1-2: AI-Assisted Programming Basics"
+  },
+  "tips": [
+    {
+      "id": "l12-dialogue-intro",
+      "level": 2,
+      "sub_skill": "Basic Dialogue",
+      "depth": "intro",
+      "activity_tags": ["general", "feature", "bugfix"],
+      "tip": "Instead of googling error messages, try pasting them directly into Claude Code and asking what went wrong.",
+      "example_before": "[Googles] 'TypeError: Cannot read property of undefined'",
+      "example_after": "I'm getting 'TypeError: Cannot read property of undefined' on line 42 of app.js. What's causing this?",
+      "tech_variants": {}
+    },
+    {
+      "id": "l12-dialogue-context",
+      "level": 2,
+      "sub_skill": "Basic Dialogue",
+      "depth": "practice",
+      "activity_tags": ["general", "feature"],
+      "tip": "When asking Claude a question, mention the file name and what you were trying to do — it helps AI give a more accurate answer.",
+      "example_before": "Why is this broken?",
+      "example_after": "In src/auth.js, the login function returns undefined instead of the user object. I was trying to add JWT auth.",
+      "tech_variants": {}
+    },
+    {
+      "id": "l12-dialogue-followup",
+      "level": 2,
+      "sub_skill": "Basic Dialogue",
+      "depth": "practice",
+      "activity_tags": ["general", "bugfix"],
+      "tip": "If AI's first answer isn't quite right, don't start over — tell it what was wrong and ask it to adjust.",
+      "example_before": "[Starts a new conversation from scratch]",
+      "example_after": "That fix handles the null case but not the empty string case. Can you also check for empty strings?",
+      "tech_variants": {}
+    },
+    {
+      "id": "l12-judgment-review",
+      "level": 2,
+      "sub_skill": "AI Code Judgment",
+      "depth": "intro",
+      "activity_tags": ["feature", "test"],
+      "tip": "Before accepting AI-generated code, read it line by line. Can you explain what each part does?",
+      "example_before": "[Accepts AI code, runs it, confused when it breaks]",
+      "example_after": "Let me read through this... line 5 uses a regex I don't understand. Can you explain what /^[a-z]+$/i matches?",
+      "tech_variants": {}
+    },
+    {
+      "id": "l12-judgment-test",
+      "level": 2,
+      "sub_skill": "AI Code Judgment",
+      "depth": "practice",
+      "activity_tags": ["feature", "test"],
+      "tip": "After AI generates code, try to think of one edge case it might have missed. Ask AI to handle it.",
+      "example_before": "[Accepts code as-is]",
+      "example_after": "What happens if the user submits an empty form? I don't see validation for empty fields.",
+      "tech_variants": {
+        "react": "What happens if the component receives null props? I don't see a null check.",
+        "python": "What happens if the input is None or an empty string? I don't see type checking.",
+        "go": "What happens if the error is non-nil? I don't see error handling for this case."
+      }
+    },
+    {
+      "id": "l12-judgment-modify",
+      "level": 2,
+      "sub_skill": "AI Code Judgment",
+      "depth": "advanced",
+      "activity_tags": ["feature", "refactor"],
+      "tip": "It's good practice to modify AI code to match your project's style — variable naming, error handling patterns, etc.",
+      "example_before": "[Uses AI's generic variable names like 'data', 'result', 'temp']",
+      "example_after": "I'll rename 'data' to 'userProfile' and 'result' to 'authResponse' to match our naming convention.",
+      "tech_variants": {}
+    },
+    {
+      "id": "l12-completion-habit",
+      "level": 1,
+      "sub_skill": "AI Completion Habits",
+      "depth": "intro",
+      "activity_tags": ["general", "feature"],
+      "tip": "Try typing a function signature and pausing — let AI suggest the implementation before you write it yourself.",
+      "example_before": "function validateEmail(email) { // writes entire function manually }",
+      "example_after": "function validateEmail(email) { // pause, review AI suggestion, accept or modify }",
+      "tech_variants": {
+        "python": "def validate_email(email: str) -> bool:  # pause, review AI suggestion",
+        "go": "func validateEmail(email string) bool {  // pause, review AI suggestion"
+      }
+    },
+    {
+      "id": "l12-completion-comments",
+      "level": 1,
+      "sub_skill": "AI Completion Habits",
+      "depth": "practice",
+      "activity_tags": ["general", "feature"],
+      "tip": "Write a comment describing what you want, then let AI complete the code. Comments are prompts too!",
+      "example_before": "// [starts writing implementation directly]",
+      "example_after": "// Sort users by last login date, most recent first\n// [AI suggests implementation]",
+      "tech_variants": {}
+    }
+  ]
+}

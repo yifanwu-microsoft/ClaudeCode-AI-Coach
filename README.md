@@ -75,7 +75,7 @@ Install once, then just use Claude Code normally. The coach watches how you inte
 ### Step 1 — Clone
 
 ```bash
-git clone https://github.com/anthropics/ClaudeCode-AI-Coach.git
+git clone https://github.com/yifanwu-microsoft/ClaudeCode-AI-Coach.git
 cd ClaudeCode-AI-Coach
 ```
 
@@ -122,26 +122,32 @@ for a deeper project-specific assessment at any time.
 
 ## 🔬 How It Works
 
+The coach uses a **four-tier architecture** to guarantee coaching always happens — even if the LLM skips its instructions:
+
 ```
-┌─────────────────────────────────────────────────────────┐
-│  You use Claude Code normally (write code, ask questions) │
-└──────────────────────────┬──────────────────────────────┘
-                           │
-                           ▼
-┌─────────────────────────────────────────────────────────┐
-│  Coach system (injected via CLAUDE.md) observes:         │
-│  • Your prompt patterns (how you describe tasks)         │
-│  • Your interaction style (how many rounds, edits)       │
-│  • Your project context (tech stack, file structure)     │
-└──────────────────────────┬──────────────────────────────┘
-                           │
-                           ▼
-┌─────────────────────────────────────────────────────────┐
-│  After completing your request, Claude appends:          │
-│  • Level assessment (what level this interaction was)    │
-│  • Upgrade suggestion / positive feedback / warning      │
-│  • Progress updates (achievements, sub-skill changes)    │
-└─────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────┐
+│  Tier 1: LLM Inline Coaching                             │
+│  CLAUDE.md instructions → richest feedback, not guaranteed│
+├──────────────────────────────────────────────────────────┤
+│  Tier 2: Dedicated LLM Coaching Call (Hook-triggered)    │
+│  Stop hook → claude -p → focused coaching, guaranteed     │
+├──────────────────────────────────────────────────────────┤
+│  Tier 3: Context-Aware Rules Engine (no LLM needed)      │
+│  Signal scan + activity analysis + tech-stack tips        │
+├──────────────────────────────────────────────────────────┤
+│  Tier 4: Static Tip Fallback (always works)              │
+│  Pre-written tips by level, zero dependencies             │
+└──────────────────────────────────────────────────────────┘
+```
+
+**How the tiers cascade:**
+1. Claude Code completes your request with inline coaching (Tier 1 — best case)
+2. A `Stop` hook fires automatically after every interaction
+3. The hook tries a dedicated `claude -p` coaching call (Tier 2 — high quality, guaranteed trigger)
+4. If that fails, the rules engine selects a context-aware tip (Tier 3 — no LLM needed)
+5. If that fails too, a static tip for your level is shown (Tier 4 — always works)
+
+> **Result:** Coaching is delivered every time, with quality adapting to what's available.
 | 1-2 | Occasional autocomplete/Q&A | Typing assistant |
 | 3-4 | Writing structured prompts, managing context | Junior engineer following instructions |
 | 5 | Describing business intent, reviewing AI solutions | Mid-level engineer delivering independently |
@@ -167,6 +173,9 @@ git clone → ./scripts/install.sh → auto assessment (or /coach:assess)
 | `PROGRESS.md` | Your personal progress tracker — levels, sub-skills, achievements, milestones |
 | `ai-engineering-leveling-guide.md` | The complete Level 1-8 reference guide (1200+ lines of techniques and exercises) |
 | `commands/coach/*.md` | Slash commands (`/coach:assess`, `/coach:practice`, etc.) |
+| `coach-engine/` | Deterministic coaching engine (signal scanner, tips database, progress tracker) |
+| `coach-engine/hooks/` | Stop hook for guaranteed post-interaction coaching |
+| `settings.json` | Claude Code hooks configuration (auto-merged with your existing settings) |
 
 ## 🎮 Commands Reference
 
@@ -271,35 +280,77 @@ The install script updates configs and commands but **never overwrites your PROG
 Progress is maintained independently per machine. On a new device:
 
 ```bash
-git clone https://github.com/anthropics/ClaudeCode-AI-Coach.git
+git clone https://github.com/yifanwu-microsoft/ClaudeCode-AI-Coach.git
 cd ClaudeCode-AI-Coach && ./scripts/install.sh
 ```
 
 Then run `/coach:assess` — it will quickly determine your level based on your current skills. No manual data migration needed.
 
-## 🛠️ Customization
+## 🛠️ Standalone Coach CLI
+
+The coaching engine also works as a standalone CLI tool — no Claude Code session required:
+
+```bash
+# Quick project assessment (scans for objective signals)
+~/.claude/coach-engine/coach-cli.sh assess
+
+# Get a coaching tip for your current level
+~/.claude/coach-engine/coach-cli.sh tip
+
+# Check progress and suggested updates
+~/.claude/coach-engine/coach-cli.sh progress
+
+# Get practice suggestions
+~/.claude/coach-engine/coach-cli.sh practice
+```
+
+### Coach Mode Configuration
+
+Control how coaching is delivered via `~/.claude/coach-engine/config.json`:
+
+| Mode | Behavior |
+|------|----------|
+| `"auto"` (default) | Try Tier 2 (LLM) → Tier 3 (rules) → Tier 4 (static) |
+| `"llm-only"` | Only use dedicated LLM coaching call, skip rules engine |
+| `"rules-only"` | Only use deterministic rules engine, no LLM calls |
+| `"off"` | Disable hook-based coaching entirely |
+
+## 🎨 Customization
 
 | What | How |
 |------|-----|
 | **Add commands** | Create `.md` files in `coach/commands/coach/`, then reinstall |
 | **Modify coaching rules** | Edit `coach/CLAUDE.md`, then reinstall. Marker-block merging keeps your other `~/.claude/CLAUDE.md` rules intact |
 | **Adjust progress template** | Edit `coach/PROGRESS.template.md` (only affects new installs — existing progress is preserved) |
+| **Add/edit coaching tips** | Edit JSON files in `coach/engine/tips/`, then reinstall |
+| **Customize coach mode** | Edit `~/.claude/coach-engine/config.json` directly (no reinstall needed) |
 
 ## 📁 Project Structure
 
 ```
 ClaudeCode-AI-Coach/
 ├── coach/                               ← Distributable source (installed to ~/.claude/)
-│   ├── CLAUDE.md                        ← Coaching system rules & behavior
+│   ├── CLAUDE.md                        ← Coaching system rules & behavior (~80 lines, focused)
 │   ├── PROGRESS.template.md              ← Progress tracker template
 │   ├── ai-engineering-leveling-guide.md ← Complete Level 1-8 guide (1200+ lines)
 │   ├── achievement-triggers.md          ← Achievement definitions & unlock conditions
-│   └── commands/coach/                  ← Slash commands
-│       ├── assess.md                    ← /coach:assess
-│       ├── practice.md                  ← /coach:practice
-│       ├── progress-report.md           ← /coach:progress-report
-│       ├── review-prompt.md             ← /coach:review-prompt
-│       └── uninstall.md                 ← /coach:uninstall
+│   ├── commands/coach/                  ← Slash commands
+│   │   ├── assess.md                    ← /coach:assess
+│   │   ├── practice.md                  ← /coach:practice
+│   │   ├── progress-report.md           ← /coach:progress-report
+│   │   ├── review-prompt.md             ← /coach:review-prompt
+│   │   └── uninstall.md                 ← /coach:uninstall
+│   ├── engine/                          ← Deterministic coaching engine (no LLM needed)
+│   │   ├── coach-cli.sh                 ← Standalone CLI: assess / tip / progress / practice
+│   │   ├── assess.sh                    ← Weighted multi-signal project scanner
+│   │   ├── tips.sh                      ← Context-aware tip selector
+│   │   ├── progress.sh                  ← PROGRESS.md auto-updater
+│   │   ├── tier2-prompt.md              ← Dedicated LLM coaching prompt template
+│   │   ├── lib/                         ← Shared utilities
+│   │   └── tips/                        ← Curated tips database (JSON, per level)
+│   └── hooks/                           ← Claude Code hooks
+│       ├── on-stop.sh                   ← Post-interaction coaching (4-tier fallback)
+│       └── settings.template.json       ← Hook configuration template
 ├── scripts/
 │   ├── install.sh / install.ps1         ← Install scripts (macOS/Linux/Windows)
 │   └── uninstall.sh / uninstall.ps1     ← Uninstall scripts
@@ -314,7 +365,13 @@ ClaudeCode-AI-Coach/
 <details>
 <summary><b>Does this slow down Claude Code?</b></summary>
 
-No. The coaching system adds a few lines of feedback at the end of each response. It doesn't add extra API calls or processing steps — it's just additional instructions in Claude's system prompt.
+Minimal impact. Tier 1 (inline coaching) adds a few lines to responses. Tier 2 (Stop hook) runs a quick coaching call after each interaction (~2s). You can set `coach_mode` to `"rules-only"` for near-zero overhead.
+</details>
+
+<details>
+<summary><b>Does coaching require an API key or internet access?</b></summary>
+
+No. Tier 3 (rules engine) and Tier 4 (static tips) work completely offline with no LLM. Tier 2 uses `claude -p` which requires an active Claude Code session. If it's unavailable, the engine falls back automatically.
 </details>
 
 <details>

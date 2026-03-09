@@ -6,13 +6,24 @@ This is the development repository for the **AI Engineering Coach System**, a Cl
 
 ```
 coach/                  # Distributable source files (installed to ~/.claude/)
-├── CLAUDE.md           #   Coach system prompt (custom instructions)
+├── CLAUDE.md           #   Coach system prompt (~80 lines, simplified)
 ├── PROGRESS.template.md #  User progress template (installed as ~/.claude/PROGRESS.md)
 ├── ai-engineering-leveling-guide.md  # Level 1-8 definitions
-└── commands/coach/     #   Slash commands (/coach:assess, /coach:practice, etc.)
+├── achievement-triggers.md  # Achievement unlock conditions
+├── commands/coach/     #   Slash commands (/coach:assess, /coach:practice, etc.)
+├── engine/             #   Deterministic coaching engine (no LLM needed)
+│   ├── coach-cli.sh    #     Standalone CLI entry point
+│   ├── assess.sh       #     Weighted multi-signal project scanner
+│   ├── tips.sh         #     Context-aware tip selector
+│   ├── progress.sh     #     PROGRESS.md auto-updater
+│   ├── lib/            #     Shared utilities
+│   └── tips/           #     Curated tips database (JSON per level)
+└── hooks/              #   Claude Code hooks
+    ├── on-stop.sh      #     Post-interaction coaching (4-tier fallback)
+    └── settings.template.json  # Hook config template
 scripts/                # Install/uninstall scripts
-├── install.sh          #   Deploys coach files to ~/.claude/
-├── uninstall.sh        #   Removes coach files from ~/.claude/
+├── install.sh          #   Deploys coach files + engine + hooks to ~/.claude/
+├── uninstall.sh        #   Removes all coach files from ~/.claude/
 ├── install.ps1         #   Windows install (PowerShell)
 └── uninstall.ps1       #   Windows uninstall (PowerShell)
 .claude/                # Project-level Claude Code settings (dev only)

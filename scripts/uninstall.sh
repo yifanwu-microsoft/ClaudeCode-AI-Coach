@@ -153,12 +153,69 @@ remove_progress() {
 # Remove guide file
 remove_guide() {
     local guide_file="$CLAUDE_HOME/ai-engineering-leveling-guide.md"
+    local achievement_file="$CLAUDE_HOME/achievement-triggers.md"
 
     if [ -f "$guide_file" ]; then
         rm -f "$guide_file"
         info "ai-engineering-leveling-guide.md removed"
     else
         info "No guide file found, skipping"
+    fi
+
+    if [ -f "$achievement_file" ]; then
+        rm -f "$achievement_file"
+        info "achievement-triggers.md removed"
+    fi
+}
+
+# Remove coaching engine
+remove_engine() {
+    local engine_dir="$CLAUDE_HOME/coach-engine"
+
+    if [ -d "$engine_dir" ]; then
+        rm -rf "$engine_dir"
+        info "Coaching engine removed"
+    else
+        info "No coaching engine found, skipping"
+    fi
+}
+
+# Remove coach hook from settings.json
+remove_hooks() {
+    local settings_file="$CLAUDE_HOME/settings.json"
+
+    if [ ! -f "$settings_file" ]; then
+        info "No settings.json found, skipping hook removal"
+        return
+    fi
+
+    if ! command -v jq &>/dev/null; then
+        warn "jq not found — cannot auto-remove hook from settings.json"
+        warn "Manually remove the on-stop.sh hook entry from $settings_file"
+        return
+    fi
+
+    # Remove our hook entries
+    if jq -e '.hooks.Stop[]? | select(.command | contains("on-stop.sh"))' "$settings_file" &>/dev/null; then
+        local tmp_settings
+        tmp_settings=$(mktemp)
+        jq '.hooks.Stop = [.hooks.Stop[]? | select(.command | contains("on-stop.sh") | not)]
+            | if (.hooks.Stop | length) == 0 then del(.hooks.Stop) else . end
+            | if (.hooks | length) == 0 then del(.hooks) else . end' \
+            "$settings_file" > "$tmp_settings"
+
+        # Check if settings is now empty
+        local remaining
+        remaining=$(jq 'keys | length' "$tmp_settings" 2>/dev/null || echo "0")
+        if [ "$remaining" -eq 0 ]; then
+            rm -f "$settings_file" "$tmp_settings"
+            info "settings.json was coach-only, removed entirely"
+        else
+            mv "$tmp_settings" "$settings_file"
+            info "Coach hook removed from settings.json"
+        fi
+    else
+        info "No coach hook found in settings.json, skipping"
     fi
 }
 
@@ -199,6 +256,12 @@ verify_uninstall() {
         has_error=1
     fi
 
+    # Check engine is gone
+    if [ -d "$CLAUDE_HOME/coach-engine" ]; then
+        err "Verification failed: coach-engine/ directory still exists"
+        has_error=1
+    fi
+
     # Check PROGRESS.md (only if not keeping)
     if [ "$KEEP_PROGRESS" -eq 0 ] && [ -f "$CLAUDE_HOME/PROGRESS.md" ]; then
         err "Verification failed: PROGRESS.md still exists"
@@ -236,10 +299,16 @@ main() {
     # Step 4: Remove guide
     remove_guide
 
-    # Step 5: Clean up backups
+    # Step 5: Remove coaching engine
+    remove_engine
+
+    # Step 6: Remove hooks from settings.json
+    remove_hooks
+
+    # Step 7: Clean up backups
     remove_backups
 
-    # Step 6: Verify
+    # Step 8: Verify
     verify_uninstall
 
     echo ""

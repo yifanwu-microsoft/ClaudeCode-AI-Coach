@@ -1,0 +1,100 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "description": "Coaching tips for Level 8: Automated Orchestration System"
+  },
+  "tips": [
+    {
+      "id": "l8-headless-intro",
+      "level": 8,
+      "sub_skill": "Headless Mode",
+      "depth": "intro",
+      "activity_tags": ["config", "test"],
+      "tip": "Use `claude -p` (headless mode) to batch-generate files — great for test generation, boilerplate, or migration scripts.",
+      "example_before": "Manually writing test files one by one in interactive mode",
+      "example_after": "for model in User Product Order; do\n  claude -p \"Generate comprehensive tests for the $model model\" > tests/test_${model}.py\ndone",
+      "tech_variants": {
+        "react": "claude -p 'Generate tests for all components in src/components/' > tests/components.test.tsx",
+        "python": "claude -p 'Generate pytest tests for all models in src/models/' > tests/test_models.py",
+        "go": "claude -p 'Generate table-driven tests for all handlers in internal/handlers/' > internal/handlers/handlers_test.go"
+      }
+    },
+    {
+      "id": "l8-cicd-pr-review",
+      "level": 8,
+      "sub_skill": "CI/CD PR Review",
+      "depth": "intro",
+      "activity_tags": ["config"],
+      "tip": "Set up AI-powered PR review in your CI pipeline. Every PR gets an automated first-pass review before human review.",
+      "example_before": "Human reviewers catch everything, including trivial issues that waste review time",
+      "example_after": "GitHub Action on pull_request: claude reviews diff for bugs, security issues, style violations. Human reviewers focus on architecture.",
+      "tech_variants": {}
+    },
+    {
+      "id": "l8-cicd-autofix",
+      "level": 8,
+      "sub_skill": "CI Failure Auto-fix",
+      "depth": "intro",
+      "activity_tags": ["config", "bugfix"],
+      "tip": "Configure auto-fix pipelines: when CI fails, AI creates a fix PR automatically. Human still reviews before merge.",
+      "example_before": "CI fails → developer manually investigates → fixes → pushes → waits for CI again",
+      "example_after": "CI fails → AI analyzes failure → creates fix PR with `needs-review` label → developer reviews and merges. Saves 15-30 min per failure.",
+      "tech_variants": {}
+    },
+    {
+      "id": "l8-cicd-safety",
+      "level": 8,
+      "sub_skill": "CI/CD PR Review",
+      "depth": "practice",
+      "activity_tags": ["config"],
+      "tip": "NEVER auto-merge AI-generated PRs. Always require human review. Use labels like `ai-generated` and `needs-review` for visibility.",
+      "example_before": "AI fix PR auto-merges to main branch",
+      "example_after": "AI fix PR created with labels: ai-generated, needs-review. Branch protection requires 1 human approval. Auto-merge disabled.",
+      "tech_variants": {}
+    },
+    {
+      "id": "l8-issue-triage",
+      "level": 8,
+      "sub_skill": "Issue Auto-triage",
+      "depth": "intro",
+      "activity_tags": ["config"],
+      "tip": "Use AI to auto-classify incoming issues: bug/feature/question, priority, affected component. Saves triage time at scale.",
+      "example_before": "Team manually reads every issue, assigns labels, estimates priority",
+      "example_after": "GitHub Action on issues.opened: AI reads issue, adds labels (bug/feature/question, priority, component), assigns to relevant team.",
+      "tech_variants": {}
+    },
+    {
+      "id": "l8-cost-monitoring",
+      "level": 8,
+      "sub_skill": "Cost Monitoring",
+      "depth": "intro",
+      "activity_tags": ["config", "general"],
+      "tip": "Set up cost monitoring for AI API usage. Track spend per workflow, set billing alerts, optimize expensive patterns.",
+      "example_before": "No idea how much AI API calls cost, surprised by the bill",
+      "example_after": "Dashboard tracking: $X/month on PR reviews, $Y/month on auto-fix, $Z/month on issue triage. Alert at 80% budget. Optimize the most expensive one.",
+      "tech_variants": {}
+    },
+    {
+      "id": "l8-cost-optimize",
+      "level": 8,
+      "sub_skill": "Cost Monitoring",
+      "depth": "practice",
+      "activity_tags": ["config"],
+      "tip": "Optimize AI costs: use cheaper models for simple tasks (triage, formatting), reserve expensive models for complex tasks (code review, auto-fix).",
+      "example_before": "Same expensive model for everything",
+      "example_after": "Haiku for issue triage ($0.001/issue). Sonnet for PR review ($0.02/PR). Opus for complex auto-fix ($0.10/fix). Total: 60% cost reduction.",
+      "tech_variants": {}
+    },
+    {
+      "id": "l8-metrics",
+      "level": 8,
+      "sub_skill": "Cost Monitoring",
+      "depth": "advanced",
+      "activity_tags": ["config"],
+      "tip": "Track automation metrics weekly: auto-fix success rate, PR review accuracy, triage precision. If metrics drop, adjust prompts.",
+      "example_before": "Set up automation and forget about it",
+      "example_after": "Weekly review: auto-fix success 35% (target >30% ✅), PR review false positive rate 8% (target <10% ✅), triage accuracy 92%.",
+      "tech_variants": {}
+    }
+  ]
+}

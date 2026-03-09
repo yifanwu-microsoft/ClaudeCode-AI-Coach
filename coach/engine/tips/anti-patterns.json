@@ -1,0 +1,64 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "description": "Anti-pattern detection tips — shown when bad practices are detected"
+  },
+  "tips": [
+    {
+      "id": "anti-l6-too-many-agents",
+      "level": 6,
+      "trigger": "worktree_count > 5",
+      "tip": "⚠️ You have 5+ parallel worktrees. Start with 2-3 agents — more agents means more merge conflicts and harder reviews.",
+      "fix": "Close some worktrees. Focus on 2-3 parallel streams you can effectively review.",
+      "activity_tags": ["feature"]
+    },
+    {
+      "id": "anti-l7-claudemd-too-long",
+      "level": 7,
+      "trigger": "claudemd_lines > 200",
+      "tip": "⚠️ Your CLAUDE.md is over 200 lines. Move detailed workflows to Custom Commands — keep CLAUDE.md for core rules only.",
+      "fix": "Extract step-by-step workflows into .claude/commands/ files. CLAUDE.md should be a concise reference.",
+      "activity_tags": ["config"]
+    },
+    {
+      "id": "anti-l7-no-hooks",
+      "level": 7,
+      "trigger": "has_commands AND NOT has_hooks",
+      "tip": "💡 You have Custom Commands but no Hooks configured. Add a PostToolUse hook for type-checking to catch errors automatically.",
+      "fix": "Add to .claude/settings.json: a PostToolUse hook that runs your linter or type-checker after file edits.",
+      "activity_tags": ["config"]
+    },
+    {
+      "id": "anti-l8-no-review-label",
+      "level": 8,
+      "trigger": "has_ci_ai AND NOT has_review_requirement",
+      "tip": "⚠️ AI-generated PRs must require human review. Add branch protection rules and use `needs-review` labels.",
+      "fix": "Enable branch protection: require 1+ review approvals. AI PRs should auto-add `ai-generated` and `needs-review` labels.",
+      "activity_tags": ["config"]
+    },
+    {
+      "id": "anti-l8-no-cost-monitoring",
+      "level": 8,
+      "trigger": "has_ci_ai AND NOT has_cost_monitoring",
+      "tip": "⚠️ You have AI in CI/CD but no cost monitoring. Set billing alerts before costs surprise you.",
+      "fix": "Set up billing alerts at 50%, 80%, 100% of your monthly budget. Track cost per workflow type.",
+      "activity_tags": ["config"]
+    },
+    {
+      "id": "anti-general-stale-claudemd",
+      "level": 4,
+      "trigger": "claudemd_age_days > 30",
+      "tip": "💡 Your CLAUDE.md hasn't been updated in 30+ days. Stale instructions cause AI to generate outdated code patterns.",
+      "fix": "Review CLAUDE.md: does it still reflect your current tech stack, conventions, and directory structure?",
+      "activity_tags": ["general", "config"]
+    },
+    {
+      "id": "anti-general-no-tests",
+      "level": 5,
+      "trigger": "test_ratio < 0.1",
+      "tip": "💡 Your test-to-source file ratio is very low. When delegating features to AI, always include 'with tests' in your prompt.",
+      "fix": "Add to your prompts: 'Include unit tests with >80% coverage for the new code.'",
+      "activity_tags": ["feature", "test"]
+    }
+  ]
+}

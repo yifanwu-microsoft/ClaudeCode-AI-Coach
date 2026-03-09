@@ -1,0 +1,10 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "command": "bash ~/.claude/coach-engine/hooks/on-stop.sh"
+      }
+    ]
+  }
+}

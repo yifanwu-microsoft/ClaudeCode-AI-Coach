@@ -67,6 +67,11 @@ preflight_check() {
         has_error=1
     fi
 
+    if [ ! -d "$REPO_ROOT/coach/engine" ]; then
+        err "coach/engine/ directory not found in repo root ($REPO_ROOT)"
+        has_error=1
+    fi
+
     if [ "$has_error" -eq 1 ]; then
         err "Pre-flight check failed. Aborting installation."
         exit 1
@@ -79,7 +84,10 @@ set_source_paths() {
     CLAUDE_MD_SOURCE="$REPO_ROOT/coach/CLAUDE.md"
     PROGRESS_SOURCE="$REPO_ROOT/coach/PROGRESS.template.md"
     GUIDE_SOURCE="$REPO_ROOT/coach/ai-engineering-leveling-guide.md"
+    ACHIEVEMENT_SOURCE="$REPO_ROOT/coach/achievement-triggers.md"
     COMMANDS_SOURCE="$REPO_ROOT/coach/commands"
+    ENGINE_SOURCE="$REPO_ROOT/coach/engine"
+    HOOKS_SOURCE="$REPO_ROOT/coach/hooks"
 }
 
 # Post-install verification
@@ -100,6 +108,16 @@ verify_install() {
 
     if [ ! -f "$CLAUDE_HOME/commands/coach/assess.md" ]; then
         err "Verification failed: commands/coach/assess.md not found in $CLAUDE_HOME"
+        has_error=1
+    fi
+
+    if [ ! -x "$CLAUDE_HOME/coach-engine/coach-cli.sh" ]; then
+        err "Verification failed: coach-engine/coach-cli.sh not found or not executable"
+        has_error=1
+    fi
+
+    if [ ! -x "$CLAUDE_HOME/coach-engine/hooks/on-stop.sh" ]; then
+        err "Verification failed: coach-engine/hooks/on-stop.sh not found or not executable"
         has_error=1
     fi
 
@@ -205,6 +223,93 @@ main() {
     else
         err "Guide not found at $GUIDE_SOURCE"
         exit 1
+    fi
+
+    # 5. Sync achievement triggers
+    if [ -f "$ACHIEVEMENT_SOURCE" ]; then
+        cp -f "$ACHIEVEMENT_SOURCE" "$CLAUDE_HOME/achievement-triggers.md"
+        info "Achievement triggers installed"
+    fi
+
+    # 6. Install coaching engine
+    if [ -d "$ENGINE_SOURCE" ]; then
+        local engine_dest="$CLAUDE_HOME/coach-engine"
+        mkdir -p "$engine_dest/lib" "$engine_dest/tips" "$engine_dest/state"
+
+        # Copy engine scripts
+        for script in coach-cli.sh assess.sh tips.sh progress.sh tier2-prompt.md config.default.json; do
+            if [ -f "$ENGINE_SOURCE/$script" ]; then
+                cp -f "$ENGINE_SOURCE/$script" "$engine_dest/$script"
+            fi
+        done
+
+        # Copy lib/
+        cp -f "$ENGINE_SOURCE/lib/"*.sh "$engine_dest/lib/" 2>/dev/null || true
+
+        # Copy tips database
+        cp -f "$ENGINE_SOURCE/tips/"*.json "$engine_dest/tips/" 2>/dev/null || true
+
+        # Set executable permissions
+        chmod +x "$engine_dest/coach-cli.sh" "$engine_dest/assess.sh" "$engine_dest/tips.sh" "$engine_dest/progress.sh" 2>/dev/null || true
+
+        # Create default config if not exists
+        if [ ! -f "$engine_dest/config.json" ]; then
+            cp -f "$ENGINE_SOURCE/config.default.json" "$engine_dest/config.json"
+        fi
+
+        info "Coaching engine installed"
+    fi
+
+    # 7. Install hooks
+    if [ -d "$HOOKS_SOURCE" ]; then
+        local hooks_dest="$CLAUDE_HOME/coach-engine/hooks"
+        mkdir -p "$hooks_dest"
+
+        cp -f "$HOOKS_SOURCE/on-stop.sh" "$hooks_dest/on-stop.sh"
+        chmod +x "$hooks_dest/on-stop.sh"
+
+        # Merge hooks config into settings.json
+        local settings_file="$CLAUDE_HOME/settings.json"
+        local hook_cmd="bash $CLAUDE_HOME/coach-engine/hooks/on-stop.sh"
+
+        if [ -f "$settings_file" ] && command -v jq &>/dev/null; then
+            # Check if our hook is already configured
+            if ! jq -e '.hooks.Stop[]? | select(.command | contains("on-stop.sh"))' "$settings_file" &>/dev/null; then
+                # Add our hook to existing config
+                local tmp_settings
+                tmp_settings=$(mktemp)
+                TEMP_FILES+=("$tmp_settings")
+                jq --arg cmd "$hook_cmd" '
+                    .hooks = (.hooks // {}) |
+                    .hooks.Stop = ((.hooks.Stop // []) + [{"matcher": "", "command": $cmd}])
+                ' "$settings_file" > "$tmp_settings"
+                mv "$tmp_settings" "$settings_file"
+                info "Coach hook added to existing settings.json"
+            else
+                info "Coach hook already configured in settings.json"
+            fi
+        elif [ -f "$settings_file" ]; then
+            warn "jq not found — cannot auto-merge hooks config into settings.json"
+            warn "Manually add to $settings_file:"
+            warn "  \"hooks\": { \"Stop\": [{ \"command\": \"$hook_cmd\" }] }"
+        else
+            # Create new settings.json with hook
+            cat > "$settings_file" << EOF
+{
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "command": "$hook_cmd"
+      }
+    ]
+  }
+}
+EOF
+            info "settings.json created with coach hook"
+        fi
+
+        info "Hooks installed"
     fi
 
     # Post-install verification

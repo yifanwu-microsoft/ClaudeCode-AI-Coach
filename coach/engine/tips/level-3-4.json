@@ -1,0 +1,114 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "description": "Coaching tips for Level 3-4: Prompt Engineering + Context Management"
+  },
+  "tips": [
+    {
+      "id": "l34-structured-intro",
+      "level": 3,
+      "sub_skill": "Structured Prompts",
+      "depth": "intro",
+      "activity_tags": ["general", "feature"],
+      "tip": "Structure your prompts with Context → Requirements → Acceptance criteria → Tech constraints → Examples (CRATE).",
+      "example_before": "Add a search feature",
+      "example_after": "Context: We have a product list in src/products/. Requirements: Add search by name and category. Acceptance: Results update as user types, <200ms response. Tech: Use existing Fuse.js dependency.",
+      "tech_variants": {}
+    },
+    {
+      "id": "l34-structured-constraints",
+      "level": 3,
+      "sub_skill": "Structured Prompts",
+      "depth": "practice",
+      "activity_tags": ["feature", "refactor"],
+      "tip": "Always include constraints in your prompt — file size limits, performance targets, existing patterns to follow.",
+      "example_before": "Create a data table component",
+      "example_after": "Create a data table component. Constraints: Must handle 10k+ rows (use virtualization), follow existing TableBase pattern in src/components/, support column sorting.",
+      "tech_variants": {
+        "react": "Follow existing TableBase pattern in src/components/, use react-window for virtualization.",
+        "vue": "Follow existing TableBase pattern in src/components/, use vue-virtual-scroller.",
+        "python": "Follow existing BaseModel pattern, support pagination for 10k+ records, use SQLAlchemy lazy loading."
+      }
+    },
+    {
+      "id": "l34-structured-oneshot",
+      "level": 4,
+      "sub_skill": "Structured Prompts",
+      "depth": "advanced",
+      "activity_tags": ["feature"],
+      "tip": "Aim for one-shot success: if AI needs >3 rounds to get it right, your prompt probably needs more context or clearer acceptance criteria.",
+      "example_before": "[5 rounds of back-and-forth fixing issues]",
+      "example_after": "Before starting: specify file paths, error handling strategy, test expectations, and edge cases upfront.",
+      "tech_variants": {}
+    },
+    {
+      "id": "l34-claudemd-create",
+      "level": 3,
+      "sub_skill": "CLAUDE.md Maintenance",
+      "depth": "intro",
+      "activity_tags": ["general", "config"],
+      "tip": "Create a CLAUDE.md in your project root with your tech stack, coding conventions, and directory structure.",
+      "example_before": "[No CLAUDE.md, AI guesses your project structure]",
+      "example_after": "# CLAUDE.md\n## Tech Stack: Next.js 14, TypeScript, Prisma\n## Conventions: Use server components by default\n## Structure: src/app/ (routes), src/lib/ (utilities)",
+      "tech_variants": {
+        "python": "# CLAUDE.md\n## Tech Stack: Python 3.12, FastAPI, SQLAlchemy\n## Conventions: Type hints required, async endpoints\n## Structure: src/api/ (routes), src/models/ (DB models)",
+        "go": "# CLAUDE.md\n## Tech Stack: Go 1.22, Chi router, GORM\n## Conventions: Table-driven tests, context propagation\n## Structure: cmd/ (entrypoints), internal/ (business logic)"
+      }
+    },
+    {
+      "id": "l34-claudemd-update",
+      "level": 4,
+      "sub_skill": "CLAUDE.md Maintenance",
+      "depth": "practice",
+      "activity_tags": ["config", "refactor"],
+      "tip": "Update your CLAUDE.md when you add new patterns or change conventions — stale instructions cause AI to generate outdated code.",
+      "example_before": "CLAUDE.md says 'use REST' but project migrated to GraphQL last month",
+      "example_after": "After migration: update CLAUDE.md to reflect GraphQL patterns, remove REST references, add schema location.",
+      "tech_variants": {}
+    },
+    {
+      "id": "l34-planmode-intro",
+      "level": 3,
+      "sub_skill": "Plan Mode Usage",
+      "depth": "intro",
+      "activity_tags": ["feature"],
+      "tip": "For tasks touching 3+ files, use Plan Mode first — let AI create a plan, review it, then execute.",
+      "example_before": "[Asks AI to implement directly, ends up with scattered changes across 8 files]",
+      "example_after": "Start with: 'Plan how to add user authentication — list all files that need changes and the order of changes.'",
+      "tech_variants": {}
+    },
+    {
+      "id": "l34-planmode-review",
+      "level": 4,
+      "sub_skill": "Plan Mode Usage",
+      "depth": "practice",
+      "activity_tags": ["feature", "refactor"],
+      "tip": "When reviewing AI's plan, check: Are all affected files listed? Is the change order correct? Any missing edge cases?",
+      "example_before": "[Accepts plan without reading it]",
+      "example_after": "The plan misses updating the API route types. Also, step 3 should come before step 2 because the model depends on the schema.",
+      "tech_variants": {}
+    },
+    {
+      "id": "l34-planmode-scope",
+      "level": 4,
+      "sub_skill": "Plan Mode Usage",
+      "depth": "advanced",
+      "activity_tags": ["feature"],
+      "tip": "If a plan has >10 steps, it's too big. Break the feature into smaller, independently testable chunks.",
+      "example_before": "Plan: 15 steps to add full auth system",
+      "example_after": "Chunk 1: User model + migration (3 steps). Chunk 2: Login endpoint + tests (4 steps). Chunk 3: Session middleware (3 steps).",
+      "tech_variants": {}
+    },
+    {
+      "id": "l34-core-functions",
+      "level": 3,
+      "sub_skill": "Core Functions",
+      "depth": "intro",
+      "activity_tags": ["general"],
+      "tip": "Learn the key Claude Code commands: /init (setup project), /compact (reduce context), /cost (check usage).",
+      "example_before": "[Only uses basic chat]",
+      "example_after": "Start each session with /init in a new project. Use /compact when context gets long. Check /cost periodically.",
+      "tech_variants": {}
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "description": "Coaching tips for Level 6: Multi-Agent Parallelism"
+  },
+  "tips": [
+    {
+      "id": "l6-parallel-intro",
+      "level": 6,
+      "sub_skill": "Parallel Task ID",
+      "depth": "intro",
+      "activity_tags": ["feature", "general"],
+      "tip": "Look at your current task: which parts have NO data dependency on each other? Those can run in parallel AI sessions.",
+      "example_before": "Build API → then frontend → then tests [serial, one at a time]",
+      "example_after": "API + Frontend can start in parallel (shared interface contract). Tests for each layer run in a third parallel session.",
+      "tech_variants": {}
+    },
+    {
+      "id": "l6-parallel-identify",
+      "level": 6,
+      "sub_skill": "Parallel Task ID",
+      "depth": "practice",
+      "activity_tags": ["feature"],
+      "tip": "A good parallelism test: if Task A's output doesn't change Task B's implementation, they can run in parallel.",
+      "example_before": "I'll do these one at a time to be safe",
+      "example_after": "User model + Auth middleware + Email templates — these three have no shared state, they can all start now.",
+      "tech_variants": {}
+    },
+    {
+      "id": "l6-parallel-limit",
+      "level": 6,
+      "sub_skill": "Parallel Task ID",
+      "depth": "advanced",
+      "activity_tags": ["feature"],
+      "tip": "Start with 2-3 parallel agents, not 5+. You need to be able to review all outputs. More agents = more merge conflicts.",
+      "example_before": "Let me spin up 6 agents for maximum speed",
+      "example_after": "3 agents: one for API, one for frontend components, one for test infrastructure. I can review all three without context-switching overhead.",
+      "tech_variants": {}
+    },
+    {
+      "id": "l6-worktree-intro",
+      "level": 6,
+      "sub_skill": "Git Worktree",
+      "depth": "intro",
+      "activity_tags": ["feature", "general"],
+      "tip": "Use `git worktree` to run multiple Claude Code instances on separate branches — no conflicts, easy merging.",
+      "example_before": "Switching branches back and forth, stashing changes, losing context",
+      "example_after": "git worktree add ../project-api feature/api\ngit worktree add ../project-ui feature/ui\n# Two separate directories, two Claude instances, zero conflicts",
+      "tech_variants": {}
+    },
+    {
+      "id": "l6-worktree-workflow",
+      "level": 6,
+      "sub_skill": "Git Worktree",
+      "depth": "practice",
+      "activity_tags": ["feature"],
+      "tip": "Worktree workflow: create worktree → open Claude → complete task → create PR → remove worktree. Clean and isolated.",
+      "example_before": "All work on one branch, manual conflict resolution",
+      "example_after": "git worktree add ../feat-search feature/search\ncd ../feat-search && claude  # work in isolation\ngit push && gh pr create  # PR when done\ngit worktree remove ../feat-search",
+      "tech_variants": {}
+    },
+    {
+      "id": "l6-interface-intro",
+      "level": 6,
+      "sub_skill": "Interface Contracts",
+      "depth": "intro",
+      "activity_tags": ["feature"],
+      "tip": "Before starting parallel work, define the interface contracts: API shapes, function signatures, data types that cross boundaries.",
+      "example_before": "Start frontend and API in parallel, realize they disagree on the response format",
+      "example_after": "First: define the API response type. Share it between frontend and backend. Now both can build against the same contract.",
+      "tech_variants": {
+        "react": "Define TypeScript interfaces in a shared types/ directory. Frontend and API both import from there.",
+        "python": "Define Pydantic models in a shared schemas/ module. API and client both validate against the same schema.",
+        "go": "Define Protocol Buffer or OpenAPI spec first. Generate client and server code from the same source."
+      }
+    },
+    {
+      "id": "l6-interface-test",
+      "level": 6,
+      "sub_skill": "Interface Contracts",
+      "depth": "practice",
+      "activity_tags": ["feature", "test"],
+      "tip": "Write contract tests for your shared interfaces. When parallel branches merge, contract tests catch integration mismatches immediately.",
+      "example_before": "Merge two branches, discover API returns {items: [...]} but frontend expects {data: [...]}",
+      "example_after": "Contract test: API response must match ProductListResponse type. Fails immediately if either side changes the shape.",
+      "tech_variants": {}
+    },
+    {
+      "id": "l6-management-intro",
+      "level": 6,
+      "sub_skill": "Multi-Agent Management",
+      "depth": "intro",
+      "activity_tags": ["feature"],
+      "tip": "When managing multiple agents, keep a simple tracking note: which agent is doing what, what's the status, what needs review.",
+      "example_before": "Three Claude instances open, lost track of which one is doing what",
+      "example_after": "Agent 1: API endpoints [done, needs review]\nAgent 2: React components [in progress]\nAgent 3: Test suite [blocked on Agent 1 API types]",
+      "tech_variants": {}
+    }
+  ]
+}

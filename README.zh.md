@@ -75,7 +75,7 @@
 ### Step 1 — 克隆仓库
 
 ```bash
-git clone https://github.com/anthropics/ClaudeCode-AI-Coach.git
+git clone https://github.com/yifanwu-microsoft/ClaudeCode-AI-Coach.git
 cd ClaudeCode-AI-Coach
 ```
 
@@ -122,26 +122,32 @@ chmod +x scripts/install.sh
 
 ## 🔬 工作原理
 
+教练系统使用**四层架构**来保证 coaching 一定会发生 — 即使 LLM 跳过了指令也不会遗漏：
+
 ```
-┌───────────────────────────────────────────────────────┐
-│  你正常使用 Claude Code（写代码、问问题、做需求）        │
-└────────────────────────┬──────────────────────────────┘
-                         │
-                         ▼
-┌───────────────────────────────────────────────────────┐
-│  教练系统（通过 CLAUDE.md 注入）观察：                   │
-│  • 你的 prompt 模式（你如何描述任务）                    │
-│  • 你的交互风格（几轮对话、是否修改输出）                │
-│  • 你的项目上下文（技术栈、文件结构）                    │
-└────────────────────────┬──────────────────────────────┘
-                         │
-                         ▼
-┌───────────────────────────────────────────────────────┐
-│  完成你的请求后，Claude 附加：                           │
-│  • 层级评估（本次交互属于什么层级）                      │
-│  • 升级建议 / 正面反馈 / 反模式警告                     │
-│  • 进度更新（成就解锁、子技能状态变化）                  │
-└───────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────┐
+│  Tier 1: LLM 内联 Coaching                               │
+│  CLAUDE.md 指令 → 最丰富的反馈，但不保证执行              │
+├──────────────────────────────────────────────────────────┤
+│  Tier 2: 独立 LLM Coaching 调用（Hook 触发）              │
+│  Stop hook → claude -p → 专注 coaching，保证触发          │
+├──────────────────────────────────────────────────────────┤
+│  Tier 3: 上下文感知规则引擎（无需 LLM）                   │
+│  信号扫描 + 活动分析 + 技术栈适配建议                     │
+├──────────────────────────────────────────────────────────┤
+│  Tier 4: 静态建议兜底（零依赖，永远有效）                  │
+│  按等级预写的建议，任何环境都能输出                        │
+└──────────────────────────────────────────────────────────┘
+```
+
+**层级降级流程：**
+1. Claude Code 完成你的请求并附带内联 coaching（Tier 1 — 最佳情况）
+2. `Stop` Hook 在每次交互后**自动触发**
+3. Hook 尝试独立 `claude -p` coaching 调用（Tier 2 — 高质量，保证触发）
+4. 如果失败，规则引擎选择上下文相关的建议（Tier 3 — 无需 LLM）
+5. 如果也失败，显示你等级对应的静态建议（Tier 4 — 永远有效）
+
+> **结果：** 每次都能收到 coaching，质量根据可用资源自适应。
 
 ### Level 是什么意思？
 
@@ -172,6 +178,9 @@ git clone → ./scripts/install.sh → 自动评估（或 /coach:assess）
 | `PROGRESS.md` | 你的个人进度追踪器 — 等级、子技能、成就、里程碑 |
 | `ai-engineering-leveling-guide.md` | 完整的 Level 1-8 参考指南（1200+ 行的技术和练习） |
 | `commands/coach/*.md` | 斜杠命令（`/coach:assess`、`/coach:practice` 等） |
+| `coach-engine/` | 确定性 coaching 引擎（信号扫描器、建议数据库、进度追踪器） |
+| `coach-engine/hooks/` | Stop hook，保证每次交互后都提供 coaching |
+| `settings.json` | Claude Code hooks 配置（自动合并现有设置） |
 
 ## 🎮 命令参考
 
@@ -276,7 +285,7 @@ git pull
 每台电脑的进度独立维护。在新设备上：
 
 ```bash
-git clone https://github.com/anthropics/ClaudeCode-AI-Coach.git
+git clone https://github.com/yifanwu-microsoft/ClaudeCode-AI-Coach.git
 cd ClaudeCode-AI-Coach && ./scripts/install.sh
 ```
 
@@ -295,16 +304,27 @@ cd ClaudeCode-AI-Coach && ./scripts/install.sh
 ```
 ClaudeCode-AI-Coach/
 ├── coach/                               ← 可分发源文件（安装到 ~/.claude/）
-│   ├── CLAUDE.md                        ← 教练系统规则与行为定义
+│   ├── CLAUDE.md                        ← 教练系统规则（~80 行，精简版）
 │   ├── PROGRESS.template.md              ← 进度追踪模板
 │   ├── ai-engineering-leveling-guide.md ← 完整 Level 1-8 指南（1200+ 行）
 │   ├── achievement-triggers.md          ← 成就定义与解锁条件
-│   └── commands/coach/                  ← 斜杠命令
-│       ├── assess.md                    ← /coach:assess
-│       ├── practice.md                  ← /coach:practice
-│       ├── progress-report.md           ← /coach:progress-report
-│       ├── review-prompt.md             ← /coach:review-prompt
-│       └── uninstall.md                 ← /coach:uninstall
+│   ├── commands/coach/                  ← 斜杠命令
+│   │   ├── assess.md                    ← /coach:assess
+│   │   ├── practice.md                  ← /coach:practice
+│   │   ├── progress-report.md           ← /coach:progress-report
+│   │   ├── review-prompt.md             ← /coach:review-prompt
+│   │   └── uninstall.md                 ← /coach:uninstall
+│   ├── engine/                          ← 确定性 coaching 引擎（无需 LLM）
+│   │   ├── coach-cli.sh                 ← 独立 CLI：assess / tip / progress / practice
+│   │   ├── assess.sh                    ← 加权多信号项目扫描器
+│   │   ├── tips.sh                      ← 上下文感知建议选择器
+│   │   ├── progress.sh                  ← PROGRESS.md 自动更新器
+│   │   ├── tier2-prompt.md              ← 独立 LLM coaching prompt 模板
+│   │   ├── lib/                         ← 共享工具库
+│   │   └── tips/                        ← 精选建议数据库（JSON，按等级）
+│   └── hooks/                           ← Claude Code hooks
+│       ├── on-stop.sh                   ← 交互后 coaching（四层降级）
+│       └── settings.template.json       ← Hook 配置模板
 ├── scripts/
 │   ├── install.sh / install.ps1         ← 安装脚本（macOS/Linux/Windows）
 │   └── uninstall.sh / uninstall.ps1     ← 卸载脚本

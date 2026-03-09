@@ -1,0 +1,111 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "description": "Coaching tips for Level 5: Intent-Driven Development"
+  },
+  "tips": [
+    {
+      "id": "l5-intent-intro",
+      "level": 5,
+      "sub_skill": "Intent Description",
+      "depth": "intro",
+      "activity_tags": ["feature", "general"],
+      "tip": "Describe WHAT you want and WHY — let AI decide HOW to implement it.",
+      "example_before": "Add a useState hook for search, use useEffect to debounce, filter the array with .filter()",
+      "example_after": "Users need to search through 5000+ products quickly. Results should update as they type without lag.",
+      "tech_variants": {
+        "react": "Users need to search products in real-time. The product list has 5000+ items and must stay responsive.",
+        "python": "Users need to search through 50k+ records. API response time must be <200ms with pagination.",
+        "go": "Clients need to query events by date range and category. Must handle 100+ concurrent requests."
+      }
+    },
+    {
+      "id": "l5-intent-constraints",
+      "level": 5,
+      "sub_skill": "Intent Description",
+      "depth": "practice",
+      "activity_tags": ["feature"],
+      "tip": "Add business constraints to your intent: who uses it, how many, what happens on failure, what's the performance target?",
+      "example_before": "Build a notification system",
+      "example_after": "We need to notify 10k+ users when their order ships. Notifications must arrive within 5 minutes. If delivery fails, retry 3x then alert support.",
+      "tech_variants": {}
+    },
+    {
+      "id": "l5-intent-acceptance",
+      "level": 5,
+      "sub_skill": "Intent Description",
+      "depth": "advanced",
+      "activity_tags": ["feature", "test"],
+      "tip": "Define success criteria, not implementation steps. What does 'done' look like from the user's perspective?",
+      "example_before": "Create CRUD endpoints for products with validation and error handling",
+      "example_after": "Done when: admin can create/edit/delete products via API, invalid data returns clear error messages, all operations complete <500ms, 95% test coverage.",
+      "tech_variants": {}
+    },
+    {
+      "id": "l5-delegation-intro",
+      "level": 5,
+      "sub_skill": "Feature Delegation",
+      "depth": "intro",
+      "activity_tags": ["feature"],
+      "tip": "Try delegating an entire feature to AI — frontend + API + tests — instead of building piece by piece.",
+      "example_before": "First, create the database model. [wait] Now create the API route. [wait] Now the frontend component. [wait] Now tests.",
+      "example_after": "Build a complete user profile feature: database model, API endpoints (GET/PUT), frontend form with validation, and tests. Here's the acceptance criteria...",
+      "tech_variants": {}
+    },
+    {
+      "id": "l5-delegation-review",
+      "level": 5,
+      "sub_skill": "Feature Delegation",
+      "depth": "practice",
+      "activity_tags": ["feature"],
+      "tip": "After delegating a feature, review AI's architecture decisions — not just the code. Is the data model right? Are the abstractions clean?",
+      "example_before": "[Reviews code line by line for bugs]",
+      "example_after": "The data model looks good but the API splits user profile and preferences into separate endpoints — should these be one endpoint for simplicity?",
+      "tech_variants": {}
+    },
+    {
+      "id": "l5-architecture-review",
+      "level": 5,
+      "sub_skill": "Architecture Review",
+      "depth": "intro",
+      "activity_tags": ["feature", "refactor"],
+      "tip": "Ask AI to explain its architectural choices before accepting. 'Why did you choose X over Y?'",
+      "example_before": "[Accepts whatever structure AI proposes]",
+      "example_after": "Why did you put the validation in the controller instead of the model? Our convention is to keep validation close to the data.",
+      "tech_variants": {}
+    },
+    {
+      "id": "l5-architecture-tradeoffs",
+      "level": 5,
+      "sub_skill": "Architecture Review",
+      "depth": "practice",
+      "activity_tags": ["feature", "refactor"],
+      "tip": "When AI proposes a solution, ask about trade-offs: What are the alternatives? What are we giving up with this approach?",
+      "example_before": "[Takes first solution offered]",
+      "example_after": "You suggested Redis for caching. What are the trade-offs vs. in-memory caching? Our service runs on a single node currently.",
+      "tech_variants": {}
+    },
+    {
+      "id": "l5-decomposition-intro",
+      "level": 5,
+      "sub_skill": "Task Decomposition",
+      "depth": "intro",
+      "activity_tags": ["feature"],
+      "tip": "Before starting a complex feature, ask AI to break it into independent sub-tasks with clear boundaries.",
+      "example_before": "Build the entire e-commerce checkout flow",
+      "example_after": "Break this checkout flow into sub-tasks: What can be built independently? What has dependencies? What's the suggested order?",
+      "tech_variants": {}
+    },
+    {
+      "id": "l5-decomposition-deps",
+      "level": 5,
+      "sub_skill": "Task Decomposition",
+      "depth": "practice",
+      "activity_tags": ["feature"],
+      "tip": "When decomposing tasks, identify the dependency chain. Which tasks block others? Which can start immediately?",
+      "example_before": "Tasks: 1. Database 2. API 3. Frontend 4. Tests [serial]",
+      "example_after": "Independent: DB migration, UI mockup. Depends on DB: API endpoints. Depends on API: integration tests. Parallel: unit tests for each layer.",
+      "tech_variants": {}
+    }
+  ]
+}

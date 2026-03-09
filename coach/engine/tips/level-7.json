@@ -1,0 +1,104 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "description": "Coaching tips for Level 7: Workflow Orchestration"
+  },
+  "tips": [
+    {
+      "id": "l7-commands-intro",
+      "level": 7,
+      "sub_skill": "Custom Commands",
+      "depth": "intro",
+      "activity_tags": ["general", "feature"],
+      "tip": "If you've typed the same kind of prompt 3+ times, it should be a Custom Command. Save it in .claude/commands/.",
+      "example_before": "Every time: 'Create a new React component with TypeScript, tests, and Storybook story in src/components/...'",
+      "example_after": "Create .claude/commands/new-component.md with the template. Now just type /new-component ComponentName.",
+      "tech_variants": {
+        "react": "Create /new-component for React components with TypeScript, tests, and Storybook stories.",
+        "python": "Create /new-endpoint for FastAPI routes with Pydantic models, tests, and OpenAPI docs.",
+        "go": "Create /new-handler for HTTP handlers with middleware, tests, and OpenAPI annotations."
+      }
+    },
+    {
+      "id": "l7-commands-parameterize",
+      "level": 7,
+      "sub_skill": "Custom Commands",
+      "depth": "practice",
+      "activity_tags": ["feature", "config"],
+      "tip": "Good commands are parameterized with $ARGUMENTS — they define the workflow framework, AI fills in the details.",
+      "example_before": "Command that's too specific: 'Create a UserProfile component with name, email, avatar fields'",
+      "example_after": "Command uses $ARGUMENTS: 'Create a component for $ARGUMENTS. Follow project conventions, add tests, add to barrel exports.'",
+      "tech_variants": {}
+    },
+    {
+      "id": "l7-commands-five",
+      "level": 7,
+      "sub_skill": "Custom Commands",
+      "depth": "advanced",
+      "activity_tags": ["general"],
+      "tip": "Target 5+ commands covering your daily workflows: new feature, bug fix, refactor, add tests, code review.",
+      "example_before": "Just one generic /help command",
+      "example_after": "/new-feature, /fix-bug, /add-tests, /refactor, /code-review — each with project-specific conventions baked in.",
+      "tech_variants": {}
+    },
+    {
+      "id": "l7-hooks-intro",
+      "level": 7,
+      "sub_skill": "Hooks Automated QA",
+      "depth": "intro",
+      "activity_tags": ["config", "test"],
+      "tip": "Configure Hooks to auto-run type checking or linting after AI edits files — catch errors before you even review.",
+      "example_before": "AI edits 5 files, you run tsc manually, find 3 type errors, go back to fix",
+      "example_after": "Hook in settings.json: after file edit → run tsc --noEmit. Type errors caught immediately, AI fixes them in the same session.",
+      "tech_variants": {
+        "react": "PostToolUse hook: run 'tsc --noEmit' after edits to catch TypeScript errors immediately.",
+        "python": "PostToolUse hook: run 'mypy --strict' after edits to catch type errors immediately.",
+        "go": "PostToolUse hook: run 'go vet ./...' after edits to catch issues immediately."
+      }
+    },
+    {
+      "id": "l7-hooks-selective",
+      "level": 7,
+      "sub_skill": "Hooks Automated QA",
+      "depth": "practice",
+      "activity_tags": ["config"],
+      "tip": "Don't hook on every operation — only at critical checkpoints (file write, before commit). Too many hooks slow you down.",
+      "example_before": "Hooks on every tool use: lint + test + type-check = 30 second delay on every action",
+      "example_after": "Hook only on file edits: quick type-check (<5s). Full test suite runs only before commit.",
+      "tech_variants": {}
+    },
+    {
+      "id": "l7-claudemd-workflow",
+      "level": 7,
+      "sub_skill": "CLAUDE.md Workflow Rules",
+      "depth": "intro",
+      "activity_tags": ["config", "general"],
+      "tip": "Your CLAUDE.md should include workflow rules: file creation conventions, Git commit format, testing requirements.",
+      "example_before": "CLAUDE.md only has tech stack info",
+      "example_after": "CLAUDE.md includes: 'Always create tests alongside new files. Use conventional commits. Run lint before suggesting changes are done.'",
+      "tech_variants": {}
+    },
+    {
+      "id": "l7-claudemd-compact",
+      "level": 7,
+      "sub_skill": "CLAUDE.md Workflow Rules",
+      "depth": "practice",
+      "activity_tags": ["config", "refactor"],
+      "tip": "Keep CLAUDE.md under 200 lines. If it's getting longer, move detailed workflows into Custom Commands.",
+      "example_before": "CLAUDE.md is 400 lines with detailed step-by-step instructions for every scenario",
+      "example_after": "CLAUDE.md: 150 lines of core rules. /new-feature command: detailed feature workflow. /deploy command: deployment checklist.",
+      "tech_variants": {}
+    },
+    {
+      "id": "l7-graduation-test",
+      "level": 7,
+      "sub_skill": "Custom Commands",
+      "depth": "advanced",
+      "activity_tags": ["general"],
+      "tip": "Level 7 graduation test: Can a fresh Claude instance complete a CRUD page using only your CLAUDE.md + Commands? If not, your workflow docs need work.",
+      "example_before": "New Claude instance needs 10+ rounds of clarification to build a simple feature",
+      "example_after": "New Claude instance reads CLAUDE.md, runs /new-feature 'user profile CRUD', produces working code in 1-2 rounds.",
+      "tech_variants": {}
+    }
+  ]
+}
