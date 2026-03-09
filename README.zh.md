@@ -301,7 +301,7 @@ cd ClaudeCode-AI-Coach && ./scripts/install.sh
 
 | 想做什么 | 怎么做 |
 |---------|--------|
-| **添加命令** | 在 `coach/commands/coach/` 下创建 `.md` 文件，然后重新安装 |
+| **添加命令** | 在 `coach/templates/commands/coach/` 下创建 `.md` 文件，然后重新安装 |
 | **修改教练规则** | 编辑 `coach/CLAUDE.md`，然后重新安装。标记块合并机制会保留你 `~/.claude/CLAUDE.md` 中的其他规则 |
 | **调整进度模板** | 编辑 `coach/PROGRESS.template.md`（仅影响新安装 — 现有进度会被保留） |
 
@@ -314,7 +314,7 @@ ClaudeCode-AI-Coach/
 │   ├── PROGRESS.template.md              ← 进度追踪模板
 │   ├── ai-engineering-leveling-guide.md ← 完整 Level 1-8 指南（1200+ 行）
 │   ├── achievement-triggers.md          ← 成就定义与解锁条件
-│   ├── commands/coach/                  ← 斜杠命令
+│   ├── templates/commands/coach/        ← 斜杠命令（安装前隐藏）
 │   │   ├── assess.md                    ← /coach:assess
 │   │   ├── practice.md                  ← /coach:practice
 │   │   ├── progress-report.md           ← /coach:progress-report

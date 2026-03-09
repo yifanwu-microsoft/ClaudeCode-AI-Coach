@@ -88,8 +88,8 @@ preflight_check() {
     fi
 
     # CHECK: Verify command files have valid content (description on first line)
-    if [ -d "$REPO_ROOT/coach/commands/coach" ]; then
-        for cmd_file in "$REPO_ROOT/coach/commands/coach"/*.md; do
+    if [ -d "$REPO_ROOT/coach/templates/commands/coach" ]; then
+        for cmd_file in "$REPO_ROOT/coach/templates/commands/coach"/*.md; do
             if [ -f "$cmd_file" ]; then
                 # Check that file has content (first line should be description)
                 if [ ! -s "$cmd_file" ]; then
@@ -133,7 +133,7 @@ set_source_paths() {
     PROGRESS_SOURCE="$REPO_ROOT/coach/PROGRESS.template.md"
     GUIDE_SOURCE="$REPO_ROOT/coach/ai-engineering-leveling-guide.md"
     ACHIEVEMENT_SOURCE="$REPO_ROOT/coach/achievement-triggers.md"
-    COMMANDS_SOURCE="$REPO_ROOT/coach/commands"
+    COMMANDS_SOURCE="$REPO_ROOT/coach/templates/commands"
     ENGINE_SOURCE="$REPO_ROOT/coach/engine"
     HOOKS_SOURCE="$REPO_ROOT/coach/hooks"
 }

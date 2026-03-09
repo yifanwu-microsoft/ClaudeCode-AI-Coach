@@ -330,7 +330,7 @@ Control how coaching is delivered via `~/.claude/coach-engine/config.json`:
 
 | What | How |
 |------|-----|
-| **Add commands** | Create `.md` files in `coach/commands/coach/`, then reinstall |
+| **Add commands** | Create `.md` files in `coach/templates/commands/coach/`, then reinstall |
 | **Modify coaching rules** | Edit `coach/CLAUDE.md`, then reinstall. Marker-block merging keeps your other `~/.claude/CLAUDE.md` rules intact |
 | **Adjust progress template** | Edit `coach/PROGRESS.template.md` (only affects new installs — existing progress is preserved) |
 | **Add/edit coaching tips** | Edit JSON files in `coach/engine/tips/`, then reinstall |
@@ -345,7 +345,7 @@ ClaudeCode-AI-Coach/
 │   ├── PROGRESS.template.md              ← Progress tracker template
 │   ├── ai-engineering-leveling-guide.md ← Complete Level 1-8 guide (1200+ lines)
 │   ├── achievement-triggers.md          ← Achievement definitions & unlock conditions
-│   ├── commands/coach/                  ← Slash commands
+│   ├── templates/commands/coach/        ← Slash commands (hidden until install)
 │   │   ├── assess.md                    ← /coach:assess
 │   │   ├── practice.md                  ← /coach:practice
 │   │   ├── progress-report.md           ← /coach:progress-report

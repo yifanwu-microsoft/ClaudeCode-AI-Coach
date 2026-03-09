@@ -8,7 +8,7 @@ One-click uninstall for the AI Coach system. After executing this command, unins
 3. If not in repo, prompt user to `cd` into it first
 4. Execute (with `--yes` to skip interactive prompts):
    - macOS/Linux: `chmod +x scripts/uninstall.sh && ./scripts/uninstall.sh --yes`
-   - Windows: `powershell -File scripts\uninstall.ps1 --yes`
+   - Windows: `powershell -ExecutionPolicy Bypass -File scripts/uninstall.ps1 --yes`
 
 ### Step 2: Verify
 Check that: `~/.claude/CLAUDE.md` no longer contains `<!-- AI-COACH-START -->`, coach command files are removed, `~/.claude/ai-engineering-leveling-guide.md` is deleted, and PROGRESS.md is deleted. Report errors with manual cleanup steps if verification fails.

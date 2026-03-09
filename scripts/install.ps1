@@ -1,9 +1,31 @@
 # AI Coach System Install Tool
 # Usage: .\scripts\install.ps1
+# Can also be invoked via: powershell -ExecutionPolicy Bypass -File ".\scripts\install.ps1"
+
+param([string]$RepoRoot = "")
 
 $ErrorActionPreference = "Stop"
 
-$RepoRoot = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
+# Robust RepoRoot detection - handles invocation from bash, direct PowerShell, etc.
+if ([string]::IsNullOrEmpty($RepoRoot)) {
+    # Try $MyInvocation.MyCommand.Path first (works when called directly)
+    if ($MyInvocation.MyCommand.Path) {
+        $RepoRoot = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
+    }
+    # Fallback: try $PSScriptRoot (works in some contexts)
+    elseif ($PSScriptRoot) {
+        $RepoRoot = Split-Path -Parent $PSScriptRoot
+    }
+    # Final fallback: use current directory and verify
+    else {
+        $RepoRoot = $PWD.Path
+        # If we're in scripts directory, go up one level
+        if ($RepoRoot -like "*scripts") {
+            $RepoRoot = Split-Path -Parent $RepoRoot
+        }
+    }
+}
+
 $ClaudeHome = Join-Path $env:USERPROFILE ".claude"
 
 $MarkerStart = "<!-- AI-COACH-START -->"
@@ -11,6 +33,7 @@ $MarkerEnd = "<!-- AI-COACH-END -->"
 
 # Track temp files for cleanup
 $script:TempFiles = @()
+$script:IsUpdate = $false
 
 function Write-Info { param($Msg) Write-Host "[INFO] $Msg" -ForegroundColor Green }
 function Write-Warn { param($Msg) Write-Host "[WARN] $Msg" -ForegroundColor Yellow }
@@ -27,19 +50,22 @@ function Remove-TempFiles {
 function Test-Preflight {
     $hasError = $false
 
-    if (-not (Test-Path (Join-Path $RepoRoot "coach" "CLAUDE.md"))) {
-        Write-Err "CLAUDE.md not found in repo root ($RepoRoot)"
+    Write-Info "Repo root: $RepoRoot"
+
+    $coachPath = Join-Path $RepoRoot "coach"
+    if (-not (Test-Path (Join-Path $coachPath "CLAUDE.md"))) {
+        Write-Err "CLAUDE.md not found in coach/ directory"
         Write-Err "Are you running this script from the correct repository?"
         $hasError = $true
     }
 
-    if (-not (Test-Path (Join-Path $RepoRoot "coach" "PROGRESS.template.md"))) {
-        Write-Err "PROGRESS.template.md not found in repo root ($RepoRoot)"
+    if (-not (Test-Path (Join-Path $coachPath "PROGRESS.template.md"))) {
+        Write-Err "PROGRESS.template.md not found in coach/ directory"
         $hasError = $true
     }
 
-    if (-not (Test-Path (Join-Path $RepoRoot "coach" "ai-engineering-leveling-guide.md"))) {
-        Write-Err "ai-engineering-leveling-guide.md not found in repo root ($RepoRoot)"
+    if (-not (Test-Path (Join-Path $coachPath "ai-engineering-leveling-guide.md"))) {
+        Write-Err "ai-engineering-leveling-guide.md not found in coach/ directory"
         $hasError = $true
     }
 
@@ -66,7 +92,9 @@ function Test-PostInstall {
         $hasError = $true
     }
 
-    if (-not (Test-Path (Join-Path $ClaudeHome "commands" "coach" "assess.md"))) {
+    $assessPath = Join-Path (Join-Path $ClaudeHome "commands") "coach"
+    $assessPath = Join-Path $assessPath "assess.md"
+    if (-not (Test-Path $assessPath)) {
         Write-Err "Verification failed: commands/coach/assess.md not found in $ClaudeHome"
         $hasError = $true
     }
@@ -81,11 +109,12 @@ function Test-PostInstall {
 }
 
 function Get-SourcePaths {
+    $coachPath = Join-Path $RepoRoot "coach"
     return @{
-        ClaudeMd = Join-Path $RepoRoot "coach" "CLAUDE.md"
-        Progress = Join-Path $RepoRoot "coach" "PROGRESS.template.md"
-        Guide    = Join-Path $RepoRoot "coach" "ai-engineering-leveling-guide.md"
-        Commands = Join-Path $RepoRoot "coach" "commands"
+        ClaudeMd = Join-Path $coachPath "CLAUDE.md"
+        Progress = Join-Path $coachPath "PROGRESS.template.md"
+        Guide    = Join-Path $coachPath "ai-engineering-leveling-guide.md"
+        Commands = Join-Path $coachPath "templates/commands"
     }
 }
 
@@ -113,15 +142,17 @@ function Install-CoachSystem {
             $coachDir = Join-Path $commandsDir "coach"
             New-Item -ItemType Directory -Force -Path $coachDir | Out-Null
             # Copy coach namespace commands
-            $commandFiles = Get-ChildItem (Join-Path $sourceCommands "coach" "*.md") -ErrorAction SilentlyContinue
+            $sourceCoachDir = Join-Path $sourceCommands "coach"
+            $commandFiles = Get-ChildItem (Join-Path $sourceCoachDir "*.md") -ErrorAction SilentlyContinue
             foreach ($file in $commandFiles) {
                 Copy-Item $file.FullName $coachDir -Force
             }
             # Verify critical command files were copied
-            $criticalCommands = @("coach/assess.md", "coach/practice.md", "coach/progress-report.md", "coach/review-prompt.md")
+            $criticalCommands = @("assess.md", "practice.md", "progress-report.md", "review-prompt.md")
             $verifyFailed = $false
             foreach ($cmd in $criticalCommands) {
-                if (-not (Test-Path (Join-Path $commandsDir $cmd))) {
+                $cmdPath = Join-Path $coachDir $cmd
+                if (-not (Test-Path $cmdPath)) {
                     Write-Err "Critical command file missing after copy: $cmd"
                     $verifyFailed = $true
                 }
@@ -189,13 +220,15 @@ function Install-CoachSystem {
         if (Test-Path $progressFile) {
             Write-Warn "PROGRESS.md already exists, skipping (protecting local progress)"
             Write-Warn "To reset, manually delete ~/.claude/PROGRESS.md and re-run install"
+            $script:IsUpdate = $true
         }
         else {
             $progressSource = $paths.Progress
             if (-not (Test-Path $progressSource)) {
-                $progressSource = Join-Path $RepoRoot "coach" "PROGRESS.template.md"
+                $progressSource = Join-Path (Join-Path $RepoRoot "coach") "PROGRESS.template.md"
             }
-            Copy-Item $progressSource $ClaudeHome -Force
+            # Copy with explicit destination filename to ensure correct name
+            Copy-Item $progressSource $progressFile -Force
             Write-Info "PROGRESS.md created (initial state)"
         }
 
@@ -217,8 +250,10 @@ function Install-CoachSystem {
         $progressFile = Join-Path $ClaudeHome "PROGRESS.md"
         if ((Test-Path $progressFile) -and (Select-String -Path $progressFile -Pattern "Pending Assessment" -Quiet)) {
             Write-Info "Initial assessment will begin automatically - stay in this session."
+            Write-Host "INSTALL_STATUS: FIRST_INSTALL"
         } else {
             Write-Info "Configuration updated. Your progress has been preserved."
+            Write-Host "INSTALL_STATUS: UPDATE"
         }
     }
     finally {
