@@ -2,17 +2,17 @@
 
 ## Overall Assessment
 
-- **Current Level**: 5
-- **Target Level**: 6
-- **Assessment Date**: 2026-03-08
+- **Current Level**: Pending Assessment
+- **Target Level**: —
+- **Assessment Date**: —
 
 ## Level 1-2 Sub-skills Status (AI-Assisted Programming Basics)
 
 | # | Sub-skill | Status | Acceptance Criteria |
 |---|-----------|--------|-------------------|
-| 1 | AI Code Completion Habits | 🟢 Verified | Naturally uses AI completion in daily development |
-| 2 | Claude Code Basic Dialogue | 🟢 Verified | 3+ effective conversations per day |
-| 3 | AI Code Judgment | 🟡 Practicing | Has a habit of accepting/modifying/rejecting each piece of AI-generated code |
+| 1 | AI Code Completion Habits | 🔴 Not Started | Naturally uses AI completion in daily development |
+| 2 | Claude Code Basic Dialogue | 🔴 Not Started | 3+ effective conversations per day |
+| 3 | AI Code Judgment | 🔴 Not Started | Has a habit of accepting/modifying/rejecting each piece of AI-generated code |
 
 Graduation Test: Use AI assistance to complete 3 small component features (form + list + detail view), with AI contributing 20%+ of the code, and be able to explain every line.
 
@@ -20,10 +20,10 @@ Graduation Test: Use AI assistance to complete 3 small component features (form 
 
 | # | Sub-skill | Status | Acceptance Criteria |
 |---|-----------|--------|-------------------|
-| 1 | Claude Code Core Functions | 🟢 Verified | Proficient with /init, /plan, /compact, /cost |
+| 1 | Claude Code Core Functions | 🔴 Not Started | Proficient with /init, /plan, /compact, /cost |
 | 2 | Plan Mode Usage | 🔴 Not Started | 100% use of Plan Mode for complex tasks (3+ files) |
-| 3 | Structured Prompts (CRATE) | 🟢 Verified | Average 1-3 prompt rounds to get satisfactory results |
-| 4 | CLAUDE.md Configuration & Maintenance | 🟢 Verified | Includes tech stack, conventions, directory structure; kept up to date |
+| 3 | Structured Prompts (CRATE) | 🔴 Not Started | Average 1-3 prompt rounds to get satisfactory results |
+| 4 | CLAUDE.md Configuration & Maintenance | 🔴 Not Started | Includes tech stack, conventions, directory structure; kept up to date |
 
 Graduation Test: Complete a data table with filtering + sorting + pagination, using Plan Mode, within 1-3 prompt rounds, with manual modifications < 20%.
 
@@ -31,9 +31,9 @@ Graduation Test: Complete a data table with filtering + sorting + pagination, us
 
 | # | Sub-skill | Status | Acceptance Criteria |
 |---|-----------|--------|-------------------|
-| 1 | Intent Description (Why/What, not How) | 🟢 Verified | >70% of recent 10 prompts use What/Why framing |
-| 2 | Feature-Level Delegation | 🟡 Practicing | Completed 3+ full feature delegations (frontend + API + tests) |
-| 3 | Architecture Review Ability | 🟡 Practicing | AI solutions pass review on first attempt >80% of the time |
+| 1 | Intent Description (Why/What, not How) | 🔴 Not Started | >70% of recent 10 prompts use What/Why framing |
+| 2 | Feature-Level Delegation | 🔴 Not Started | Completed 3+ full feature delegations (frontend + API + tests) |
+| 3 | Architecture Review Ability | 🔴 Not Started | AI solutions pass review on first attempt >80% of the time |
 | 4 | Task Decomposition & Dependency Analysis | 🔴 Not Started | Can break complex features into 3+ sub-tasks and map dependencies |
 
 Graduation Test: Complete a full feature (frontend + API + database), fully intent-driven without specifying implementation, AI solution passes review on first attempt, total time 2x+ faster than manual.
@@ -59,8 +59,8 @@ Graduation Test: 3 agents simultaneously complete different parts of a feature (
 
 | # | Sub-skill | Status | Acceptance Criteria |
 |---|-----------|--------|-------------------|
-| 1 | CLAUDE.md Workflow Rules | 🟢 Verified | Includes file creation rules, Git conventions, testing rules |
-| 2 | Custom Slash Commands | 🟢 Verified | 5+ Commands covering daily scenarios |
+| 1 | CLAUDE.md Workflow Rules | 🔴 Not Started | Includes file creation rules, Git conventions, testing rules |
+| 2 | Custom Slash Commands | 🔴 Not Started | 5+ Commands covering daily scenarios |
 | 3 | Hooks Automated QA | 🔴 Not Started | Auto type-checking configured after writing files |
 
 Status Legend: 🔴 Not Started / 🟡 Practicing / 🟢 Verified
@@ -95,7 +95,6 @@ Status: ⬜ Locked / ✅ Unlocked
 
 | Date | Milestone | Notes |
 |------|-----------|-------|
-| 2026-03-08 | Initial Assessment Completed | Level 5 (Intent-Driven), Target Level 6 |
 
 <!-- 
 Update Guide:

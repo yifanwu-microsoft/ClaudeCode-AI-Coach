@@ -16,7 +16,8 @@
       "WebFetch(domain:github.com)",
       "Bash(brew install:*)",
       "Bash(pandoc:*)",
-      "Bash(gh:*)"
+      "Bash(gh:*)",
+      "Bash(./scripts/install.sh:*)"
     ]
   }
 }

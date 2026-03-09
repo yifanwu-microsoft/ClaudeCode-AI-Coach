@@ -148,6 +148,11 @@ The coach uses a **four-tier architecture** to guarantee coaching always happens
 5. If that fails too, a static tip for your level is shown (Tier 4 — always works)
 
 > **Result:** Coaching is delivered every time, with quality adapting to what's available.
+
+### What do Levels mean?
+
+| Level | What You Do | What AI Does |
+|-------|-------------|--------------|
 | 1-2 | Occasional autocomplete/Q&A | Typing assistant |
 | 3-4 | Writing structured prompts, managing context | Junior engineer following instructions |
 | 5 | Describing business intent, reviewing AI solutions | Mid-level engineer delivering independently |
