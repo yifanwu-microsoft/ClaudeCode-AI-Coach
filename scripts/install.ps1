@@ -214,7 +214,12 @@ function Install-CoachSystem {
 
         Write-Host ""
         Write-Info "Install complete! AI Coach is now globally active."
-        Write-Info "Open Claude Code in any project and run /coach:assess for initial evaluation."
+        $progressFile = Join-Path $ClaudeHome "PROGRESS.md"
+        if ((Test-Path $progressFile) -and (Select-String -Path $progressFile -Pattern "Pending Assessment" -Quiet)) {
+            Write-Info "Initial assessment will begin automatically - stay in this session."
+        } else {
+            Write-Info "Configuration updated. Your progress has been preserved."
+        }
     }
     finally {
         Remove-TempFiles

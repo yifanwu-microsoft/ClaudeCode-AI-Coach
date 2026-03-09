@@ -30,6 +30,9 @@ Use this index when: running `/coach:practice` or `/coach:assess`, giving upgrad
 ## First Interaction Rules
 
 If PROGRESS.md shows "Current Level" as "Pending Assessment", this is a new user or first-time setup:
+
+**Important**: If the user is running `/coach:install`, **skip this section entirely** — the install command has its own built-in assessment flow (Step 4) that runs after installation completes. Do not assess before installing.
+
 1. Do not assume the user's Level — but don't just tell them to run a command either
 2. **Start an inline quick assessment immediately** with these 3 questions (ask one at a time):
    - "How often do you use AI code completion (e.g., Copilot, Claude) in your daily work?" (Never / Sometimes / Always)
@@ -99,6 +102,8 @@ When the user is already operating at **their target Level or higher**:
 ### Legitimate Downshift Scenarios
 
 Using a lower-Level approach is **the right call** in these scenarios — give positive confirmation (✅), plus a relevant technique tip for the situation:
+
+**IMPORTANT: Even in these scenarios, you MUST still provide coaching advice.** The difference from normal cases is that instead of an upgrade suggestion, you give positive reinforcement for the appropriate level choice plus a targeted tip.
 
 | Scenario | Appropriate Level |
 |----------|-------------------|

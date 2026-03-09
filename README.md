@@ -108,13 +108,15 @@ chmod +x scripts/install.sh
 
 ### Step 3 — Get Assessed
 
-Open Claude Code in **any project** and run:
+If you used `/coach:install`, the initial assessment starts **automatically** right after installation — no need to exit or switch projects. Claude will ask 3 quick questions to calibrate your Level.
+
+If you installed manually via the shell script, open Claude Code in any project and the coach will detect first-time setup and start the assessment automatically. You can also run:
 
 ```
 /coach:assess
 ```
 
-Claude asks about your AI tool usage habits, scores each dimension, and determines your starting Level.
+for a deeper project-specific assessment at any time.
 
 **That's it!** From now on, every Claude Code interaction includes coaching feedback automatically.
 
@@ -140,6 +142,21 @@ Claude asks about your AI tool usage habits, scores each dimension, and determin
 │  • Upgrade suggestion / positive feedback / warning      │
 │  • Progress updates (achievements, sub-skill changes)    │
 └─────────────────────────────────────────────────────────┘
+| 1-2 | Occasional autocomplete/Q&A | Typing assistant |
+| 3-4 | Writing structured prompts, managing context | Junior engineer following instructions |
+| 5 | Describing business intent, reviewing AI solutions | Mid-level engineer delivering independently |
+| 6 | Managing multiple AI task streams simultaneously | A parallelizable dev team |
+| 7 | Designing standardized workflows, AI executes by process | Automation pipeline |
+| 8 | Configuring event triggers, AI runs autonomously | Infrastructure |
+
+> See [Complete Level Definitions & Acceptance Criteria](coach/ai-engineering-leveling-guide.md)
+
+## Multi-device Usage
+
+Progress is maintained independently on each machine. When switching devices:
+
+```bash
+git clone → ./scripts/install.sh → auto assessment (or /coach:assess)
 ```
 
 **Key files installed to `~/.claude/`:**

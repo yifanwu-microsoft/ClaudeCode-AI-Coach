@@ -77,6 +77,12 @@ Status Legend: 🔴 Not Started / 🟡 Practicing / 🟢 Verified
 
 Status Legend: 🔴 Not Started / 🟡 Practicing / 🟢 Verified
 
+## Current Focus
+
+- **Focus Sub-skill**: Pending Assessment
+- **Reason**: —
+- **Next Step**: —
+
 ## Achievements 🏅
 
 Small wins on your journey. These unlock automatically as the coach detects matching behavior.
@@ -93,11 +99,11 @@ Status: ⬜ Locked / ✅ Unlocked
 
 <!-- 
 Update Guide:
-- Run /coach:assess on first use for assessment, the system will auto-fill the fields above
+- After first install, /coach:install will auto-run the assessment and fill the fields above
 - After completing a sub-skill verification, change status from 🔴/🟡 to 🟢
 - After starting practice on a sub-skill, change status from 🔴 to 🟡
 - Update "Overall Assessment" and "Assessment Date" after each assessment
 - Add entries to "Milestone Log" when important milestones are reached
 - Update Level 7 Graduation Test status after passing
-- When switching devices, no sync needed — just run /coach:assess again
+- When switching devices, no sync needed — just run /coach:install again
 -->
