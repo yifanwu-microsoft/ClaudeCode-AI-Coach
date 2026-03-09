@@ -77,12 +77,6 @@ Status Legend: 🔴 Not Started / 🟡 Practicing / 🟢 Verified
 
 Status Legend: 🔴 Not Started / 🟡 Practicing / 🟢 Verified
 
-## Current Focus
-
-- **Focus Sub-skill**: Hooks Automated QA
-- **Reason**: Next frontier for Level 6-7 advancement; you have Commands but no Hooks yet
-- **Next Step**: Configure a Hook in .claude/settings.json to auto-run type-checking after file writes
-
 ## Achievements 🏅
 
 Small wins on your journey. These unlock automatically as the coach detects matching behavior.

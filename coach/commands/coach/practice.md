@@ -1,16 +1,18 @@
-Run an interactive practice session for the user's current focused sub-skill.
+Run an interactive practice session for the user's current Level sub-skills.
 
 ## Session Flow
 
 ### Step 1: Read State & Scan Context
-Read `PROGRESS.md` for: current Level, focused sub-skill, sub-skill status.
+Read `PROGRESS.md` for: current Level, target Level, sub-skill statuses across all Levels.
 Scan project for: tech stack, test coverage, CLAUDE.md status, recent git activity.
+
+Pick the most impactful sub-skill to practice: prioritize 🔴 sub-skills at the target Level, then 🟡 sub-skills at the current Level.
 
 If no project context exists, suggest creating a small practice project appropriate to the Level.
 
 ### Step 2: Select Exercise Mode
 
-Based on the focused sub-skill, choose ONE exercise mode:
+Based on the selected sub-skill, choose ONE exercise mode:
 
 **Mode A: Prompt Gym** (for L1-5 sub-skills related to prompt quality)
 Interactive prompt improvement exercise:
@@ -57,7 +59,7 @@ Execute the selected mode interactively. Key principles:
 
 After the exercise:
 1. Summarize what the user practiced and what they learned
-2. Rate their performance on the focused sub-skill (Beginner / Intermediate / Advanced)
+2. Rate their performance on the practiced sub-skill (Beginner / Intermediate / Advanced)
 3. If they demonstrated competence, suggest updating PROGRESS.md sub-skill status
 4. Suggest when to practice again (e.g., "try Mode A again tomorrow with a different scenario")
 5. Check if any achievements should be unlocked based on what happened during practice

@@ -3,7 +3,7 @@ Perform a comprehensive AI engineering capability assessment.
 ## Assessment Process
 
 ### Step 1: Read Current State
-Read the `PROGRESS.md` file in the project root to understand the user's historical progress and current focus.
+Read the `PROGRESS.md` file in the project root to understand the user's historical progress.
 
 ### Step 2: Objective Signal Scan (automated, no user input required)
 
@@ -26,13 +26,9 @@ Score each item 0–2 (0 = not met, 1 = partially, 2 = fully met), combining obj
 
 **For each dimension, reference the corresponding `### Done When: Acceptance Criteria` section in `ai-engineering-leveling-guide.md` for precise scoring benchmarks.**
 
-- **Foundation (L1-2)**: AI completion usage · basic Claude Code conversations · AI code judgment
-- **Prompting (L3-4)**: structured prompts · CLAUDE.md maintained · Plan Mode usage · <20% manual modification
-- **Autonomous (L5)**: intent-driven prompts · full feature delegation · AI passes review >80%
-- **Parallel (L6-7)**: 3+ parallel agents · Git Worktree · 5+ Custom Commands · Hooks configured
-- **System (L8)**: CI/CD integration · auto-fix pipelines · monitoring and cost controls
-
-Scoring: 0-4 → L1-2 ｜ 5-8 → L3-4 ｜ 9-11 → L5 ｜ 12-15 → L6-7 ｜ 16-18 → L8
+For Level definitions and skill dimensions, see **CLAUDE.md** — Level Detection Rules + Scoring Reference. Key points:
+- **Scoring range**: 0-4 → L1-2, 5-8 → L3-4, 9-11 → L5, 12-15 → L6-7, 16-18 → L8
+- **Skill dimensions**: Foundation (L1-2), Prompting (L3-4), Autonomous (L5), Parallel (L6-7), System (L8)
 
 ### Step 4: Cross-Validation & History Comparison
 
@@ -43,12 +39,11 @@ Scoring: 0-4 → L1-2 ｜ 5-8 → L3-4 ｜ 9-11 → L5 ｜ 12-15 → L6-7 ｜ 16
 
 ### Step 5: Output Results
 
-Format: Date, Total Score (/18), Current Level, Recommended Target Level, Scan Results table, Scores by Dimension table (with objective signals), Current Level Sub-Skill Status, and Recommended Focus with specific next steps.
+Format: Date, Total Score (/18), Current Level, Recommended Target Level, Scan Results table, Scores by Dimension table (with objective signals), Current Level Sub-Skill Status, and Recommended next steps.
 
 ### Step 6: Update PROGRESS.md
 
 After assessment (all changes require **user confirmation**):
 1. Update Overall Assessment (Level, target, date)
 2. Update sub-skill status (🔴→🟡 or 🟢 based on results)
-3. Update Current Focus field
-4. Add this assessment to the Milestone Log
+3. Add this assessment to the Milestone Log

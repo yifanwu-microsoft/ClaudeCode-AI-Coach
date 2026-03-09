@@ -20,7 +20,7 @@ Use this template, adding level-specific sections based on the user's current Le
 - [Completed milestones and sub-skills]
 
 ## Currently In Progress
-- **Focused Sub-Skill**: [from PROGRESS.md]
+- **Current Level Sub-Skills**: [summary of 🔴/🟡/🟢 status]
 - **Progress Summary**: [from git activity and file changes]
 
 ## Blockers
