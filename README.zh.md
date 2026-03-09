@@ -215,6 +215,12 @@ git clone → ./scripts/install.sh → 自动评估（或 /coach:assess）
 
 **何时使用：** 需要向 leader 汇报 AI 工程能力成长时。
 
+### `/coach:stats` — 统计仪表盘
+
+生成可视化的 ASCII 仪表盘，展示你的 AI 工程成长旅程的即时快照。包含等级进度、各等级区间的子技能分解、成就进度和可操作的洞察建议。
+
+**何时使用：** 想快速查看进度概览，无需阅读完整 PROGRESS.md 时。
+
 ### `/coach:uninstall` — 卸载
 
 从本机移除教练系统。可选保留 `PROGRESS.md`，避免丢失进度数据。
@@ -313,6 +319,7 @@ ClaudeCode-AI-Coach/
 │   │   ├── practice.md                  ← /coach:practice
 │   │   ├── progress-report.md           ← /coach:progress-report
 │   │   ├── review-prompt.md             ← /coach:review-prompt
+│   │   ├── stats.md                     ← /coach:stats
 │   │   └── uninstall.md                 ← /coach:uninstall
 │   ├── engine/                          ← 确定性 coaching 引擎（无需 LLM）
 │   │   ├── coach-cli.sh                 ← 独立 CLI：tip / progress / practice

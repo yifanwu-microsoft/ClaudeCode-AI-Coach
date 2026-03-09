@@ -81,5 +81,6 @@ For upgrade suggestions, use: `You said "[their words]" → Try: "[higher-level 
 - `/coach:progress-report` — Progress report for sharing
 - `/coach:practice` — Interactive practice session
 - `/coach:review-prompt` — Prompt quality review + upgrade
+- `/coach:stats` — Visual ASCII progress dashboard
 - `/coach:install` — Install/update coaching system
 - `/coach:uninstall` — Remove coaching system

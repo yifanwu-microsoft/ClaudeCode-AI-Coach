@@ -215,6 +215,12 @@ Generates a structured progress report summarizing your level, sub-skill status,
 
 **When to use:** When you need to report on your AI engineering skill growth.
 
+### `/coach:stats` — Stats Dashboard
+
+Generates a visual ASCII dashboard showing an instant snapshot of your AI engineering growth journey. Displays level progress, sub-skill breakdown by level band, achievement progress, and actionable insights.
+
+**When to use:** When you want a quick visual overview of your progress without reading the full PROGRESS.md.
+
 ### `/coach:uninstall` — Uninstall
 
 Removes the coaching system from your machine. Optionally preserves your `PROGRESS.md` so you don't lose your progress data.
@@ -344,6 +350,7 @@ ClaudeCode-AI-Coach/
 │   │   ├── practice.md                  ← /coach:practice
 │   │   ├── progress-report.md           ← /coach:progress-report
 │   │   ├── review-prompt.md             ← /coach:review-prompt
+│   │   ├── stats.md                     ← /coach:stats
 │   │   └── uninstall.md                 ← /coach:uninstall
 │   ├── engine/                          ← Deterministic coaching engine (no LLM needed)
 │   │   ├── coach-cli.sh                 ← Standalone CLI: tip / progress / practice
