@@ -10,7 +10,7 @@ AI coaching system one-click install with automatic initial assessment. Running 
 3. If not in repo, prompt user to `cd` into it first
 4. Run install script directly (**do not ask for confirmation**):
    - macOS/Linux: `chmod +x scripts/install.sh && ./scripts/install.sh`
-   - Windows: `.\scripts\install.ps1`
+   - Windows: `powershell -ExecutionPolicy Bypass -File scripts/install.ps1`
 
 ### Step 2: Verify Installation
 Check that key files exist: `~/.claude/CLAUDE.md`, `~/.claude/commands/coach/assess.md`, `~/.claude/PROGRESS.md`. Report errors with remediation steps if any are missing.

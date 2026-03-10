@@ -17,15 +17,7 @@ CLAUDE_HOME="$HOME/.claude"
 MARKER_START="<!-- AI-COACH-START -->"
 MARKER_END="<!-- AI-COACH-END -->"
 
-# Coach command files installed by install.sh
-COACH_COMMANDS=(
-    "coach/assess.md"
-    "coach/uninstall.md"
-    "coach/practice.md"
-    "coach/progress-report.md"
-    "coach/review-prompt.md"
-    "coach/i18n.md"
-)
+# No hardcoded list - we delete dynamically like install.sh copies
 
 # Color output
 GREEN='\033[0;32m'
@@ -47,13 +39,16 @@ remove_commands() {
         return
     fi
 
-    for cmd in "${COACH_COMMANDS[@]}"; do
-        local cmd_path="$commands_dir/$cmd"
-        if [ -f "$cmd_path" ]; then
-            rm -f "$cmd_path"
-            removed=$((removed + 1))
-        fi
-    done
+    # Dynamic deletion: remove all .md files in commands/coach/
+    local coach_dir="$commands_dir/coach"
+    if [ -d "$coach_dir" ]; then
+        for cmd_path in "$coach_dir"/*.md; do
+            if [ -f "$cmd_path" ]; then
+                rm -f "$cmd_path"
+                removed=$((removed + 1))
+            fi
+        done
+    fi
 
     info "Removed $removed command file(s)"
 
@@ -223,13 +218,18 @@ verify_uninstall() {
 
     info "Running post-uninstall verification..."
 
-    # Check coach commands are gone
-    for cmd in "${COACH_COMMANDS[@]}"; do
-        if [ -f "$CLAUDE_HOME/commands/$cmd" ]; then
-            err "Verification failed: $cmd still exists in $CLAUDE_HOME/commands/"
+    # Check coach commands directory is gone (or empty)
+    local coach_dir="$CLAUDE_HOME/commands/coach"
+    if [ -d "$coach_dir" ]; then
+        local remaining_files
+        remaining_files=$(find "$coach_dir" -name "*.md" -type f 2>/dev/null | head -5)
+        if [ -n "$remaining_files" ]; then
+            echo "$remaining_files" | while read -r file; do
+                err "Verification failed: $(basename "$file") still exists in $CLAUDE_HOME/commands/coach/"
+            done
             has_error=1
         fi
-    done
+    fi
 
     # Check CLAUDE.md marker block is gone
     if [ -f "$CLAUDE_HOME/CLAUDE.md" ]; then

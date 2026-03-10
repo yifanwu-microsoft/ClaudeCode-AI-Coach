@@ -8,15 +8,7 @@ $ClaudeHome = Join-Path $env:USERPROFILE ".claude"
 $MarkerStart = "<!-- AI-COACH-START -->"
 $MarkerEnd = "<!-- AI-COACH-END -->"
 
-# Coach command files installed by install.ps1
-$CoachCommands = @(
-    "coach\assess.md",
-    "coach\uninstall.md",
-    "coach\practice.md",
-    "coach\progress-report.md",
-    "coach\review-prompt.md",
-    "coach\i18n.md"
-)
+# No hardcoded list - we delete dynamically like install.ps1 copies
 
 function Write-Info { param($Msg) Write-Host "[INFO] $Msg" -ForegroundColor Green }
 function Write-Warn { param($Msg) Write-Host "[WARN] $Msg" -ForegroundColor Yellow }
@@ -31,10 +23,12 @@ function Remove-CoachCommands {
         return
     }
 
-    foreach ($cmd in $CoachCommands) {
-        $cmdPath = Join-Path $commandsDir $cmd
-        if (Test-Path $cmdPath) {
-            Remove-Item $cmdPath -Force
+    # Dynamic deletion: remove all .md files in commands/coach/
+    $coachDir = Join-Path $commandsDir "coach"
+    if (Test-Path $coachDir) {
+        $commandFiles = Get-ChildItem (Join-Path $coachDir "*.md") -ErrorAction SilentlyContinue
+        foreach ($file in $commandFiles) {
+            Remove-Item $file.FullName -Force
             $removed++
         }
     }
@@ -139,11 +133,15 @@ function Test-PostUninstall {
 
     Write-Info "Running post-uninstall verification..."
 
-    # Check coach commands are gone
-    foreach ($cmd in $CoachCommands) {
-        $cmdPath = Join-Path $ClaudeHome "commands" $cmd
-        if (Test-Path $cmdPath) {
-            Write-Err "Verification failed: $cmd still exists in $ClaudeHome\commands\"
+    # Check coach commands directory is gone (or empty)
+    $commandsDir = Join-Path $ClaudeHome "commands"
+    $coachDir = Join-Path $commandsDir "coach"
+    if (Test-Path $coachDir) {
+        $remainingFiles = Get-ChildItem (Join-Path $coachDir "*.md") -ErrorAction SilentlyContinue
+        if ($remainingFiles -and $remainingFiles.Count -gt 0) {
+            foreach ($file in $remainingFiles) {
+                Write-Err "Verification failed: $($file.Name) still exists in $ClaudeHome\commands\coach\"
+            }
             $hasError = $true
         }
     }
