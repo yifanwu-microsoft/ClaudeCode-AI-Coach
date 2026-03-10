@@ -114,7 +114,7 @@ function Get-SourcePaths {
         ClaudeMd = Join-Path $coachPath "CLAUDE.md"
         Progress = Join-Path $coachPath "PROGRESS.template.md"
         Guide    = Join-Path $coachPath "ai-engineering-leveling-guide.md"
-        Commands = Join-Path $coachPath "templates/commands"
+        Commands = Join-Path (Join-Path $coachPath "templates") "commands"
     }
 }
 
