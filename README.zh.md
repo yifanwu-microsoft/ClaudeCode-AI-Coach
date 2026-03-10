@@ -54,6 +54,10 @@
 ⚠️ 你同时运行了 5 个 agent — 管理起来很困难。建议从 2-3 个开始，熟练后再扩展。
 ```
 
+**实际效果：**
+
+![AI Coach 示例](images/AI%20Coach%20examples.png)
+
 ### 核心能力
 
 | 能力 | 描述 |
@@ -119,6 +123,8 @@ chmod +x scripts/install.sh
 进行更深入的项目级评估。
 
 **搞定！** 之后每次使用 Claude Code 都会自动附带教练反馈。
+
+![安装与评估](images/install%20%26%20assess.png)
 
 ## 🔬 工作原理
 
@@ -188,6 +194,8 @@ git clone → ./scripts/install.sh → 自动评估（或 /coach:assess）
 
 对你的 AI 工程能力进行综合评估。扫描你的 CLAUDE.md 配置、自定义命令、Hooks、CI/CD 设置、Git 规范和项目结构。输出 5 个维度的评分报告，附带具体改进建议。
 
+![评估结果](images/Assessment%20Results.png)
+
 **何时使用：** 首次安装时、定期检查进度时、或觉得自己升级了的时候。
 
 ### `/coach:practice` — 练习会话
@@ -213,11 +221,15 @@ git clone → ./scripts/install.sh → 自动评估（或 /coach:assess）
 
 生成结构化的进度报告，汇总你的等级、子技能状态、成就和近期里程碑。格式适合分享给团队负责人或经理。
 
+![进度报告](images/AI%20Engineering%20Capability%20Progress%20Report.png)
+
 **何时使用：** 需要向 leader 汇报 AI 工程能力成长时。
 
 ### `/coach:stats` — 统计仪表盘
 
 生成可视化的 ASCII 仪表盘，展示你的 AI 工程成长旅程的即时快照。包含等级进度、各等级区间的子技能分解、成就进度和可操作的洞察建议。
+
+![统计仪表盘](images/AI%20Engineering%20-%20Stats%20Dashboard.png)
 
 **何时使用：** 想快速查看进度概览，无需阅读完整 PROGRESS.md 时。
 

@@ -54,6 +54,10 @@ Install once, then just use Claude Code normally. The coach watches how you inte
 ⚠️ You have 5 agents running simultaneously — that's hard to manage. Start with 2-3 and scale up as you build confidence.
 ```
 
+**Here's what it looks like in practice:**
+
+![AI Coach Examples](images/AI%20Coach%20examples.png)
+
 ### Core Capabilities
 
 | Capability | Description |
@@ -119,6 +123,8 @@ If you installed manually via the shell script, open Claude Code in any project 
 for a deeper project-specific assessment at any time.
 
 **That's it!** From now on, every Claude Code interaction includes coaching feedback automatically.
+
+![Install & Assessment](images/install%20%26%20assess.png)
 
 ## 🔬 How It Works
 
@@ -188,6 +194,8 @@ git clone → ./scripts/install.sh → auto assessment (or /coach:assess)
 
 Performs a comprehensive evaluation of your AI engineering proficiency. Scans your CLAUDE.md configuration, custom commands, hooks, CI/CD setup, git conventions, and project structure. Outputs a scored report across 5 dimensions with specific improvement recommendations.
 
+![Assessment Results](images/Assessment%20Results.png)
+
 **When to use:** On first install, periodically to check progress, or when you feel you've leveled up.
 
 ### `/coach:practice` — Practice Session
@@ -213,11 +221,15 @@ Analyzes a prompt you provide, assesses its current level (L1-8), and generates 
 
 Generates a structured progress report summarizing your level, sub-skill status, achievements, and recent milestones. Formatted for sharing with a team lead or manager.
 
+![Progress Report](images/AI%20Engineering%20Capability%20Progress%20Report.png)
+
 **When to use:** When you need to report on your AI engineering skill growth.
 
 ### `/coach:stats` — Stats Dashboard
 
 Generates a visual ASCII dashboard showing an instant snapshot of your AI engineering growth journey. Displays level progress, sub-skill breakdown by level band, achievement progress, and actionable insights.
+
+![Stats Dashboard](images/AI%20Engineering%20-%20Stats%20Dashboard.png)
 
 **When to use:** When you want a quick visual overview of your progress without reading the full PROGRESS.md.
 
