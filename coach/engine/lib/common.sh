@@ -145,3 +145,27 @@ days_since() {
   past=$(date -j -f "%Y-%m-%d" "$past_date" +%s 2>/dev/null || date -d "$past_date" +%s 2>/dev/null || echo "$today")
   echo $(( (today - past) / 86400 ))
 }
+
+# ─── Cross-platform Timeout ─────────────────────────────
+# GNU timeout is not available in Git Bash on Windows.
+# Fallback: background process + kill.
+run_with_timeout() {
+  local seconds="$1"
+  shift
+
+  if command -v timeout &>/dev/null; then
+    timeout "$seconds" "$@"
+    return $?
+  fi
+
+  # Fallback for Git Bash / environments without timeout
+  "$@" &
+  local pid=$!
+  ( sleep "$seconds"; kill "$pid" 2>/dev/null ) &
+  local watchdog=$!
+  wait "$pid" 2>/dev/null
+  local exit_code=$?
+  kill "$watchdog" 2>/dev/null
+  wait "$watchdog" 2>/dev/null
+  return $exit_code
+}

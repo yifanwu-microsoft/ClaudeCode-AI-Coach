@@ -59,7 +59,7 @@ tier2_llm_coaching() {
 
   # Make the dedicated coaching call with timeout
   local result
-  result=$(timeout 15 claude -p "$prompt" --max-turns 1 2>/dev/null) || return 1
+  result=$(run_with_timeout 15 claude -p "$prompt" --max-turns 1 2>/dev/null) || return 1
 
   if [ -n "$result" ]; then
     echo ""

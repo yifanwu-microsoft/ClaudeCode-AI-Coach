@@ -120,6 +120,122 @@ function Remove-Guide {
     }
 }
 
+function Remove-AchievementTriggers {
+    $achievementFile = Join-Path $ClaudeHome "achievement-triggers.md"
+
+    if (Test-Path $achievementFile) {
+        Remove-Item $achievementFile -Force
+        Write-Info "achievement-triggers.md removed"
+    } else {
+        Write-Info "No achievement-triggers.md found, skipping"
+    }
+}
+
+function Remove-Engine {
+    $engineDir = Join-Path $ClaudeHome "coach-engine"
+
+    if (Test-Path $engineDir) {
+        Remove-Item $engineDir -Recurse -Force
+        Write-Info "Coaching engine removed"
+    } else {
+        Write-Info "No coaching engine found, skipping"
+    }
+}
+
+function Remove-Hooks {
+    $settingsFile = Join-Path $ClaudeHome "settings.json"
+
+    if (-not (Test-Path $settingsFile)) {
+        Write-Info "No settings.json found, skipping hook removal"
+        return
+    }
+
+    try {
+        $settingsRaw = Get-Content $settingsFile -Raw -Encoding UTF8
+        $settings = $settingsRaw | ConvertFrom-Json
+    } catch {
+        Write-Warn "Could not parse settings.json: $_"
+        Write-Warn "Manually remove the on-stop.sh hook entry from $settingsFile"
+        return
+    }
+
+    # Check if there are any coach hooks to remove
+    $hasCoachHook = $false
+    if ($settings.hooks -and $settings.hooks.Stop) {
+        foreach ($entry in $settings.hooks.Stop) {
+            # Check nested format: { matcher: "", hooks: [{ command: "..." }] }
+            if ($entry.hooks) {
+                foreach ($h in $entry.hooks) {
+                    if ($h.command -and $h.command.Contains("on-stop.sh")) {
+                        $hasCoachHook = $true
+                        break
+                    }
+                }
+            }
+            # Check flat format: { command: "..." }
+            if ($entry.command -and $entry.command.Contains("on-stop.sh")) {
+                $hasCoachHook = $true
+            }
+            if ($hasCoachHook) { break }
+        }
+    }
+
+    if (-not $hasCoachHook) {
+        Write-Info "No coach hook found in settings.json, skipping"
+        return
+    }
+
+    # Filter out coach hook entries from Stop array
+    $filteredStop = @()
+    foreach ($entry in $settings.hooks.Stop) {
+        $isCoachEntry = $false
+
+        # Check nested format
+        if ($entry.hooks) {
+            foreach ($h in $entry.hooks) {
+                if ($h.command -and $h.command.Contains("on-stop.sh")) {
+                    $isCoachEntry = $true
+                    break
+                }
+            }
+        }
+        # Check flat format
+        if ($entry.command -and $entry.command.Contains("on-stop.sh")) {
+            $isCoachEntry = $true
+        }
+
+        if (-not $isCoachEntry) {
+            $filteredStop += $entry
+        }
+    }
+
+    # Update or remove the Stop key
+    if ($filteredStop.Count -eq 0) {
+        # Remove Stop key
+        $settings.hooks.PSObject.Properties.Remove("Stop")
+    } else {
+        $settings.hooks.Stop = $filteredStop
+    }
+
+    # Check if hooks object is now empty
+    $hooksProps = @($settings.hooks.PSObject.Properties)
+    if ($hooksProps.Count -eq 0) {
+        # Remove hooks key
+        $settings.PSObject.Properties.Remove("hooks")
+    }
+
+    # Check if entire settings is now empty
+    $settingsProps = @($settings.PSObject.Properties)
+    if ($settingsProps.Count -eq 0) {
+        Remove-Item $settingsFile -Force
+        Write-Info "settings.json was coach-only, removed entirely"
+    } else {
+        $json = $settings | ConvertTo-Json -Depth 10
+        [System.IO.File]::WriteAllText($settingsFile, $json, [System.Text.UTF8Encoding]::new($false))
+        Write-Info "Coach hook removed from settings.json"
+    }
+}
+
 function Remove-Backups {
     $claudeBak = Join-Path $ClaudeHome "CLAUDE.md.bak"
     if (Test-Path $claudeBak) {
@@ -153,6 +269,14 @@ function Test-PostUninstall {
         if ($content.Contains($MarkerStart)) {
             Write-Err "Verification failed: AI Coach block still present in CLAUDE.md"
             $hasError = $true
+        } else {
+            # Verify CLAUDE.md still has content after removal
+            if (-not [string]::IsNullOrWhiteSpace($content)) {
+                Write-Info "CLAUDE.md cleaned successfully (user content preserved)"
+            } else {
+                Write-Err "Verification failed: CLAUDE.md is empty after cleanup"
+                $hasError = $true
+            }
         }
     }
 
@@ -166,6 +290,30 @@ function Test-PostUninstall {
     if (Test-Path (Join-Path $ClaudeHome "PROGRESS.md")) {
         Write-Err "Verification failed: PROGRESS.md still exists"
         $hasError = $true
+    }
+
+    # Check achievement-triggers.md is gone
+    if (Test-Path (Join-Path $ClaudeHome "achievement-triggers.md")) {
+        Write-Err "Verification failed: achievement-triggers.md still exists"
+        $hasError = $true
+    }
+
+    # Check coach-engine/ directory is gone
+    if (Test-Path (Join-Path $ClaudeHome "coach-engine")) {
+        Write-Err "Verification failed: coach-engine/ directory still exists"
+        $hasError = $true
+    }
+
+    # Check settings.json is still valid JSON (if it exists)
+    $settingsFile = Join-Path $ClaudeHome "settings.json"
+    if (Test-Path $settingsFile) {
+        try {
+            $null = Get-Content $settingsFile -Raw -Encoding UTF8 | ConvertFrom-Json
+            Write-Info "settings.json is valid JSON after hook removal"
+        } catch {
+            Write-Err "Verification failed: settings.json is not valid JSON after cleanup"
+            $hasError = $true
+        }
     }
 
     if ($hasError) {
@@ -205,10 +353,19 @@ function Uninstall-CoachSystem {
     # Step 4: Remove guide
     Remove-Guide
 
-    # Step 5: Clean up backups
+    # Step 5: Remove achievement triggers
+    Remove-AchievementTriggers
+
+    # Step 6: Remove coaching engine
+    Remove-Engine
+
+    # Step 7: Remove hooks from settings.json
+    Remove-Hooks
+
+    # Step 8: Clean up backups
     Remove-Backups
 
-    # Step 6: Verify
+    # Step 9: Verify
     $verified = Test-PostUninstall
 
     Write-Host ""
