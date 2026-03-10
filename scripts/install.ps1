@@ -247,13 +247,12 @@ function Install-CoachSystem {
 
         Write-Host ""
         Write-Info "Install complete! AI Coach is now globally active."
-        $progressFile = Join-Path $ClaudeHome "PROGRESS.md"
-        if ((Test-Path $progressFile) -and (Select-String -Path $progressFile -Pattern "Pending Assessment" -Quiet)) {
-            Write-Info "Initial assessment will begin automatically - stay in this session."
-            Write-Host "INSTALL_STATUS: FIRST_INSTALL"
-        } else {
+        if ($script:IsUpdate) {
             Write-Info "Configuration updated. Your progress has been preserved."
             Write-Host "INSTALL_STATUS: UPDATE"
+        } else {
+            Write-Info "Initial assessment will begin automatically - stay in this session."
+            Write-Host "INSTALL_STATUS: FIRST_INSTALL"
         }
     }
     finally {
